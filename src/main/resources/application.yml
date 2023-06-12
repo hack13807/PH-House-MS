@@ -15,7 +15,7 @@ spring:
         password: admin
         # 使用druid数据源
         type: com.alibaba.druid.pool.DruidDataSource
-        driver-class-name: com.mysql.jdbc.Driver
+        driver-class-name: com.mysql.cj.jdbc.Driver
   mail:
     host: smtp.163.com
     username: 1042577659@163.com

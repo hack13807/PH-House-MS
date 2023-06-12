@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panghu.housemanage.dao.RoomMapper">
+    <insert id="insertBatch">
+        INSERT INTO t_room(number, description, member_id)
+        VALUES
+        <foreach collection="list" item="room" separator=",">
+            (#{room.number}, #{room.description}, #{room.memberId})
+        </foreach>
+    </insert>
+
+    <select id="queryRoom" resultType="com.panghu.housemanage.pojo.Room">
+        select id, number, status, member_id, description from t_room
+<!--        <if test="">-->
+
+<!--        </if>-->
+    </select>
+</mapper>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.panghu.housemanage.dao.UserBakMapper">
+    <select id="checkUser" resultType="com.panghu.housemanage.pojo.UserBak">
+        select * from reader where user_name=#{user.userName} and pass_wd=#{user.passWd}
+    </select>
+
+    <select id="checkManager" resultType="com.panghu.housemanage.pojo.UserBak">
+        select manager_id as user_id, pass_wd, mname as user_name from manager where mname=#{user.userName} and pass_wd=#{user.passWd};
+    </select>
+
+</mapper>

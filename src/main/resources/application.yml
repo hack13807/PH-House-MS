@@ -1,0 +1,40 @@
+server:
+  port: 8080
+
+spring:
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+    encoding: UTF-8
+    mode: HTML5
+  datasource:
+        name: hms
+        url: jdbc:mysql://127.0.0.1:3306/hms?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
+        username: root
+        password: admin
+        # 使用druid数据源
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+  mail:
+    host: smtp.163.com
+    username: 1042577659@163.com
+    password: keji9527765
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.starttls.required: true
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.panghu.housemanage.pojo
+  configuration:
+    map-underscore-to-camel-case: true
+
+mail:
+  fromMail:
+    addr: 490864627@qq.com
+
+logging:
+  level:
+    cn.lightina.housemanage.dao: debug

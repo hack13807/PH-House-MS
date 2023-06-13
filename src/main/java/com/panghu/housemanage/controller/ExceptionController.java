@@ -1,7 +1,7 @@
 package com.panghu.housemanage.controller;
 
 import com.panghu.housemanage.exception.ServiceException;
-import com.panghu.housemanage.pojo.ProcessResult;
+import com.panghu.housemanage.pojo.po.ProcessResult;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;

@@ -1,6 +1,6 @@
 package com.panghu.housemanage.controller;
 
-import com.panghu.housemanage.pojo.*;
+import com.panghu.housemanage.pojo.po.*;
 import com.panghu.housemanage.service.BookService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

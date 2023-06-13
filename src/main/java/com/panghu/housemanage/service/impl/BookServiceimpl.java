@@ -1,9 +1,10 @@
-package com.panghu.housemanage.service;
+package com.panghu.housemanage.service.impl;
 
 import com.panghu.housemanage.dao.BookMapper;
 import com.panghu.housemanage.enumeration.ExceptionEnum;
 import com.panghu.housemanage.exception.ServiceException;
-import com.panghu.housemanage.pojo.*;
+import com.panghu.housemanage.pojo.po.*;
+import com.panghu.housemanage.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

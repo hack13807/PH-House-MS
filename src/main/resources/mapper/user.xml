@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.panghu.housemanage.dao.UserMapper">
-    <select id="queryUser" resultType="com.panghu.housemanage.pojo.User">
+    <select id="queryUser" resultType="com.panghu.housemanage.pojo.po.User">
         select * from t_user where number = #{user.number} and pwd = #{user.pwd};
     </select>
 </mapper>

@@ -4,11 +4,11 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.panghu.housemanage.dao.UserBakMapper">
-    <select id="checkUser" resultType="com.panghu.housemanage.pojo.UserBak">
+    <select id="checkUser" resultType="com.panghu.housemanage.pojo.po.UserBak">
         select * from reader where user_name=#{user.userName} and pass_wd=#{user.passWd}
     </select>
 
-    <select id="checkManager" resultType="com.panghu.housemanage.pojo.UserBak">
+    <select id="checkManager" resultType="com.panghu.housemanage.pojo.po.UserBak">
         select manager_id as user_id, pass_wd, mname as user_name from manager where mname=#{user.userName} and pass_wd=#{user.passWd};
     </select>
 

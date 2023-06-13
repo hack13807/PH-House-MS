@@ -1,6 +1,6 @@
 package com.panghu.housemanage.dao;
 
-import com.panghu.housemanage.pojo.Room;
+import com.panghu.housemanage.pojo.po.Room;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

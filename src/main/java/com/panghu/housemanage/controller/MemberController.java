@@ -1,8 +1,8 @@
 package com.panghu.housemanage.controller;
 
 import com.panghu.housemanage.enumeration.RoomStatusEnum;
-import com.panghu.housemanage.pojo.po.Room;
-import com.panghu.housemanage.service.RoomService;
+import com.panghu.housemanage.pojo.po.Member;
+import com.panghu.housemanage.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,23 +17,23 @@ import java.util.stream.Collectors;
  * 房间管理Controller
  */
 @Controller
-@RequestMapping("/room")
-public class RoomController {
+@RequestMapping("/member")
+public class MemberController {
     @Autowired
-    RoomService roomService;
+    MemberService memberService;
 
     @GetMapping
-    public String queryRoom(Model model, HttpServletRequest request){
+    public String queryMember(Model model, HttpServletRequest request){
 
-        List<Room> rooms = roomService.queryRoom(null);
+        List<Member> members = memberService.queryMember(null);
 //        rooms.stream().map(room ->{
 //            room.setStatus(RoomStatusEnum.getValueByCode(Integer.valueOf(room.getStatus())));
 //            return room;
 //        }).collect(Collectors.toList());
 
 
-        rooms.stream().map(room -> room.setStatus(RoomStatusEnum.getValueByCode(Integer.valueOf(room.getStatus())))).collect(Collectors.toList());
-        model.addAttribute("list",rooms);
+        members.stream().map(member -> member.setStatus(RoomStatusEnum.getValueByCode(Integer.valueOf(member.getStatus())))).collect(Collectors.toList());
+        model.addAttribute("list",members);
         return "room_list";
     }
 

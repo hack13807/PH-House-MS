@@ -1,7 +1,8 @@
-package com.panghu.housemanage.service;
+package com.panghu.housemanage.service.impl;
 
 import com.panghu.housemanage.dao.MailMapper;
-import com.panghu.housemanage.pojo.MailDetail;
+import com.panghu.housemanage.pojo.po.MailDetail;
+import com.panghu.housemanage.service.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class MailServiceimpl implements MailService{
+public class MailServiceimpl implements MailService {
     @Autowired
     private JavaMailSender mailSender;
 

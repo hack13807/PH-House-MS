@@ -1,6 +1,6 @@
 package com.panghu.housemanage.controller;
 
-import com.panghu.housemanage.pojo.UserBak;
+import com.panghu.housemanage.pojo.po.UserBak;
 import com.panghu.housemanage.service.UserBakService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

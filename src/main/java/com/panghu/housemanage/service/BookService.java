@@ -1,6 +1,6 @@
 package com.panghu.housemanage.service;
 
-import com.panghu.housemanage.pojo.*;
+import com.panghu.housemanage.pojo.po.*;
 
 import java.util.List;
 

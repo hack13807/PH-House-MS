@@ -30,6 +30,7 @@ public class LoginController {
         if ( StringUtils.isEmpty(name) || StringUtils.isEmpty(pwd)){
             return "detail_user";
         }
+
         else {
             User user = User.builder().number(name).pwd(pwd).build();
             User u = userService.queryUser(user);

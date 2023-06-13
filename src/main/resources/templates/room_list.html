@@ -30,7 +30,7 @@
             <tr th:each="room: ${list}">
                 <td th:text="${room.number}"></td>
                 <td th:text="${room.status}"></td>
-                <td th:text="${room.memberId}"></td>
+                <td th:text="${room.memberName}"></td>
                 <td th:text="${room.description}"></td>
                 <td><button type="button" class="btn btn-success disabled">处理中</button></td>
             </tr>

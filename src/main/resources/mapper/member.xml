@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panghu.housemanage.dao.MemberMapper">
+
+    <select id="queryMember" resultType="com.panghu.housemanage.pojo.po.Member">
+        Select r.number, GROUP_CONCAT(m.name SEPARATOR ',')
+        from t_member m
+        left join t_room r on m.room_id = r.id
+        group by r.number;
+    </select>
+</mapper>
+<!--
+
+        Select r.number, GROUP_CONCAT(m.name SEPARATOR ',')
+        from t_member m
+        left join t_room r on m.room_id = r.id
+        group by r.number;-->

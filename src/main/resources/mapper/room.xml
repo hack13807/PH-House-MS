@@ -11,8 +11,11 @@
         </foreach>
     </insert>
 
-    <select id="queryRoom" resultType="com.panghu.housemanage.pojo.po.Room">
-        select id, number, status, member_id, description from t_room
+    <select id="queryRoom" resultType="com.panghu.housemanage.pojo.vo.RoomVo">
+        select r.id, r.number, r.status, r.description, GROUP_CONCAT(m.name SEPARATOR ',') as memberName
+        from t_room r
+        left join t_member m on m.room_id = r.id
+        group by r.id, r.number, r.status, r.description;
 <!--        <if test="">-->
 
 <!--        </if>-->

@@ -1,6 +1,6 @@
-package com.panghu.housemanage.exception;
+package com.panghu.housemanage.common.exception;
 
-import com.panghu.housemanage.enumeration.ExceptionEnum;
+import com.panghu.housemanage.common.enumeration.ExceptionEnum;
 import lombok.Data;
 
 /**

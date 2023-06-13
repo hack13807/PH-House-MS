@@ -11,7 +11,7 @@
         </foreach>
     </insert>
 
-    <select id="queryRoom" resultType="com.panghu.housemanage.pojo.Room">
+    <select id="queryRoom" resultType="com.panghu.housemanage.pojo.po.Room">
         select id, number, status, member_id, description from t_room
 <!--        <if test="">-->
 

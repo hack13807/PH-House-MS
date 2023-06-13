@@ -1,7 +1,8 @@
-package com.panghu.housemanage.service;
+package com.panghu.housemanage.service.impl;
 
 import com.panghu.housemanage.dao.RoomMapper;
-import com.panghu.housemanage.pojo.Room;
+import com.panghu.housemanage.pojo.po.Room;
+import com.panghu.housemanage.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

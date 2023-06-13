@@ -1,6 +1,6 @@
 package com.panghu.housemanage.controller;
 
-import com.panghu.housemanage.pojo.User;
+import com.panghu.housemanage.pojo.po.User;
 import com.panghu.housemanage.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;

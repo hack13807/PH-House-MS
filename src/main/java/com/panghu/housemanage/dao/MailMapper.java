@@ -1,6 +1,6 @@
 package com.panghu.housemanage.dao;
 
-import com.panghu.housemanage.pojo.MailDetail;
+import com.panghu.housemanage.pojo.po.MailDetail;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

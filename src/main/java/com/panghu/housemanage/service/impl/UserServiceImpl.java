@@ -1,12 +1,13 @@
-package com.panghu.housemanage.service;
+package com.panghu.housemanage.service.impl;
 
 import com.panghu.housemanage.dao.UserMapper;
-import com.panghu.housemanage.pojo.User;
+import com.panghu.housemanage.pojo.po.User;
+import com.panghu.housemanage.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
     @Autowired(required = false)
     UserMapper userMapper;
 

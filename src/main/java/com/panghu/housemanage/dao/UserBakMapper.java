@@ -1,6 +1,6 @@
 package com.panghu.housemanage.dao;
 
-import com.panghu.housemanage.pojo.UserBak;
+import com.panghu.housemanage.pojo.po.UserBak;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

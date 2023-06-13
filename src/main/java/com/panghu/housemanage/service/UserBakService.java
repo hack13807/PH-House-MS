@@ -1,6 +1,6 @@
 package com.panghu.housemanage.service;
 
-import com.panghu.housemanage.pojo.UserBak;
+import com.panghu.housemanage.pojo.po.UserBak;
 
 
 public interface UserBakService {

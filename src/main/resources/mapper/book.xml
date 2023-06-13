@@ -5,20 +5,20 @@
 
 <mapper namespace="com.panghu.housemanage.dao.BookMapper">
 
-    <select id="getList" resultType="com.panghu.housemanage.pojo.BookList">
+    <select id="getList" resultType="com.panghu.housemanage.pojo.po.BookList">
         select * from booklist
     </select>
 
-    <select id="getListByQuery" parameterType="String" resultType="com.panghu.housemanage.pojo.BookList">
+    <select id="getListByQuery" parameterType="String" resultType="com.panghu.housemanage.pojo.po.BookList">
         select * from booklist where bname like CONCAT('%','${query}','%')
     </select>
 
-    <select id="getListById" parameterType="int" resultType="com.panghu.housemanage.pojo.BookList">
+    <select id="getListById" parameterType="int" resultType="com.panghu.housemanage.pojo.po.BookList">
         select * from borrow
     </select>
 
     <!--拿到可以被预约的图书-->
-    <select id="getRes" parameterType="String" resultType="com.panghu.housemanage.pojo.Book">
+    <select id="getRes" parameterType="String" resultType="com.panghu.housemanage.pojo.po.Book">
         select * from book where isbn=#{isbn} and (state=0 or (state=2 and book_id not in (select reservation.book_id from reservation))) order by state
     </select>
 
@@ -26,15 +26,15 @@
         insert into reservation (user_id, book_id, deadline) values (#{user.userId}, #{book.bookId}, date_add(now(),interval 10 day))
     </insert>
 
-    <select id="getResId" resultType="com.panghu.housemanage.pojo.Reservation">
+    <select id="getResId" resultType="com.panghu.housemanage.pojo.po.Reservation">
         select * from reservation where book_id=#{book.bookId} and user_id=#{user.userId}
     </select>
 
-    <select id="getResById" resultType="com.panghu.housemanage.pojo.ReservationDetail">
+    <select id="getResById" resultType="com.panghu.housemanage.pojo.po.ReservationDetail">
         select reservation_id, bname, deadline, user_name, book_id from reservation_detail where user_id = #{user.userId};
     </select>
 
-    <select id="getBorById" resultType="com.panghu.housemanage.pojo.BorrowDetail" parameterType="com.panghu.housemanage.pojo.User">
+    <select id="getBorById" resultType="com.panghu.housemanage.pojo.po.BorrowDetail" parameterType="com.panghu.housemanage.pojo.po.User">
         select borrow_id, bname, btime, deadline, rtime from borrow_detail where user_id=#{user.userId}
     </select>
 
@@ -48,7 +48,7 @@
                               #{booklist.ptime}, #{booklist.number}, #{booklist.operator}, #{location}, #{state})
     </insert>
 
-    <select id="getResList" resultType="com.panghu.housemanage.pojo.ReservationDetail">
+    <select id="getResList" resultType="com.panghu.housemanage.pojo.po.ReservationDetail">
         select reservation_id, bname, deadline, user_name from reservation_detail
     </select>
 
@@ -62,7 +62,7 @@
         call library.return_book(#{borrowId});
     </select>
 
-    <select id="getBorList" resultType="com.panghu.housemanage.pojo.BorrowDetail">
+    <select id="getBorList" resultType="com.panghu.housemanage.pojo.po.BorrowDetail">
         select borrow_id, bname, btime, deadline, rtime, user_name from borrow_detail
     </select>
 

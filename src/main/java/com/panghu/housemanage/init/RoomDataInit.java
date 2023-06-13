@@ -1,7 +1,7 @@
 //package com.panghu.housemanage.init;
 //
 //import com.panghu.housemanage.dao.RoomMapper;
-//import com.panghu.housemanage.pojo.Room;
+//import com.panghu.housemanage.pojo.po.Room;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.stereotype.Component;
 //

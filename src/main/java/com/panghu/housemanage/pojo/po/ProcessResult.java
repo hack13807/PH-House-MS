@@ -1,4 +1,4 @@
-package com.panghu.housemanage.pojo;
+package com.panghu.housemanage.pojo.po;
 
 import lombok.Data;
 

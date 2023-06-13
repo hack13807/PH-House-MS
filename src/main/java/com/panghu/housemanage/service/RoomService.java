@@ -1,6 +1,6 @@
 package com.panghu.housemanage.service;
 
-import com.panghu.housemanage.pojo.Room;
+import com.panghu.housemanage.pojo.po.Room;
 
 import java.util.List;
 import java.util.Map;

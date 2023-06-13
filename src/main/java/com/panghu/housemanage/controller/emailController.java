@@ -1,6 +1,6 @@
 package com.panghu.housemanage.controller;
 
-import com.panghu.housemanage.pojo.ProcessResult;
+import com.panghu.housemanage.pojo.po.ProcessResult;
 import com.panghu.housemanage.service.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;

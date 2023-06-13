@@ -1,4 +1,4 @@
-package com.panghu.housemanage.enumeration;
+package com.panghu.housemanage.common.enumeration;
 
 public enum RoomStatusEnum {
     UNUSED(0,"待出租"),

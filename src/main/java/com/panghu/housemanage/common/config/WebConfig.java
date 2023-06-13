@@ -1,4 +1,4 @@
-package com.panghu.housemanage.config;
+package com.panghu.housemanage.common.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;

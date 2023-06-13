@@ -33,7 +33,7 @@ mybatis:
 
 mail:
   fromMail:
-    addr: 490864627@qq.com
+    addr:
 
 logging:
   level:

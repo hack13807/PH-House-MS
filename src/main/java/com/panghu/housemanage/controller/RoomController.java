@@ -27,12 +27,6 @@ public class RoomController {
     public String queryRoom(Model model, HttpServletRequest request){
 
         List<RoomVo> rooms = roomService.queryRoom(null);
-//        rooms.stream().map(room ->{
-//            room.setStatus(RoomStatusEnum.getValueByCode(Integer.valueOf(room.getStatus())));
-//            return room;
-//        }).collect(Collectors.toList());
-
-
         rooms.stream().map(room -> room.setStatus(RoomStatusEnum.getValueByCode(Integer.valueOf(room.getStatus())))).collect(Collectors.toList());
         model.addAttribute("list",rooms);
         return "room_list";

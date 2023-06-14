@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>房间总览</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/lib/css/homepage.css">
+    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div th:include="../static/common/headbar::headbar"></div>
+<div th:include="./detail_user::homepage"></div>
+<div class="panel panel-default" style="width: 90%;margin-left: 5%">
+    <div class="panel-heading">
+        <h3 class="panel-title" style="text-align:center">租客总览</h3>
+    </div>
+    <div class="panel-body">
+        <table class="table table-hover" style="text-align:center">
+            <thead>
+            <tr>
+                <th>姓名</th>
+                <th>手机号</th>
+                <th>身份证</th>
+                <th>状态</th>
+                <th>房间</th>
+                <th>房间描述</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="member: ${list}">
+                <td th:text="${member.memberName}"></td>
+                <td th:text="${member.phone}"></td>
+                <td th:text="${member.idCard}"></td>
+                <td th:text="${member.memberStatus}"></td>
+                <td th:text="${member.roomNo}"></td>
+                <td th:text="${member.roomDesc}"></td>
+                <td><button type="button" class="btn btn-success disabled">操作</button></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!--分页-->
+    <div class="dataTables_info" id="editable-sample_info">
+        当前第 [[${page.current}]] 页
+        总计 [[${page.pages}]] 页
+        共 [[${page.total}]] 条记录
+    </div>
+    <ul>
+        <li th:if="${page.current>1}" class="prev"><a th:href="@{/dynamic_table(pn=${(page.current)-1})}">← 前一页</a></li>
+        <li th:if="${page.current==1}" class="prev disabled"><a>← 前一页</a></li>
+        <li th:class="${num == page.current?'active':''}" class="active" th:each="num:${#numbers.sequence(1,page.pages)}">
+            <a th:href="@{/dynamic_table(pn=${num})}">[[${num}]]</a>
+        </li>
+        <li th:if="${page.current<page.pages}" class="next"><a th:href="@{/dynamic_table(pn=${(page.current)+1})}">下一页 → </a></li>
+        <li th:if="${page.current==page.pages}" class="next disabled"><a>下一页 →</a></li>
+    </ul>
+</div>
+
+</body>
+</html>

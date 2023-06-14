@@ -4,21 +4,20 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Accessors(chain = true)
 public class MemberVo {
-    private Long id;
-    private String name;
+    private Long memberId;
+    private Long roomId;
+    private String memberName;
+    private String roomNo;
     private String phone;
     private String idCard;
-    private String room;
-    private String status;
-
-    public MemberVo setStatus(String status) {
-        this.status = status;
-        return this;
-    }
+    private String memberStatus;
+    private String roomDesc;
 }

@@ -7,7 +7,7 @@ spring:
     prefix: classpath:/templates/
     suffix: .html
     encoding: UTF-8
-    mode: HTML5
+    mode: HTML
   datasource:
         name: hms
         url: jdbc:mysql://127.0.0.1:3306/hms?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
@@ -25,16 +25,55 @@ spring:
       mail.smtp.starttls.enable: true
       mail.smtp.starttls.required: true
 
-mybatis:
-  mapper-locations: classpath:mapper/*.xml
-  type-aliases-package: com.panghu.housemanage.pojo
-  configuration:
-    map-underscore-to-camel-case: true
-
 mail:
   fromMail:
     addr: 490864627@qq.com
 
-logging:
-  level:
-    cn.lightina.housemanage.dao: debug
+mybatis-plus:
+  # Mapper.xml 文件位置 Maven 多模块项目的扫描路径需以 classpath*: 开头
+  mapperLocations: classpath*:mapper/*Mapper.xml
+  #  #MyBaits 别名包扫描路径，通过该属性可以给包中的类注册别名 实体扫描，多个package用逗号或者分号分隔
+  #  typeAliasesPackage: com.vanhr.user.dao.entity
+  #  #通过父类（或实现接口）的方式来限定扫描实体
+  #  typeAliasesSuperType: com.vanhr.user.dao.entity.baseEntity
+  #  #枚举类 扫描路径 如果配置了该属性，会将路径下的枚举类进行注入，让实体类字段能够简单快捷的使用枚举属性
+  #  typeEnumsPackage: com.vanhr.user.dao.enums
+  #  #启动时是否检查 MyBatis XML 文件的存在，默认不检查 仅限spring boot 使用
+  #  checkConfigLocation : true
+  #  #通过该属性可指定 MyBatis 的执行器，MyBatis 的执行器总共有三种：
+  #  # ExecutorType.SIMPLE：该执行器类型不做特殊的事情，为每个语句的执行创建一个新的预处理语句（PreparedStatement）
+  #  # ExecutorType.REUSE：该执行器类型会复用预处理语句（PreparedStatement）
+  #  # ExecutorType.BATCH：该执行器类型会批量执行所有的更新语句
+  #  executorType: SIMPLE
+  #  # 指定外部化 MyBatis Properties 配置，通过该配置可以抽离配置，实现不同环境的配置部署
+  #  configurationProperties:
+  configuration: # MyBatis 原生支持的配置
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    logging:
+      level:
+        com:
+          baomidou:
+            mybatisplus=DEBUG:
+    # 是否开启自动驼峰命名规则（camel case）映射
+    mapUnderscoreToCamelCase: true
+    # 枚举处理类,如果配置了该属性,枚举将统一使用指定处理器进行处理
+    #   org.apache.ibatis.type.EnumTypeHandler : 存储枚举的名称
+    #   org.apache.ibatis.type.EnumOrdinalTypeHandler : 存储枚举的索引
+    #   com.baomidou.mybatisplus.extension.handlers.MybatisEnumTypeHandler : 枚举类需要实现IEnum接口或字段标记@EnumValue注解.(3.1.2以下版本为EnumTypeHandler)
+    #    defaultEnumTypeHandler: com.baomidou.mybatisplus.extension.handlers.MybatisEnumTypeHandler
+    # 配置JdbcTypeForNull, oracle数据库必须配置
+#    jdbc-type-for-null: null
+  global-config: # 全局策略配置
+    # 是否控制台 print mybatis-plus 的 LOGO
+    banner: false
+    db-config:
+      # id类型
+      id-type: auto
+      # 表名是否使用下划线命名，默认数据库表使用下划线命名
+      table-underline: true
+      #是否开启大写命名，默认不开启
+#      capital-mode: false
+#      #逻辑已删除值,(逻辑删除下有效) 需要注入逻辑策略LogicSqlInjector 以@Bean方式注入
+#      logic-not-delete-value: 0
+#      #逻辑未删除值,(逻辑删除下有效)
+#      logic-delete-value: 1

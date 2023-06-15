@@ -1,0 +1,11 @@
+.form-condition {
+    height: 35px;
+    padding: 5px;
+    margin: 0 auto;
+    margin-right: 10px;
+}
+.div-condition {
+    float:left;
+    padding: 10px;
+    padding-left: 20px;
+}

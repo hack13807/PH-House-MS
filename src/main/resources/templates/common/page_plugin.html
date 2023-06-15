@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<div class="pagination_3I9AM" th:fragment="pagination">
+
+    <!--点击首页会跳转到第一页，并且首页禁用-->
+    <th:block th:if="${page.current==1}">
+        <a class="paginationItem_M4KH- paginationItemDisable">首页</a></li>
+    </th:block>
+
+    <th:block th:if="${page.current>1}">
+        <a class="paginationItem_M4KH-"
+           th:href="@{/search(question=${param.question},pn=1)}"
+           th:text="首页">
+        </a>
+    </th:block>
+
+    <!--上一页-->
+    <th:block th:if="${page.current>1}">
+        <a class="paginationItem_M4KH-"
+           th:href="@{/search(question=${param.question},pn=${page.getCurrent()-1})}">
+            <span>&laquo;</span>
+        </a>
+    </th:block>
+
+    <th:block th:if="${page.current - 3 >= 1}">
+        <a class="paginationItem_M4KH-" th:href="@{/search(question=${param.question},pn=${page.current}-3)}" th:text="${page.current -3}"></a>
+    </th:block>
+    <th:block th:if="${page.current - 2 >= 1}">
+        <a class="paginationItem_M4KH-" th:href="@{/search(question=${param.question},pn=${page.current}-2)}" th:text="${page.current -2}"></a>
+    </th:block>
+    <th:block th:if="${page.current - 1 >= 1}">
+        <a class="paginationItem_M4KH-"  th:href="@{/search(question=${param.question},pn=${page.current}-1)}" th:text="${page.current -1}"></a>
+    </th:block>
+
+    <th:block>
+        <a class="paginationItem_M4KH- paginationItemActive_3TLeb"  th:text="${page.current}"></a>
+    </th:block>
+
+    <th:block th:if="${page.current+1 <=page.getPages()}">
+        <a class="paginationItem_M4KH-" th:href="@{/search(question=${param.question},pn=${page.current}+1)}" th:text="${page.current +1}"></a>
+    </th:block>
+    <th:block th:if="${page.current+2 <=page.getPages()}">
+        <a class="paginationItem_M4KH-" th:href="@{/search(question=${param.question},pn=${page.current}+2)}" th:text="${page.current +2}"></a>
+    </th:block>
+
+    <th:block th:if="${page.current+3 <=page.getPages()}">
+        <a class="paginationItem_M4KH-" th:href="@{/search(question=${param.question},pn=${page.current}+3)}" th:text="${page.current +3}"></a>
+    </th:block>
+
+
+    <!--下一页-->
+    <th:block th:if="${page.getPages() > page.getCurrent()}">
+        <a class="paginationItem_M4KH-"
+           th:href="@{/search(question=${param.question},pn=${page.current+1})}">
+            <span aria-hidden="true">&raquo;</span>
+        </a>
+    </th:block>
+
+    <!--点击末页会跳转到最后一页，并且最后一页禁用-->
+    <th:block th:if="${page.current<page.pages}">
+        <a class="paginationItem_M4KH-"
+           th:href="@{/search(question=${param.question},pn=${page.pages})}"
+           th:text="末页">
+        </a>
+    </th:block>
+
+    <th:block th:if="${page.current==page.pages}">
+        <a class="paginationItem_M4KH- paginationItemDisable" th:text="末页"></a>
+    </th:block>
+
+    <!--分页-->
+    <div class="dataTables_info" id="editable-sample_info">
+        当前第 [[${page.current}]] 页
+        总计 [[${page.pages}]] 页
+        共 [[${page.total}]] 条记录
+    </div>
+    <ul>
+        <li th:if="${page.current>1}" class="prev"><a th:href="@{/member/search(pn=${(page.current)-1})}">← 前一页</a></li>
+        <li th:if="${page.current==1}" class="prev disabled"><a>← 前一页</a></li>
+        <li th:class="${num == page.current?'active':''}" class="active" th:each="num:${#numbers.sequence(1,page.pages)}">
+            <a th:href="@{/member/search(pn=${num},room=$)}">[[${num}]]</a>
+        </li>
+        <li th:if="${page.current<page.pages}" class="next"><a th:href="@{/member/search(pn=${(page.current)+1})}">下一页 → </a></li>
+        <li th:if="${page.current==page.pages}" class="next disabled"><a>下一页 →</a></li>
+    </ul>
+</div>

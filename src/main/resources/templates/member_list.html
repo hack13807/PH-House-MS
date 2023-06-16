@@ -7,11 +7,9 @@
     <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/lib/css/homepage.css">
     <link rel="stylesheet" href="/static/lib/css/controller.css">
-    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.css">
     <script src="../static/lib/js/list.js"></script>
     <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.js"></script>
 </head>
 <body>
 <div th:insert="~{../static/common/headbar::headbar}"></div>
@@ -33,11 +31,11 @@
                       th:value="${condition.roomNo}==null? '':${condition.roomNo}"/>
         &nbsp;&nbsp;
         <input type="button" value="搜索" class="btn btn-success" id="selectClassRoom" th:onclick="|searchMember();|"/>&nbsp;
-        <input type="button" class="btn btn-danger" value="删除" id="dropClassRoom" th:onclick="|deleteRow();|"/>
+        <input type="button" class="btn btn-danger" value="删除" id="dropClassRoom"/>
 
     </div>
     <div class="panel-body">
-        <!--<table class="table table-hover" style="text-align:center">
+        <table class="table table-hover" style="text-align:center">
             <thead>
             <tr>
                 <th>姓名</th>
@@ -59,76 +57,98 @@
                 <td><button type="button" class="btn btn-success disabled">操作</button></td>
             </tr>
             </tbody>
-        </table>-->
-      <table id="table">
-      </table>
+        </table>
+    </div>
+
+
+    <input type="text" class="btn btn-danger" id="pageNum" th:value="${page.current}"/>
+    <input type="text" class="btn btn-danger" id="pages" th:value="${page.pages}"/>
+    <input type="text" class="btn btn-danger" id="total" th:value="${page.total}"/>
+    <div class="pagination_3I9AM" th:fragment="pagination">
+
+        <!--点击首页会跳转到第一页，并且首页禁用-->
+        <th:block th:if="${page.current==1}">
+            <a class="paginationItem_M4KH- paginationItemDisable">首页</a></li>
+        </th:block>
+
+        <th:block th:if="${page.current>1}">
+            <a class="paginationItem_M4KH-"
+               th:href="@{/member/search(question=${param.question},pn=1)}"
+               th:text="首页">
+            </a>
+        </th:block>
+
+        <!--上一页-->
+        <th:block th:if="${page.current>1}">
+            <a class="paginationItem_M4KH-"
+               th:href="@{/member/search(question=${param.question},pn=${page.getCurrent()-1})}">
+                <span>&laquo;</span>
+            </a>
+        </th:block>
+
+        <th:block th:if="${page.current - 3 >= 1}">
+            <a class="paginationItem_M4KH-" th:href="@{/search(question=${param.question},pn=${page.current}-3)}" th:text="${page.current -3}"></a>
+        </th:block>
+        <th:block th:if="${page.current - 2 >= 1}">
+            <a class="paginationItem_M4KH-" th:href="@{/search(question=${param.question},pn=${page.current}-2)}" th:text="${page.current -2}"></a>
+        </th:block>
+        <th:block th:if="${page.current - 1 >= 1}">
+            <a class="paginationItem_M4KH-"  th:href="@{/search(question=${param.question},pn=${page.current}-1)}" th:text="${page.current -1}"></a>
+        </th:block>
+
+        <th:block>
+            <a class="paginationItem_M4KH- paginationItemActive_3TLeb"  th:text="${page.current}"></a>
+        </th:block>
+
+        <th:block th:if="${page.current+1 <=page.getPages()}">
+            <a class="paginationItem_M4KH-" th:href="@{/search(question=${param.question},pn=${page.current}+1)}" th:text="${page.current +1}"></a>
+        </th:block>
+        <th:block th:if="${page.current+2 <=page.getPages()}">
+            <a class="paginationItem_M4KH-" th:href="@{/search(question=${param.question},pn=${page.current}+2)}" th:text="${page.current +2}"></a>
+        </th:block>
+
+        <th:block th:if="${page.current+3 <=page.getPages()}">
+            <a class="paginationItem_M4KH-" th:href="@{/search(question=${param.question},pn=${page.current}+3)}" th:text="${page.current +3}"></a>
+        </th:block>
+
+
+        <!--下一页-->
+        <th:block th:if="${page.getPages() > page.getCurrent()}">
+            <a class="paginationItem_M4KH-"
+               th:href="@{/search(question=${param.question},pn=${page.current+1})}">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </th:block>
+
+        <!--点击末页会跳转到最后一页，并且最后一页禁用-->
+        <th:block th:if="${page.current<page.pages}">
+            <a class="paginationItem_M4KH-"
+               th:href="@{/search(question=${param.question},pn=${page.pages})}"
+               th:text="末页">
+            </a>
+        </th:block>
+
+        <th:block th:if="${page.current==page.pages}">
+            <a class="paginationItem_M4KH- paginationItemDisable" th:text="末页"></a>
+        </th:block>
+
+        <!--分页-->
+        <div class="dataTables_info" id="editable-sample_info">
+            当前第 [[${page.current}]] 页
+            总计 [[${page.pages}]] 页
+            共 [[${page.total}]] 条记录
+        </div>
+        <ul>
+            <li th:if="${page.current>1}" class="prev"><a th:href="|searchMember();|">← 前一页</a></li>
+            <li th:if="${page.current==1}" class="prev disabled"><a>← 前一页</a></li>
+            <li th:class="${num == page.current?'active':''}" class="active" th:each="num:${#numbers.sequence(1,page.pages)}">
+                <a th:href="@{/member/search(pn=${num},memberName=${memberSearch},roomNo=${roomSearch})}">[[${num}]]</a>
+            </li>
+            <li th:if="${page.current<page.pages}" class="next"><a th:onclick="|searchMember();|">下一页 → </a></li>
+            <li th:if="${page.current==page.pages}" class="next disabled"><a>下一页 →</a></li>
+        </ul>
     </div>
 </div>
-<script>
-  $('#table').bootstrapTable({
-    url: '/member/data',
-    method: 'GET',
-    pageNumber: 1,
-    uniqueId: "memberId",
-    pagination: true,
-    sidePagination: "server",
-    pageSize: 10,                       //每页的记录行数（*）
-    pageList: [10, 25, 50, 100],
-    queryParams: function(params) {
-      return {
-        pageNumber: params.offset,
-        pageSize: params.limit,
-        memberSearch: $("#memberSearch").val(),
-        roomSearch:  $("#roomSearch").val()
-      }
-    },
-    responseHandler: function(res) {
-      return {total: 12, rows: res.data}
-    },
-    columns: [{
-      checkbox: true,
-      visible: true
-    },{
-      field: 'memberId',
-      title: 'memberId'
-    }, {
-      field: 'memberName',
-      title: 'memberName'
-    }, {
-      field: 'roomId',
-      title: 'roomId'
-    },{
-      title: "操作",
-      formatter: function (row){
-        return "<a >发送密码</a>"
-      }
-    }]
-  });
 
-  function searchMember(){
-    $("#table").bootstrapTable('refresh');
-  }
-
-  function deleteRow(){
-    //$("#table").bootstrapTable('refresh');
-   var rows = $("#table").bootstrapTable('getSelections');
-   if (!rows) {
-     return
-   }
-    for (var i = 0; i < rows.length; i++) {
-      var id = rows[i].memberId;
-      console.log(id);
-      $.ajax("/member/deleteData", {
-          type: "get",
-          dataType: "json",
-          data:{
-            id: id
-          }
-      })
-    }
-
-  }
-
-</script>
 </body>
 </html>

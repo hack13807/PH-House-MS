@@ -66,10 +66,8 @@ public class MemberController {
         Map<String, Object> map = new HashMap<>();
         map.put("code", "0000");
         map.put("data", list);
-
         map.put("total", "12");
         map.put("rows", list);
-
         return map;
     }
 

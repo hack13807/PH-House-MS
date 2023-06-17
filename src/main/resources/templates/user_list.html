@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>用户管理</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/lib/css/homepage.css">
+    <link rel="stylesheet" href="/static/lib/css/controller.css">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.css">
+    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.js"></script>
+</head>
+<body>
+<div th:include="../static/common/headbar::headbar"></div>
+<div th:include="./detail_user::homepage"></div>
+<div style="padding: 20px 550px 10px">
+    <div class="panel-heading">
+        <h3 class="panel-title" style="text-align:center">用户总览</h3>
+    </div>
+    <!--条件过滤栏-->
+    <div class="div-condition">
+        <select name="select" id="userStatus" class="form-condition">
+            <option value="0">启用</option>
+            <option value="1">禁用</option>
+        </select>
+        <input name="userName" id="userName" class="form-condition" placeholder="用户姓名"/>
+        <input type="button" value="搜索" class="btn btn-success" id="selectClassRoom" th:onclick="|searchUser();|"/>&nbsp;
+        <input type="button" class="btn btn-danger" value="删除" id="dropClassRoom" th:onclick="|deleteUser();|"/>
+    </div>
+
+    <div class="panel-body">
+        <table id="table">
+        </table>
+    </div>
+</div>
+
+<script>
+    $('#table').bootstrapTable({
+        url: '/user/detail',
+        method: 'GET',
+        pageNumber: 1,
+        uniqueId: "userId",
+        pagination: true,               //是否显示分页（*）
+        sidePagination: "server",       //分页方式：client客户端分页，server服务端分页（*）
+        pageSize: 10,                       //每页的记录行数（*）
+        pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+        queryParams: function (params) {    //传递参数（*）
+            return {
+                offset: params.offset, //数据取值起始
+                limit: params.limit, //数据条数限制
+                userStatus: document.getElementById("userStatus").value,
+                userName: $("#userName").val()
+            }
+        },
+
+        columns: [{
+            checkbox: true,
+            visible: true
+        }, {
+            field: 'userId',
+            title: '用户ID',
+            visible: false
+        }, {
+            field: 'userName',
+            title: '用户名',
+            // visible: false
+        }, {
+            field: 'userRole',
+            title: '用户角色',
+            // visible: false
+        }, {
+            field: 'userStatus',
+            title: '用户状态',
+            // visible: false
+        }, {
+            title: "操作",
+            formatter: function (row) {
+                return "<a>修改</a>"
+            }
+        }]
+    });
+
+    function searchUser() {
+        $("#table").bootstrapTable('refresh');
+    }
+</script>
+
+</body>
+</html>

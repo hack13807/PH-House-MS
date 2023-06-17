@@ -21,7 +21,7 @@ public class MemberVo {
     private Long roomId;
     private String memberName;
     private String roomNo;
-    private String phone;
+    private String tel;
     private String idCard;
     private String memberStatus;
     private String roomDesc;

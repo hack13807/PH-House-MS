@@ -48,7 +48,7 @@ mybatis-plus:
   #  # 指定外部化 MyBatis Properties 配置，通过该配置可以抽离配置，实现不同环境的配置部署
   #  configurationProperties:
   configuration: # MyBatis 原生支持的配置
-#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     logging:
       level:
         com:

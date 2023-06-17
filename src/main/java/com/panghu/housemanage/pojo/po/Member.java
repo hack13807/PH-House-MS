@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class Member {
     private Long id;
     private String name;
-    private String phone;
+    private String tel;
     private String idCard;
     private Long roomId;
     private String status;

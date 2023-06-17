@@ -14,7 +14,6 @@ import java.util.Map;
 public interface MemberMapper extends BaseMapper<MemberVo> {
     List<MemberVo> queryMember(Map<String, Object> params);
 
-    int insertBatch(List<Member> list);
 
     Page<MemberVo> pageQueryMember(Page<MemberVo> page, @Param("params")Map<String, Object> params);
 }

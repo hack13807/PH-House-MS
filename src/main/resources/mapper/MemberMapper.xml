@@ -4,20 +4,26 @@
 <mapper namespace="com.panghu.housemanage.dao.MemberMapper">
 
     <select id="queryMember" resultType="com.panghu.housemanage.pojo.vo.MemberVo">
-        Select m.id as memberId,m.name as memberName,m.phone,m.idcard,m.status as memberStatus,r.id as roomId,r.number as roomNo,r.description as roomDesc
+        Select m.id as memberId,m.name as memberName,m.tel,m.idcard,m.status as memberStatus,r.id as roomId,r.number as roomNo,r.description as roomDesc
         from t_member m
         left join t_room r on m.room_id = r.id
     </select>
 
-    <select id="pageQueryMember" resultType="com.panghu.housemanage.pojo.vo.MemberVo">
-        Select m.id as memberId,m.name as memberName,m.phone,m.idcard,m.status as memberStatus,r.id as roomId,r.number as roomNo,r.description as roomDesc
+    <select id="pageQueryMember" parameterType="java.util.HashMap" resultType="com.panghu.housemanage.pojo.vo.MemberVo">
+        Select m.id as memberId,m.name as memberName,m.tel,m.idcard,m.status as memberStatus,r.id as roomId,r.number as roomNo,r.description as roomDesc
         from t_member m
         left join t_room r on m.room_id = r.id
+        <where>
+            1 = 1
+            <if test=" params.memberName != null and params.memberName != '' ">
+                and m.name = #{params.memberName}
+            </if>
+            <if test=" params.roomNo != null and params.roomNo != '' ">
+                and r.number = #{params.roomNo}
+            </if>
+            <if test=" params.memberStatus != null and params.memberStatus != '' and params.memberStatus != '-1' ">
+                and m.status = #{params.memberStatus}
+            </if>
+        </where>
     </select>
 </mapper>
-<!--
-
-        Select r.number, GROUP_CONCAT(m.name SEPARATOR ',')
-        from t_member m
-        left join t_room r on m.room_id = r.id
-        group by r.number;-->

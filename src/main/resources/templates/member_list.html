@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="/static/lib/css/homepage.css">
     <link rel="stylesheet" href="/static/lib/css/controller.css">
     <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.css">
-    <script src="../static/lib/js/list.js"></script>
     <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.js"></script>
@@ -22,112 +21,119 @@
     </div>
     <!--条件过滤栏-->
     <div class="div-condition">
-        <select name="select" id="memberStatus" class="form-condition" >
+        <select name="select" id="memberStatus" class="form-condition">
             <option value="-1">全部</option>
             <option value="0">租住中</option>
             <option value="1">已退租</option>
         </select>
-        <input name="memberSearch" id="memberSearch" class="form-condition" placeholder="租客姓名"
-                    th:value="${condition.memberName}==null? '':${condition.memberName}"/>
-        <input name="roomSearch" id="roomSearch" class="form-condition" placeholder="房间号"
-                      th:value="${condition.roomNo}==null? '':${condition.roomNo}"/>
+        <input name="memberSearch" id="memberSearch" class="form-condition" placeholder="租客姓名"/>
+        <input name="roomSearch" id="roomSearch" class="form-condition" placeholder="房间号"/>
         &nbsp;&nbsp;
         <input type="button" value="搜索" class="btn btn-success" id="selectClassRoom" th:onclick="|searchMember();|"/>&nbsp;
-        <input type="button" class="btn btn-danger" value="删除" id="dropClassRoom" th:onclick="|deleteRow();|"/>
+        <input type="button" class="btn btn-danger" value="删除" id="dropClassRoom" th:onclick="|deleteRows();|"/>
 
     </div>
     <div class="panel-body">
-        <!--<table class="table table-hover" style="text-align:center">
-            <thead>
-            <tr>
-                <th>姓名</th>
-                <th>手机号</th>
-                <th>身份证</th>
-                <th>状态</th>
-                <th>房间</th>
-                <th>房间描述</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="member: ${page.records}">
-                <td th:text="${member.memberName}"></td>
-                <td th:text="${member.phone}"></td>
-                <td th:text="${member.idCard}"></td>
-                <td th:text="${member.memberStatus}"></td>
-                <td th:text="${member.roomNo}"></td>
-                <td th:text="${member.roomDesc}"></td>
-                <td><button type="button" class="btn btn-success disabled">操作</button></td>
-            </tr>
-            </tbody>
-        </table>-->
-      <table id="table">
-      </table>
+        <table id="table">
+        </table>
     </div>
 </div>
 <script>
-  $('#table').bootstrapTable({
-    url: '/member/data',
-    method: 'GET',
-    pageNumber: 1,
-    uniqueId: "memberId",
-    pagination: true,
-    sidePagination: "server",
-    pageSize: 10,                       //每页的记录行数（*）
-    pageList: [10, 25, 50, 100],
-    queryParams: function(params) {
-      return {
-        pageNumber: params.offset,
-        pageSize: params.limit,
-        memberSearch: $("#memberSearch").val(),
-        roomSearch:  $("#roomSearch").val()
-      }
-    },
-    responseHandler: function(res) {
-      return {total: 12, rows: res.data}
-    },
-    columns: [{
-      checkbox: true,
-      visible: true
-    },{
-      field: 'memberId',
-      title: 'memberId'
-    }, {
-      field: 'memberName',
-      title: 'memberName'
-    }, {
-      field: 'roomId',
-      title: 'roomId'
-    },{
-      title: "操作",
-      formatter: function (row){
-        return "<a >发送密码</a>"
-      }
-    }]
-  });
+    $('#table').bootstrapTable({
+        url: '/member/data',
+        method: 'GET',
+        pageNumber: 1,                  //初始化加载第一页，默认第一页
+        uniqueId: "memberId",           // 表格唯一键
+        pagination: true,               //是否显示分页（*）
+        sidePagination: "server",       //分页方式：client客户端分页，server服务端分页（*）
+        pageSize: 10,                       //每页的记录行数（*）
+        pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+        queryParams: function (params) {    //传递参数（*）
+            return {
+                offset: params.offset,
+                limit: params.limit,
+                memberStatus: document.getElementById("memberStatus").value,
+                memberSearch: $("#memberSearch").val(),
+                roomSearch: $("#roomSearch").val()
+            }
+        },
+        responseHandler: function (res) {
+            return {total: res.total, rows: res.rows}
+        },
+        columns: [{
+            checkbox: true,
+            visible: true
+        }, {
+            field: 'memberId',
+            title: '租客ID',
+            visible: false
+        }, {
+            field: 'roomId',
+            title: '房间ID',
+            // visible: false
+        }, {
+            field: 'roomNo',
+            title: '房间号',
+            // visible: false
+        }, {
+            field: 'memberName',
+            title: '租客姓名'
+        }, {
+            field: 'tel',
+            title: '手机号'
+        }, {
+            field: 'idCard',
+            title: '身份证'
+        }, {
+            field: 'memberStatus',
+            title: '租住状态'
+        }, {
+            field: 'roomDesc',
+            title: '房间描述'
+        }, {
+            title: "操作",
+            formatter: function (row) {
+                return "<a>修改</a>"
+            }
+        }],
+        //自定义分页字符串显示为中文
+        formatShowingRows:function(pageFrom, pageTo, totalRows)
+        {
+            return "第"+pageFrom+"到"+pageTo+"行，共"+totalRows+"条 ";
+        },
+        //自定义分页字符串显示为中文
+        formatRecordsPerPage:function(pageNumber)
+        {
+            return "   "+pageNumber+' 行每页';
+        }
+    });
 
-  function searchMember(){
-    $("#table").bootstrapTable('refresh');
-  }
-
-  function deleteRow(){
-    //$("#table").bootstrapTable('refresh');
-   var rows = $("#table").bootstrapTable('getSelections');
-   if (!rows) {
-     return
-   }
-    for (var i = 0; i < rows.length; i++) {
-      var id = rows[i].memberId;
-      console.log(id);
-      $.ajax("/member/deleteData", {
-          type: "get",
-          dataType: "json",
-          data:{
-            id: id
-          }
-      })
+    function searchMember() {
+        $("#table").bootstrapTable('refresh');
     }
 
-  }
+    function deleteRows() {
+        var rows = $("#table").bootstrapTable('getSelections');
+        if (!rows) {
+            return
+        }
+        var arr=[];
+        $.each(rows,function (i,e) {
+            arr.push(e.memberId);
+        });
+        // for (var i = 0; i < rows.length; i++) {
+        //     var id = rows[i].memberId;
+        //     console.log(id);
+        // }
+        $.ajax("/member/deleteData", {
+            type: "get",
+            dataType: "json",
+            data: {
+                ids: arr
+            }
+        })
+    }
+
 
 </script>
 </body>

@@ -21,3 +21,16 @@ CREATE TABLE `t_room`
     PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 175 CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
 
+DROP TABLE IF EXISTS `t_user`;
+CREATE TABLE `t_user`
+(
+    `id`      bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+    `number`  varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NULL DEFAULT NULL,
+    `name`    varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NULL DEFAULT NULL,
+    `phone`   varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NULL DEFAULT NULL,
+    `pwd`     varchar(20) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NULL DEFAULT NULL,
+    `role_id` bigint NULL DEFAULT NULL COMMENT '关联t_role表',
+    `status`  tinyint NULL DEFAULT NULL COMMENT '0：正常  1：禁用',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_unicode_ci ROW_FORMAT = Dynamic;
+

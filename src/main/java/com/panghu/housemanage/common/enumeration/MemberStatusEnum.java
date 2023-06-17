@@ -1,31 +1,34 @@
 package com.panghu.housemanage.common.enumeration;
 
-public enum MemberStatusEnum {
+import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.baomidou.mybatisplus.annotation.IEnum;
+import com.fasterxml.jackson.annotation.JsonValue;
+
+public enum MemberStatusEnum implements IEnum<Integer> {
     RENTING(0,"租住中"),
     SURRENDER(1,"已退租");
 
-    MemberStatusEnum(int code , String value){
-        this.code = code ;
+    @EnumValue
+    private int value;
+
+    @JsonValue
+    private String desc;
+
+    MemberStatusEnum(int value , String desc){
         this.value = value ;
+        this.desc = desc ;
     }
 
-    private int code;
-    private String value;
-
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
+    public void setValue(int value) {
         this.value = value;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 
     /**
@@ -36,24 +39,29 @@ public enum MemberStatusEnum {
     public static String getValueByCode(int code){
 
         for(MemberStatusEnum typeEnum: MemberStatusEnum.values()){
-            if(typeEnum.getCode() == code){
-                return typeEnum.getValue();
+            if(typeEnum.getValue() == code){
+                return typeEnum.getDesc();
             }
         }
         return "";
     }
 
     /**
-     * 通过code获取实例
-     * @param code
+     * 通过value获取实例
+     * @param value
      * @return
      */
-    public static MemberStatusEnum getTypeEnumBytypeId(int code){
+    public static MemberStatusEnum getTypeEnumBytypeId(int value){
         for(MemberStatusEnum topType : values()){
-            if(topType.getCode() == code){
+            if(topType.getValue() == value){
                 return topType;
             }
         }
         return null;
+    }
+
+    @Override
+    public Integer getValue() {
+        return value;
     }
 }

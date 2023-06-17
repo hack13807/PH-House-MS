@@ -2,27 +2,32 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.panghu.housemanage.dao.MemberMapper">
+    <resultMap id="memberPoMap" type="com.panghu.housemanage.pojo.vo.MemberVo" >
+        <id column="memberId" property="memberId"/>
+        <result column="memberStatus" property="memberStatus" typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
+        <result column="memberName" property="memberName"/>
+        <result column="tel" property="tel"/>
+        <result column="idcard" property="idCard"/>
+        <result column="roomId" property="roomId"/>
+        <result column="roomNo" property="roomNo"/>
+        <result column="roomDesc" property="roomDesc"/>
+    </resultMap>
 
-    <select id="queryMember" resultType="com.panghu.housemanage.pojo.vo.MemberVo">
-        Select m.id as memberId,m.name as memberName,m.tel,m.idcard,m.status as memberStatus,r.id as roomId,r.number as roomNo,r.description as roomDesc
-        from t_member m
-        left join t_room r on m.room_id = r.id
-    </select>
 
-    <select id="pageQueryMember" parameterType="java.util.HashMap" resultType="com.panghu.housemanage.pojo.vo.MemberVo">
+    <select id="pageQueryMember" parameterType="java.util.HashMap" resultMap="memberPoMap">
         Select m.id as memberId,m.name as memberName,m.tel,m.idcard,m.status as memberStatus,r.id as roomId,r.number as roomNo,r.description as roomDesc
         from t_member m
         left join t_room r on m.room_id = r.id
         <where>
             1 = 1
-            <if test=" params.memberName != null and params.memberName != '' ">
-                and m.name = #{params.memberName}
+            <if test=" memberVo.memberName != null and memberVo.memberName != '' ">
+                and m.name = #{memberVo.memberName}
             </if>
-            <if test=" params.roomNo != null and params.roomNo != '' ">
-                and r.number = #{params.roomNo}
+            <if test=" memberVo.roomNo != null and memberVo.roomNo != '' ">
+                and r.number = #{memberVo.roomNo}
             </if>
-            <if test=" params.memberStatus != null and params.memberStatus != '' and params.memberStatus != '-1' ">
-                and m.status = #{params.memberStatus}
+            <if test=" memberVo.memberStatus != null and memberVo.memberStatus != '' and memberVo.memberStatus != '-1' ">
+                and m.status = #{memberVo.memberStatus}
             </if>
         </where>
     </select>

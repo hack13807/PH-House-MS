@@ -3,7 +3,7 @@ package com.panghu.housemanage.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.panghu.housemanage.common.enumeration.UserStatusEnum;
-import com.panghu.housemanage.common.util.PageParamTransUtil;
+import com.panghu.housemanage.common.util.RequestHandleUtil;
 import com.panghu.housemanage.pojo.vo.UserVo;
 import com.panghu.housemanage.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,7 +31,7 @@ public class UserController {
     @RequestMapping("/detail")
     @ResponseBody
     public Map<String, Object> queryUser(HttpServletRequest request) {
-        Page<UserVo> page = PageParamTransUtil.getPage(request);
+        Page<UserVo> page = RequestHandleUtil.getPage(null);
         Map<String, Object> param = new HashMap<>();
         param.put("userStatus", request.getParameter("userStatus"));
         param.put("userName", request.getParameter("userName"));

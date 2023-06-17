@@ -2,20 +2,16 @@ package com.panghu.housemanage.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.panghu.housemanage.common.enumeration.MemberStatusEnum;
-import com.panghu.housemanage.common.util.PageParamTransUtil;
-import com.panghu.housemanage.pojo.condition.MemberCondition;
+import com.panghu.housemanage.common.util.RequestHandleUtil;
+import com.panghu.housemanage.pojo.po.MemberPo;
 import com.panghu.housemanage.pojo.vo.MemberVo;
 import com.panghu.housemanage.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 房间管理Controller
@@ -26,8 +22,6 @@ public class MemberController {
     @Autowired
     MemberService memberService;
 
-    private static final int pageNum = 3;
-
     @GetMapping
     public String search(HttpServletRequest request){
         return "member_list";
@@ -35,18 +29,13 @@ public class MemberController {
 
     @RequestMapping("/data")
     @ResponseBody
-    public Map<String, Object>getData(HttpServletRequest request) {
-        Page<MemberVo> page = PageParamTransUtil.getPage(request);
-        Map<String, Object> params = new HashMap<>();
-        params.put("memberStatus", request.getParameter("memberStatus"));
-        params.put("memberName", request.getParameter("memberSearch"));
-        params.put("roomNo", request.getParameter("roomSearch"));
-        IPage<MemberVo> pageResult = memberService.pageQueryMember(page, params);
-        List<MemberVo> rows = pageResult.getRecords().stream().map(member -> member.setMemberStatus(MemberStatusEnum.getValueByCode(Integer.parseInt(member.getMemberStatus())))).toList();
-        Map<String, Object> map = new HashMap<>();
-        map.put("total", pageResult.getTotal());
-        map.put("rows", rows);
-        return map;
+    public Map<String, Object> getData(@RequestBody MemberPo memberPo) {
+        // 通过前段传过来的po实体构建分页对象page
+        Page<MemberVo> page = RequestHandleUtil.getPage(memberPo);
+        // 把分页对象page和查询实体po传到service层，查询结果返回封装成Page对象
+        IPage<MemberVo> pageResult = memberService.pageQueryMember(page, memberPo);
+        // 获取查询总数和记录，构建返回前端的Map对象
+        return RequestHandleUtil.buildResultMap(pageResult);
     }
 
     @RequestMapping("/deleteData")

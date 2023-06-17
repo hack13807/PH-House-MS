@@ -1,8 +1,5 @@
-package com.panghu.housemanage.pojo.vo;
+package com.panghu.housemanage.pojo.po;
 
-import com.baomidou.mybatisplus.annotation.EnumValue;
-import com.panghu.housemanage.common.enumeration.MemberStatusEnum;
-import com.panghu.housemanage.pojo.po.PHBasePo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,14 +11,13 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-public class MemberVo extends PHBaseVo {
+public class MemberPo extends PHBasePo{
     private Long memberId;
     private Long roomId;
     private String memberName;
     private String roomNo;
     private String tel;
     private String idCard;
-    @EnumValue
-    private MemberStatusEnum memberStatus;
+    private String memberStatus;
     private String roomDesc;
 }

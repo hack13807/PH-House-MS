@@ -4,6 +4,22 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.panghu.housemanage.dao.UserMapper">
     <select id="queryUser" resultType="com.panghu.housemanage.pojo.po.User">
-        select * from t_user where number = #{user.number} and pwd = #{user.pwd};
+        select *
+        from t_user
+        where number = #{user.number}
+          and pwd = #{user.pwd};
+    </select>
+
+    <select id="listUser" resultType="com.panghu.housemanage.pojo.vo.UserVo">
+        select id as userId,number as userNumber,name as userName,role_id as userRole,status as userStatus from t_user
+        <where>
+            1 = 1
+            <if test=" params.userName != null and params.userName != '' ">
+                and name = #{params.userName}
+            </if>
+            <if test=" params.userStatus != null and params.userStatus != '' ">
+                and status = #{params.userStatus}
+            </if>
+        </where>
     </select>
 </mapper>

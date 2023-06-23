@@ -9,6 +9,8 @@ import com.panghu.housemanage.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+
 @Service
 public class MemberServiceImpl implements MemberService {
     @Autowired
@@ -17,6 +19,11 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public IPage<MemberVo> pageQueryMember(Page<MemberVo> page, PHBasePo po) {
         return memberMapper.pageQueryMember(page, po);
+    }
+
+    @Override
+    public int batchDelete(String[] ids) {
+        return memberMapper.deleteBatchIds(Arrays.asList(ids));
     }
 
 }

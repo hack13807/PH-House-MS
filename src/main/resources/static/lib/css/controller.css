@@ -6,6 +6,21 @@
 }
 .div-condition {
     float:left;
-    padding: 10px;
-    padding-left: 20px;
+    /*padding: 10px;*/
+    padding-top: 20px;
+    padding-left: 15px;
+}
+/* 调整 DIV 元素的位置和大小 */
+#error-alert {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    max-width: 80%;
+}
+
+/* 调整错误提示信息的样式 */
+.error-message {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px;
 }

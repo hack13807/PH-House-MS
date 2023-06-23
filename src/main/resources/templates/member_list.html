@@ -11,16 +11,20 @@
     <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.js"></script>
+    <!--    alert美化-->
+    <link rel="stylesheet" type="text/css" href="/static/lib/css/sweetalert.css">
+    <script type="text/javascript" src="/static/lib/js/sweetalert-dev.js"></script>
 </head>
 <body>
 <div th:insert="~{../static/common/headbar::headbar}"></div>
 <div th:insert="~{./detail_user::homepage}"></div>
 <div class="panel panel-default" style="width: 90%;margin-left: 5%">
+    <!--标题栏-->
     <div class="panel-heading">
         <h3 class="panel-title" style="text-align:center">租客总览</h3>
     </div>
-    <!--条件过滤栏-->
-    <div class="div-condition">
+    <!--工具栏-->
+    <div id="toolbar" class="div-toolbar">
         <select name="select" id="memberStatus" class="form-condition">
             <option value="-1">全部</option>
             <option value="0">租住中</option>
@@ -28,17 +32,78 @@
         </select>
         <input name="memberSearch" id="memberSearch" class="form-condition" placeholder="租客姓名"/>
         <input name="roomSearch" id="roomSearch" class="form-condition" placeholder="房间号"/>
-        &nbsp;&nbsp;
-        <input type="button" value="搜索" class="btn btn-success" id="selectClassRoom" th:onclick="|searchMember();|"/>&nbsp;
-        <input type="button" class="btn btn-danger" value="删除" id="dropClassRoom" th:onclick="|deleteRows();|"/>
-
+        <!--操作按钮-->
+        <button id="search" class="btn btn-primary" th:onclick="|searchMember();|">搜 索</button>
+        <button class="btn btn-success" data-toggle="modal" data-target="#myModal" th:onclick="|addMember()|">新 增
+        </button>
+        <button class="btn btn-info" th:onclick="|edit()|">编 辑</button>
+        <button class="btn btn-danger" th:onclick="|deleteRows();|">删 除</button>
     </div>
+    <!--表格-->
     <div class="panel-body">
         <table id="table">
         </table>
     </div>
 </div>
+
+<!-- （新增、修改） 模态框容器 -->
+<div>
+    <!-- 新增和修改共用一个模态框（Modal） -->
+    <form id="add-project-form" class="form-horizontal" role="form">
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            ×
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            新增项目
+                        </h4>
+                    </div>
+                    <!--                    {# 模态框body #}-->
+                    <div class="modal-body" style="height: 100%;">
+                        <div class="form-group">
+                            <label for="memberSearch" class="col-sm-3 control-label">项目名称</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" id="project_name" name="project_name" required
+                                       placeholder="请输入项目名">
+                                <input type="hidden" class="form-control" id="project_id">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="memberStatus" class="col-sm-3 control-label">负责人</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" id="project_manager" name="project_manager"
+                                       required
+                                       placeholder="请输入负责人">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="roomSearch" class="col-sm-3 control-label">业务部门</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" id="project_line" name="project_line"
+                                       placeholder="请输入业务部门">
+                            </div>
+                        </div>
+
+                    </div>
+                    <!--                    {# 模态框底部 #}-->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <input type="button" onclick="addOrUpdate()" class="btn btn-primary" value="提交"/>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+    </form>
+</div>
+<!--页面功能script脚本-->
 <script>
+    /*表格初始化*/
     $('#table').bootstrapTable({
         url: '/member/data',
         method: 'post',
@@ -49,6 +114,14 @@
         pageSize: 10,                       //每页的记录行数（*）
         pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
         contentType: 'application/json',
+        toolbar: '#toolbar',
+        showRefresh: true,   //是否显示刷新按钮
+        showToggle: true,    //是否显示详细视图和列表视图的切换按钮
+        showColumns: true,   //选择要显示的列
+        striped: true,      //是否显示行间隔色
+        toolbarAlign: 'left',//工具栏的位置
+        clickToSelect: true,    //是否启用点击选中行
+        cardView: false,     //是否显示详细视图
         queryParams: function (params) {    //传递参数（*）
             return {
                 offset: params.offset,
@@ -58,9 +131,9 @@
                 roomNo: $("#roomSearch").val()
             }
         },
-        responseHandler: function (res) {
-            return {total: res.total, rows: res.rows}
-        },
+        // responseHandler: function (res) {
+        //     return {total: res.total, rows: res.rows}
+        // },
         columns: [{
             checkbox: true,
             visible: true
@@ -81,7 +154,7 @@
             title: '租客姓名'
         }, {
             field: 'tel',
-            title: '手机号'
+            title: '手机号',
         }, {
             field: 'idCard',
             title: '身份证'
@@ -91,23 +164,93 @@
         }, {
             field: 'roomDesc',
             title: '房间描述'
-        }, {
-            title: "操作",
-            formatter: function (row) {
-                return "<a>修改</a>"
-            }
         }],
         //自定义分页字符串显示为中文
-        formatShowingRows:function(pageFrom, pageTo, totalRows)
-        {
-            return "第"+pageFrom+"到"+pageTo+"行，共"+totalRows+"条 ";
+        formatShowingRows: function (pageFrom, pageTo, totalRows) {
+            return "第" + pageFrom + "到" + pageTo + "行，共" + totalRows + "条 ";
         },
         //自定义分页字符串显示为中文
-        formatRecordsPerPage:function(pageNumber)
-        {
-            return "   "+pageNumber+' 行每页';
+        formatRecordsPerPage: function (pageNumber) {
+            return "   " + pageNumber + ' 行每页';
         }
     });
+
+    /*添加租客*/
+    function addMember() {
+        $('.modal-title').text("新增项目")
+        $('#add-project-form')[0].reset()  //重置表单
+    }
+
+    function edit() {
+        let selecton = $("#table").bootstrapTable('getSelections'); //获取该行数据
+        if (selecton.length == 0) {
+            swal("请选择需要修改的数据")
+            return;
+        } else if (selecton.length > 1) {
+            swal("请选择单条数据修改")
+            return;
+        } else {
+            let selecton = $("#table").bootstrapTable('getSelections')[0]; //获取该行数据
+            if (selecton.id !== null) {
+                // {# 修改modal框的标题 #}
+                $('.modal-title').text('修改项目')
+            }
+            $('#myModal').modal('show')
+            // 回填数据，记得回填隐藏的input框的value值为要修改的数据的id主键值
+            $("#project_name").val(selecton.memberName);
+            $("#project_id").val(selecton.id);
+            $("#project_manager").val(selecton.roomNo);
+            $("#project_line").val(selecton.tel);
+            $("#desc").val(selecton.desc);
+        }
+    };
+
+    function addOrUpdate() {
+        let project_id = $('#project_id').val();
+        console.log("project_id的值为：" + project_id)
+        // {# 如果不存在project_id就是新增 #}
+        if (!project_id) {
+            $.ajax({
+                type: "POST",
+                url: "projects",
+                dataType: "json",
+                data: $('#add-project-form').serialize(),
+                success: function (res_data) {
+                    console.log(res_data)
+                    // {#关闭模态框并清除框内数据，否则下次打开还是上次的数据#}
+                    $("#add-project-form")[0].reset();
+                    $('#myModal').modal('hide');
+                    $("#mytab").bootstrapTable('refresh');
+                }
+            })
+        }
+        // {# 如果project_id存在就是修改 #}
+        else {
+            $.ajax({
+                type: "PUT",
+                dataType: "json",
+                url: "update_projects/" + project_id, // 待后端提供PUT修改接口
+                data: $('#add-project-form').serialize(),
+
+                success: function (data) {
+                    console.log(data);
+                    if (data.code == 200) {
+                        toastr.success("修改成功");
+                        $("#add-project-form")[0].reset();
+                        $('#project_id').val("")
+                        $('#myModal').modal('hide');
+                        $("#mytab").bootstrapTable('refresh');
+                    } else {
+                        toastr.warning('请填写所有数据');
+                    }
+                },
+                error: function () {
+                    toastr.warning("修改失败");
+                }
+            })
+        }
+    }
+
 
     function searchMember() {
         $("#table").bootstrapTable('refresh');
@@ -115,27 +258,52 @@
 
     function deleteRows() {
         var rows = $("#table").bootstrapTable('getSelections');
-        if (!rows) {
+        let length = rows.length;
+        if (length === 0) {
+            swal("请选择要删除的租客")
             return
         }
-        var arr=[];
-        $.each(rows,function (i,e) {
-            arr.push(e.memberId);
-        });
-        // for (var i = 0; i < rows.length; i++) {
-        //     var id = rows[i].memberId;
-        //     console.log(id);
-        // }
-        $.ajax("/member/deleteData", {
-            type: "get",
-            dataType: "json",
-            data: {
-                ids: arr
-            }
-        })
+        swal({
+                title: "确定删除吗？",
+                text: "是否删除选中的"+ length +"条记录",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确定删除",
+                cancelButtonText: "取消删除",
+                closeOnConfirm: false,
+                // closeOnCancel: false
+            },
+            function(isConfirm){
+                if (isConfirm) {
+                    var arr = [];
+                    $.each(rows, function (i, e) {
+                        arr.push(e.memberId);
+                    });
+                    $.ajax("/member/deleteData", {
+                        type: "get",
+                        dataType: "json",
+                        data: {
+                            ids: arr
+                        },
+                        success: function (data) {
+                            if (data.code == 200) {
+                                swal("删除", "所选租客记录已删除",
+                                    "success");
+                                $("#table").bootstrapTable('refresh');
+                            } else {
+                                swal("删除失败:"+data.msg)
+                            }
+                        },
+                        error: function (data) {
+                            swal("删除失败:"+data.msg)
+                        }
+                    })
+
+                }
+            });
     }
-
-
 </script>
+<script src="/static/lib/js/check.js"></script>
 </body>
 </html>

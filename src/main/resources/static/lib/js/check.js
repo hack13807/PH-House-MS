@@ -157,3 +157,12 @@ $('#btn-delete').click(function (e) {
         });
     }
 });
+// 初始化
+$(function() {
+    // 绑定回车键
+    $("body").keydown(function() {
+        if (event.keyCode == "13") {	// keyCode=13是回车键
+            $('#search').click();
+        }
+    });
+});

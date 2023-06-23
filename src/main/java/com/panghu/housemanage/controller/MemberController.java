@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 /**
- * 房间管理Controller
+ * 租客控制器
+ *
+ * @author PangHu
+ * @date 2023/06/18
  */
 @Controller
 @RequestMapping("/member")
@@ -35,13 +38,18 @@ public class MemberController {
         // 把分页对象page和查询实体po传到service层，查询结果返回封装成Page对象
         IPage<MemberVo> pageResult = memberService.pageQueryMember(page, memberPo);
         // 获取查询总数和记录，构建返回前端的Map对象
-        return RequestHandleUtil.buildResultMap(pageResult);
+        return RequestHandleUtil.successResult(pageResult);
     }
 
     @RequestMapping("/deleteData")
     @ResponseBody
-    public void deleteData(@RequestParam("ids[]") String[] ids) {
-        System.out.println(ids);
+    public Map<String, Object> deleteData(@RequestParam("ids[]") String[] ids) {
+        try {
+            memberService.batchDelete(ids);
+        }catch (Exception e){
+            return RequestHandleUtil.errorResult(e);
+        }
+        return RequestHandleUtil.successResult();
     }
 
 }

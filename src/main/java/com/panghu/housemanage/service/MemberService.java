@@ -11,4 +11,6 @@ import java.util.Map;
 
 public interface MemberService {
      IPage<MemberVo> pageQueryMember(Page<MemberVo> page, PHBasePo po);
+
+    int batchDelete(String[] ids);
 }

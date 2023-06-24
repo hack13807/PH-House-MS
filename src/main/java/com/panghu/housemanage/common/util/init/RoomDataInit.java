@@ -1,4 +1,4 @@
-//package com.panghu.housemanage.init;
+package com.panghu.housemanage.common.util.init;
 //
 //import com.panghu.housemanage.dao.RoomMapper;
 //import com.panghu.housemanage.pojo.po.Room;

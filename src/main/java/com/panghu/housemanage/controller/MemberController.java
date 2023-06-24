@@ -2,6 +2,8 @@ package com.panghu.housemanage.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.panghu.housemanage.common.enumeration.PHExceptionCodeEnum;
+import com.panghu.housemanage.common.exception.PHServiceException;
 import com.panghu.housemanage.common.util.RequestHandleUtil;
 import com.panghu.housemanage.pojo.po.MemberPo;
 import com.panghu.housemanage.pojo.vo.MemberVo;
@@ -44,12 +46,21 @@ public class MemberController {
     @RequestMapping("/deleteData")
     @ResponseBody
     public Map<String, Object> deleteData(@RequestParam("ids[]") String[] ids) {
-        try {
-            memberService.batchDelete(ids);
-        }catch (Exception e){
-            return RequestHandleUtil.errorResult(e);
-        }
+//        if (true) {
+//            throw new PHServiceException(PHExceptionCodeEnum.DATA_NOT_FOUND);
+//        }
+        memberService.batchDelete(ids);
         return RequestHandleUtil.successResult();
     }
+//    @RequestMapping("/deleteData")
+//    @ResponseBody
+//    public Map<String, Object> deleteData(@RequestParam("ids[]") String[] ids) {
+////        if (true) {
+////            throw new PHServiceException(PHExceptionCodeEnum.DATA_NOT_FOUND);
+////        }
+//        memberService.batchDelete(ids);
+//        return RequestHandleUtil.successResult();
+//    }
+
 
 }

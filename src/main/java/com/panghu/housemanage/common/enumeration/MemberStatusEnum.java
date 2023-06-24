@@ -3,32 +3,23 @@ package com.panghu.housemanage.common.enumeration;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.baomidou.mybatisplus.annotation.IEnum;
 import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
 public enum MemberStatusEnum implements IEnum<Integer> {
     RENTING(0,"租住中"),
     SURRENDER(1,"已退租");
 
     @EnumValue
-    private int value;
+    private final int code;
 
     @JsonValue
-    private String desc;
+    private final String msg;
 
-    MemberStatusEnum(int value , String desc){
-        this.value = value ;
-        this.desc = desc ;
-    }
-
-    public void setValue(int value) {
-        this.value = value;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public void setDesc(String desc) {
-        this.desc = desc;
+    MemberStatusEnum(int code , String msg){
+        this.code = code ;
+        this.msg = msg ;
     }
 
     /**
@@ -40,7 +31,7 @@ public enum MemberStatusEnum implements IEnum<Integer> {
 
         for(MemberStatusEnum typeEnum: MemberStatusEnum.values()){
             if(typeEnum.getValue() == code){
-                return typeEnum.getDesc();
+                return typeEnum.getMsg();
             }
         }
         return "";
@@ -62,6 +53,6 @@ public enum MemberStatusEnum implements IEnum<Integer> {
 
     @Override
     public Integer getValue() {
-        return value;
+        return code;
     }
 }

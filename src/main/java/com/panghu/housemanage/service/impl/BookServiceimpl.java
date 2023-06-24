@@ -1,8 +1,6 @@
 package com.panghu.housemanage.service.impl;
 
 import com.panghu.housemanage.dao.BookMapper;
-import com.panghu.housemanage.common.enumeration.ExceptionEnum;
-import com.panghu.housemanage.common.exception.ServiceException;
 import com.panghu.housemanage.pojo.po.*;
 import com.panghu.housemanage.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +32,7 @@ public class BookServiceimpl implements BookService {
     @Override
     public void processRes(String ISBN, UserBak user) {
         int count = bookMapper.processRes(ISBN, user);
-        if (count == 0) throw new ServiceException(ExceptionEnum.RESERVATION_FAILURE);
+//        if (count == 0) throw new PHServiceException(ExceptionEnum.RESERVATION_FAILURE);
     }
 
     @Override

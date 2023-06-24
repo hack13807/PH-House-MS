@@ -2,7 +2,6 @@ package com.panghu.housemanage.pojo.vo;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.panghu.housemanage.common.enumeration.MemberStatusEnum;
-import com.panghu.housemanage.pojo.po.PHBasePo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

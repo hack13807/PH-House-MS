@@ -1,7 +1,6 @@
 package com.panghu.housemanage.controller;
 
 import com.panghu.housemanage.common.enumeration.RoomStatusEnum;
-import com.panghu.housemanage.pojo.po.Room;
 import com.panghu.housemanage.pojo.vo.RoomVo;
 import com.panghu.housemanage.service.RoomService;
 import jakarta.servlet.http.HttpServletRequest;

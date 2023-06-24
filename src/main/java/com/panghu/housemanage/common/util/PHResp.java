@@ -16,6 +16,9 @@ public class PHResp<T> {
     private String msg;
     private T data;
 
+    public static <T> PHResp<T> success() {
+        return new PHResp<>(200, "success", null);
+    }
     public static <T> PHResp<T> success(T data) {
         return new PHResp<>(200, "success", data);
     }

@@ -23,17 +23,15 @@ public class RequestHandleUtil {
         return new Page<>(offset, limit);
     }
 
-    public static Map<String, Object> successResult(IPage<? extends PHBaseVo> pageResult) {
+    public static PHResp<Map<String, Object>> successPageResult(IPage<? extends PHBaseVo> pageResult) {
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("total", pageResult.getTotal());
         resultMap.put("rows", pageResult.getRecords());
-        return resultMap;
+        return PHResp.success(resultMap);
     }
 
-    public static Map<String, Object> successResult() {
-        Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put("code", 200);
-        return resultMap;
+    public static PHResp<String> successResult() {
+        return PHResp.success();
     }
 
     public static Map<String, Object> errorResult(Exception e) {

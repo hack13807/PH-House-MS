@@ -58,28 +58,36 @@
                     <!--                    {# 模态框body #}-->
                     <div class="modal-body" style="height: 100%;">
                         <div class="form-group">
-                            <label for="memberSearch" class="col-sm-3 control-label">项目名称</label>
+                            <label class="col-sm-3 control-label">租客名称</label>
                             <div class="col-sm-7">
-                                <input type="text" class="form-control" id="project_name" name="project_name" required
-                                       placeholder="请输入项目名">
-                                <input type="hidden" class="form-control" id="project_id">
+                                <input type="text" class="form-control" id="memberName" name="memberName" required
+                                       placeholder="请输入租客名称">
+                                <input type="hidden" class="form-control" id="memberId">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="memberStatus" class="col-sm-3 control-label">负责人</label>
+                            <label class="col-sm-3 control-label">手机号</label>
                             <div class="col-sm-7">
-                                <input type="text" class="form-control" id="project_manager" name="project_manager"
+                                <input type="text" class="form-control" id="tel" name="tel"
                                        required
-                                       placeholder="请输入负责人">
+                                       placeholder="请输入租客手机号">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="roomSearch" class="col-sm-3 control-label">业务部门</label>
+                            <label class="col-sm-3 control-label">身份证号</label>
                             <div class="col-sm-7">
-                                <input type="text" class="form-control" id="project_line" name="project_line"
-                                       placeholder="请输入业务部门">
+                                <input type="text" class="form-control" id="idCard" name="idCard"
+                                       placeholder="请输入租客身份证号">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">租住房间</label>
+                            <div class="col-sm-7">
+                                <select name="select" id="roomSelector" class="form-condition">
+                                </select>
                             </div>
                         </div>
 
@@ -128,6 +136,9 @@
                 memberName: $("#memberSearch").val(),
                 roomNo: $("#roomSearch").val()
             }
+        },
+        responseHandler: function (res) {
+            return {total: res.data.total, rows: res.data.rows}
         },
         columns: [{
             checkbox: true,
@@ -180,12 +191,14 @@
     $('td[data-rowcolor]').attr("style", "background-color:yellow;");
     /*添加租客*/
     function addMember() {
+        initRoom();
         $('.modal-title').text("新增项目")
         $('#addOrUpdateModal').modal('show')
         $('#addOrUpdateform')[0].reset()  //重置表单
     }
 
     function edit() {
+        initRoom();
         let selecton = $("#table").bootstrapTable('getSelections'); //获取该行数据
         if (selecton.length == 0) {
             swal("请选择需要修改的数据")
@@ -201,19 +214,19 @@
             }
             $('#addOrUpdateModal').modal('show')
             // 回填数据，记得回填隐藏的input框的value值为要修改的数据的id主键值
-            $("#project_name").val(row.memberName);
-            $("#project_id").val(row.id);
-            $("#project_manager").val(row.roomNo);
-            $("#project_line").val(row.tel);
-            $("#desc").val(row.desc);
+            $("#memberName").val(row.memberName);
+            $("#memberId").val(row.id);
+            $("#tel").val(row.tel);
+            $("#idCard").val(row.idCard);
+            $("#roomSelector").val(row.roomId);
         }
     };
 
     function addOrUpdate() {
-        let project_id = $('#project_id').val();
-        console.log("project_id的值为：" + project_id)
+        let memberId = $('#memberId').val();
+        console.log("memberId的值为：" + memberId)
         // {# 如果不存在project_id就是新增 #}
-        if (!project_id) {
+        if (!memberId) {
             $.ajax({
                 type: "POST",
                 url: "projects",
@@ -233,8 +246,8 @@
             $.ajax({
                 type: "PUT",
                 dataType: "json",
-                url: "update_projects/" + project_id, // 待后端提供PUT修改接口
-                data: $('#addOrUpdateform').serialize(),
+                url: "room/roomNoList", // 待后端提供PUT修改接口
+                // data: $('#addOrUpdateform').serialize(),
 
                 success: function (data) {
                     console.log(data);
@@ -306,6 +319,23 @@
 
                 }
             });
+    }
+    function initRoom(){
+        $.ajax("/room/roomNoList", {
+            type : 'get',
+            dataType : "json",
+            success : function(data) {
+                var roomList = data.data;
+                var opts = "";
+                for( var index = 0; index < roomList.length; index++ ){
+                    var room = roomList[index];
+                    opts += "<option value='"+room.id+"'>"+room.number+'房'+"</option>";
+                }
+// 查询界面
+                $("#roomSelector").append(opts);
+                // $("#roomSelector").selectpicker("refresh");
+            }
+        });
     }
 </script>
 <script src="/static/lib/js/check.js"></script>

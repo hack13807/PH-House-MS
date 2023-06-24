@@ -1,6 +1,7 @@
 package com.panghu.housemanage.controller;
 
 import com.panghu.housemanage.common.enumeration.RoomStatusEnum;
+import com.panghu.housemanage.common.util.PHResp;
 import com.panghu.housemanage.pojo.vo.RoomVo;
 import com.panghu.housemanage.service.RoomService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,6 +31,13 @@ public class RoomController {
         rooms.stream().map(room -> room.setStatus(RoomStatusEnum.getValueByCode(Integer.valueOf(room.getStatus())))).collect(Collectors.toList());
         model.addAttribute("list",rooms);
         return "room_list";
+    }
+
+    @GetMapping("/roomNoList")
+    @ResponseBody
+    public PHResp<List<RoomVo>> queryAllRooms(){
+        List<RoomVo> rooms = roomService.queryRoom(null);
+        return PHResp.success(rooms);
     }
 
 }

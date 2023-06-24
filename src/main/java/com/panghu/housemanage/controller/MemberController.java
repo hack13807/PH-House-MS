@@ -2,8 +2,7 @@ package com.panghu.housemanage.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.panghu.housemanage.common.enumeration.PHExceptionCodeEnum;
-import com.panghu.housemanage.common.exception.PHServiceException;
+import com.panghu.housemanage.common.util.PHResp;
 import com.panghu.housemanage.common.util.RequestHandleUtil;
 import com.panghu.housemanage.pojo.po.MemberPo;
 import com.panghu.housemanage.pojo.vo.MemberVo;
@@ -13,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.Map;
 
 /**
  * 租客控制器
@@ -34,33 +33,24 @@ public class MemberController {
 
     @RequestMapping("/data")
     @ResponseBody
-    public Map<String, Object> getData(@RequestBody MemberPo memberPo) {
+    public PHResp<Map<String, Object>> getData(@RequestBody MemberPo memberPo) {
         // 通过前段传过来的po实体构建分页对象page
         Page<MemberVo> page = RequestHandleUtil.getPage(memberPo);
         // 把分页对象page和查询实体po传到service层，查询结果返回封装成Page对象
         IPage<MemberVo> pageResult = memberService.pageQueryMember(page, memberPo);
         // 获取查询总数和记录，构建返回前端的Map对象
-        return RequestHandleUtil.successResult(pageResult);
+        return RequestHandleUtil.successPageResult(pageResult);
     }
 
     @RequestMapping("/deleteData")
     @ResponseBody
-    public Map<String, Object> deleteData(@RequestParam("ids[]") String[] ids) {
-//        if (true) {
-//            throw new PHServiceException(PHExceptionCodeEnum.DATA_NOT_FOUND);
-//        }
+    public PHResp<String> deleteData(@RequestParam("ids[]") String[] ids) {
+        /*if (true) {
+            throw new PHServiceException(PHExceptionCodeEnum.DATA_NOT_FOUND);
+        }*/
         memberService.batchDelete(ids);
-        return RequestHandleUtil.successResult();
+        return PHResp.success();
     }
-//    @RequestMapping("/deleteData")
-//    @ResponseBody
-//    public Map<String, Object> deleteData(@RequestParam("ids[]") String[] ids) {
-////        if (true) {
-////            throw new PHServiceException(PHExceptionCodeEnum.DATA_NOT_FOUND);
-////        }
-//        memberService.batchDelete(ids);
-//        return RequestHandleUtil.successResult();
-//    }
 
 
 }

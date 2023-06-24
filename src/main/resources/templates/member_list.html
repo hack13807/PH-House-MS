@@ -4,16 +4,11 @@
     <meta charset="UTF-8">
     <title>房间总览</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/lib/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/lib/css/homepage.css">
     <link rel="stylesheet" href="/static/lib/css/controller.css">
-    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.css">
-    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.js"></script>
-    <!--    alert美化-->
+    <link rel="stylesheet" href="/static/lib/css/bootstrap-table.min.css">
     <link rel="stylesheet" type="text/css" href="/static/lib/css/sweetalert.css">
-    <script type="text/javascript" src="/static/lib/js/sweetalert-dev.js"></script>
 </head>
 <body>
 <div th:insert="~{../static/common/headbar::headbar}"></div>
@@ -41,7 +36,7 @@
     </div>
     <!--表格-->
     <div class="panel-body">
-        <table id="table">
+        <table id="table" class="table-striped-warner">
         </table>
     </div>
 </div>
@@ -99,6 +94,10 @@
         </div>
     </form>
 </div>
+<script src="/static/lib/js/jquery.min.js"></script>
+<script src="/static/lib/js/bootstrap.min.js"></script>
+<script src="/static/lib/js/bootstrap-table.min.js"></script>
+<script src="/static/lib/js/sweetalert-dev.js"></script>
 <!--页面功能script脚本-->
 <script>
     /*表格初始化*/
@@ -120,6 +119,7 @@
         toolbarAlign: 'left',//工具栏的位置
         clickToSelect: true,    //是否启用点击选中行
         cardView: false,     //是否显示详细视图
+        detailView: false,   //是否显示父子表
         queryParams: function (params) {    //传递参数（*）
             return {
                 offset: params.offset,
@@ -139,27 +139,35 @@
         }, {
             field: 'roomId',
             title: '房间ID',
-            // visible: false
+            visible: false
         }, {
             field: 'roomNo',
             title: '房间号',
+            align: "center", //表内容居中
             // visible: false
         }, {
             field: 'memberName',
-            title: '租客姓名'
+            title: '租客姓名',
+            align: "center", //表内容居中
         }, {
             field: 'tel',
             title: '手机号',
+            align: "center", //表内容居中
         }, {
             field: 'idCard',
-            title: '身份证'
+            title: '身份证',
+            align: "center", //表内容居中
         }, {
             field: 'memberStatus',
-            title: '租住状态'
+            title: '租住状态',
+            align: "center", //表内容居中
         }, {
             field: 'roomDesc',
-            title: '房间描述'
+            title: '房间描述',
+            align: "center", //表内容居中
         }],
+        cellStyle: function (value, row, index){return {css:{'background-color':'#F3F3F4'}};
+        },
         //自定义分页字符串显示为中文
         formatShowingRows: function (pageFrom, pageTo, totalRows) {
             return "第" + pageFrom + "到" + pageTo + "行，共" + totalRows + "条 ";
@@ -169,7 +177,7 @@
             return "   " + pageNumber + ' 行每页';
         }
     });
-
+    $('td[data-rowcolor]').attr("style", "background-color:yellow;");
     /*添加租客*/
     function addMember() {
         $('.modal-title').text("新增项目")

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panghu.housemanage.dao.LeaseMapper">
+    <resultMap id="leaseVoMap" type="com.panghu.housemanage.pojo.vo.LeaseVo" >
+        <id column="leaseId" property="leaseId"/>
+        <result column="leaseType" property="leaseType" typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
+        <result column="unit" property="unit"/>
+        <result column="rent" property="rent"/>
+        <result column="start_date" property="startDate"/>
+        <result column="end_date" property="endDate"/>
+    </resultMap>
+
+
+    <select id="queryLeaseByMemberId" parameterType="java.util.Map" resultMap="leaseVoMap">
+        Select l.id as leaseId,l.lease_type as leaseType,l.unit,l.rent,l.start_date,l.end_date
+        from t_lease l
+        left join t_member m on m.id = l.member_id
+        left join t_room r on r.id = l.room_id
+        <where>
+            m.id = #{memberId}
+        </where>
+    </select>
+</mapper>

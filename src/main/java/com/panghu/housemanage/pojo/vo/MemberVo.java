@@ -1,6 +1,7 @@
 package com.panghu.housemanage.pojo.vo;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.panghu.housemanage.common.enumeration.MemberSexEnum;
 import com.panghu.housemanage.common.enumeration.MemberStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,6 +21,8 @@ public class MemberVo extends PHBaseVo {
     private String roomNo;
     private String tel;
     private String idCard;
+    @EnumValue
+    private MemberSexEnum sex;
     @EnumValue
     private MemberStatusEnum memberStatus;
     private String roomDesc;

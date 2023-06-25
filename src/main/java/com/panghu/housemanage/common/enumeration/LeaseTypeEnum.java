@@ -4,13 +4,12 @@ import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.baomidou.mybatisplus.annotation.IEnum;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-public enum MemberStatusEnum implements IEnum<Integer> {
-    DELETE(0,"删除"),
-    RENTING(1,"租住中"),
-    SURRENDER(2,"已退租");
+public enum LeaseTypeEnum implements IEnum<Integer> {
+    DEFAULT(0,"默认"),
+    DAILY(1,"按日租"),
+    MONTHLY(2,"按月租");
 
     @EnumValue
     private final int code;
@@ -18,7 +17,7 @@ public enum MemberStatusEnum implements IEnum<Integer> {
     @JsonValue
     private final String msg;
 
-    MemberStatusEnum(int code , String msg){
+    LeaseTypeEnum(int code , String msg){
         this.code = code ;
         this.msg = msg ;
     }
@@ -30,7 +29,7 @@ public enum MemberStatusEnum implements IEnum<Integer> {
      */
     public static String getValueByCode(int code){
 
-        for(MemberStatusEnum typeEnum: MemberStatusEnum.values()){
+        for(LeaseTypeEnum typeEnum: LeaseTypeEnum.values()){
             if(typeEnum.getValue() == code){
                 return typeEnum.getMsg();
             }
@@ -43,8 +42,8 @@ public enum MemberStatusEnum implements IEnum<Integer> {
      * @param value
      * @return
      */
-    public static MemberStatusEnum getTypeEnumBytypeId(int value){
-        for(MemberStatusEnum topType : values()){
+    public static LeaseTypeEnum getTypeEnumBytypeId(int value){
+        for(LeaseTypeEnum topType : values()){
             if(topType.getValue() == value){
                 return topType;
             }

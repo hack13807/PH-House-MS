@@ -44,7 +44,7 @@ public class MemberController {
 
     @RequestMapping("/deleteData")
     @ResponseBody
-    public PHResp<String> deleteData(@RequestParam("ids[]") String[] ids) {
+    public PHResp<String> deleteData(@RequestParam("ids[]") Long[] ids) {
         /*if (true) {
             throw new PHServiceException(PHExceptionCodeEnum.DATA_NOT_FOUND);
         }*/

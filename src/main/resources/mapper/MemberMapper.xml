@@ -2,20 +2,20 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.panghu.housemanage.dao.MemberMapper">
-    <resultMap id="memberPoMap" type="com.panghu.housemanage.pojo.vo.MemberVo" >
+    <resultMap id="memberVoMap" type="com.panghu.housemanage.pojo.vo.MemberVo" >
         <id column="memberId" property="memberId"/>
         <result column="memberStatus" property="memberStatus" typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
+        <result column="sex" property="sex" typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
         <result column="memberName" property="memberName"/>
         <result column="tel" property="tel"/>
         <result column="idcard" property="idCard"/>
         <result column="roomId" property="roomId"/>
         <result column="roomNo" property="roomNo"/>
-        <result column="roomDesc" property="roomDesc"/>
     </resultMap>
 
 
-    <select id="pageQueryMember" parameterType="java.util.HashMap" resultMap="memberPoMap">
-        Select m.id as memberId,m.name as memberName,m.tel,m.idcard,m.status as memberStatus,r.id as roomId,r.number as roomNo,r.description as roomDesc
+    <select id="pageQueryMember" parameterType="java.util.HashMap" resultMap="memberVoMap">
+        Select m.id as memberId,m.name as memberName, m.sex, m.tel,m.idcard,m.status as memberStatus,r.id as roomId,r.number as roomNo
         from t_member m
         left join t_room r on m.room_id = r.id
         <where>
@@ -26,9 +26,14 @@
             <if test=" memberVo.roomNo != null and memberVo.roomNo != '' ">
                 and r.number = #{memberVo.roomNo}
             </if>
-            <if test=" memberVo.memberStatus != null and memberVo.memberStatus != '' and memberVo.memberStatus != '-1' ">
-                and m.status = #{memberVo.memberStatus}
-            </if>
+            <choose>
+                <when test=" memberVo.memberStatus != null and memberVo.memberStatus != '' and memberVo.memberStatus != '-1' ">
+                    and m.status = #{memberVo.memberStatus}
+                </when>
+                <otherwise>
+                    and m.status != 0
+                </otherwise>
+            </choose>
         </where>
     </select>
 </mapper>

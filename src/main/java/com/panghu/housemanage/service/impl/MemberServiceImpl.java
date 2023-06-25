@@ -1,8 +1,10 @@
 package com.panghu.housemanage.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.panghu.housemanage.dao.MemberMapper;
+import com.panghu.housemanage.pojo.po.MemberPo;
 import com.panghu.housemanage.pojo.po.PHBasePo;
 import com.panghu.housemanage.pojo.vo.MemberVo;
 import com.panghu.housemanage.service.MemberService;
@@ -22,8 +24,10 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public int batchDelete(String[] ids) {
-        return memberMapper.deleteBatchIds(Arrays.asList(ids));
+    public int batchDelete(Long[] ids) {
+        LambdaUpdateWrapper<MemberPo> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.set(MemberPo::getStatus, 0).in(MemberPo::getId, ids);
+        return memberMapper.update(null, updateWrapper);
     }
 
 }

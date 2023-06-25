@@ -20,7 +20,7 @@ public class RequestHandleUtil {
     public static <T> Page<T> getPage(PHBasePo po) {
         int offset = po.getOffset();
         int limit = po.getLimit();
-        return new Page<>(offset, limit);
+        return new Page<>(offset/limit + 1, limit);
     }
 
     public static PHResp<Map<String, Object>> successPageResult(IPage<? extends PHBaseVo> pageResult) {

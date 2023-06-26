@@ -9,7 +9,8 @@
     <script src="/static/lib/js/bootstrap.min.js"></script>
 </head>
 <body>
-<div th:include="../static/common/headbar::headbar"></div>
+<!--<div th:include="../static/common/headbar::headbar"></div>-->
+<div th:insert="~{./common/headbar::headbar}"></div>
 <div th:fragment="homepage">
     <nav class="nav nav-tabs" style="margin-top:50px;background-color: #EEEEEE">
         <div class="container-fluid">

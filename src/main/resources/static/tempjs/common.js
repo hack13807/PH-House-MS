@@ -1,5 +1,6 @@
 var checkadd = [false, false, false, false];
 var checkdel = [false];
+
 //校验成功函数
 function success(Obj, counter, check, offset) {
     Obj.parent().parent().removeClass('has-error').addClass('has-success');
@@ -127,8 +128,8 @@ $('#delete').find('input').eq(0).change(function () {
 
 $('#btn-delete').click(function (e) {
     if (!checkadd.every(function (value) {
-            return value == true
-        })) {
+        return value == true
+    })) {
         e.preventDefault();
         for (key in checkdel) {
             if (!checkdel[key]) {
@@ -158,9 +159,9 @@ $('#btn-delete').click(function (e) {
     }
 });
 // 初始化
-$(function() {
+$(function () {
     // 绑定回车键
-    $("body").keydown(function() {
+    $("body").keydown(function () {
         if (event.keyCode == "13") {	// keyCode=13是回车键
             $('#search').click();
         }

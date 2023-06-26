@@ -4,12 +4,14 @@
     margin: 0 auto;
     margin-right: 10px;
 }
+
 .div-condition {
-    float:left;
+    float: left;
     /*padding: 10px;*/
     padding-top: 20px;
     padding-left: 15px;
 }
+
 /* 调整 DIV 元素的位置和大小 */
 #error-alert {
     position: fixed;
@@ -24,6 +26,7 @@
     vertical-align: middle;
     margin-right: 10px;
 }
+
 /*隔行变色*/
 .table-striped-warner > tbody > tr:nth-of-type(odd) {
     background-color: rgba(222, 226, 230, 0.59);

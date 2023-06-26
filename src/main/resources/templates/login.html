@@ -9,7 +9,8 @@
     <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
-<div th:include="../static/common/headbar::headbar"></div>
+<!--<div th:include="../static/common/headbar::headbar"></div>-->
+<div th:insert="~{./common/headbar::headbar}"></div>
 <div class="container">
     <form class="form-signin" action="/housemanage/login2">
         <div class="img-login">

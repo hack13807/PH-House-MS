@@ -52,5 +52,13 @@ public class MemberController {
         return PHResp.success();
     }
 
+    @PostMapping("/insert")
+    @ResponseBody
+    public PHResp<String> insertData(@RequestBody MemberPo memberPo) {
+//        memberService.batchDelete(ids);
+        System.out.printf("111111111111");
+        return PHResp.success();
+    }
+
 
 }

@@ -30,4 +30,14 @@ public class MemberServiceImpl implements MemberService {
         return memberMapper.update(null, updateWrapper);
     }
 
+    @Override
+    public int insertMember(MemberPo memberPo) {
+        return memberMapper.insert(memberPo);
+    }
+
+    @Override
+    public int updateMemberInfo(MemberPo memberPo) {
+        return memberMapper.updateById(memberPo);
+    }
+
 }

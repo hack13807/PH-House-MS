@@ -1,6 +1,9 @@
 package com.panghu.housemanage.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.panghu.housemanage.dao.RoomMapper;
+import com.panghu.housemanage.pojo.po.RoomPo;
 import com.panghu.housemanage.pojo.vo.RoomVo;
 import com.panghu.housemanage.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +18,8 @@ public class RoomServiceImpl implements RoomService {
     RoomMapper roomMapper;
 
     @Override
-    public List<RoomVo> queryRoom(Map<String, Object> params) {
-        return roomMapper.queryRoom(params);
-    }
-
-    @Override
-    public List<RoomVo> queryAllRooms() {
-        return roomMapper.selectList(null);
+    public IPage<RoomVo> pageQueryRoom(Page<RoomVo> page, RoomPo po) {
+        return roomMapper.pageQueryRoom(page, po);
     }
 
 }

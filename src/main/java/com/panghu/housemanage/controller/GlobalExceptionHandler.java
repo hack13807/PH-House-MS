@@ -23,14 +23,14 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.OK)
     @ExceptionHandler(PHServiceException.class)
     public <T> PHResp<T> serviceExceptionHandler(PHServiceException e) {
-        return PHResp.error(e.getCode(), e.getMsg());
+        return PHResp.error(e.getCode(), e.getMsg(), null);
     }
 
     // 捕捉其他所有异常
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public <T> PHResp<T> globalException(Exception e) {
-        return PHResp.error(PHExceptionCodeEnum.SERVICE_ERROR.getCode(), PHExceptionCodeEnum.SERVICE_ERROR.getMsg());
+        return PHResp.error(PHExceptionCodeEnum.SERVICE_ERROR.getCode(), PHExceptionCodeEnum.SERVICE_ERROR.getMsg(), (T) e.toString());
     }
 
 }

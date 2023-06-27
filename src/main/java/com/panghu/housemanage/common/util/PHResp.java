@@ -25,7 +25,7 @@ public class PHResp<T> {
     public static <T> PHResp<T> success(String msg, T data) {
         return new PHResp<>(200, msg, data);
     }
-    public static <T> PHResp<T> error(int code, String msg) {
-        return new PHResp<>(code, msg, null);
+    public static <T> PHResp<T> error(int code, String msg,T error) {
+        return new PHResp<>(code, msg, error);
     }
 }

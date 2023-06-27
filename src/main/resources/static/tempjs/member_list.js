@@ -1,7 +1,9 @@
+var selectedRows = [];
+
 /*表格初始化*/
 $('#table').bootstrapTable({
-    url: '/member/data',
-    method: 'post',
+    url: '/member',
+    method: 'GET',
     pageNumber: 1,                  //初始化加载第一页，默认第一页
     uniqueId: "memberId",           // 表格唯一键
     pagination: true,               //是否显示分页（*）
@@ -18,7 +20,8 @@ $('#table').bootstrapTable({
     clickToSelect: true,    //是否启用点击选中行
     cardView: false,     //是否显示详细视图
     detailView: true,   //是否显示父子表
-    locale: 'zh-CN',
+    locale: 'zh-CN',    //配置中文汉化包
+    maintainSelected: true, //翻页时保留已选中的行的状态
     queryParams: function (params) {    //传递参数（*）
         return {
             offset: params.offset,
@@ -147,6 +150,7 @@ function edit() {
         $("#sex").val(row.sex === '男' ? 1 : 2);
         $("#idCard").val(row.idCard);
         $("#roomId").val(row.roomId);
+        $("#status").val(row.memberStatus === '租住中' ? 1 : 2);
     }
 };
 
@@ -159,29 +163,41 @@ function dateFormatter(value, row) {
 }
 
 function addOrUpdate() {
-    let memberId = $('#memberId').val();
+    let memberId = $('#id').val();
     console.log("memberId的值为：" + memberId)
     var data = {
-        memberName: $('#memberName').val(),
+        id: memberId,
+        name: $('#memberName').val(),
         tel: $('#tel').val(),
         sex: $('#sex').val(),
         idCard: $('#idCard').val(),
-        roomId: $('#roomId').val()
+        roomId: $('#roomId').val(),
+        status: $('#status').val()
     };
     // {# 如果不存在project_id就是新增 #}
     if (!memberId) {
         $.ajax({
             type: "POST",
-            url: "member/insert",
+            url: "/member",
             dataType: "json",
             contentType: "application/json;charset=UTF-8",  // 设置请求头部
             data: JSON.stringify(data),  // 设置请求体
-            success: function (res_data) {
-                console.log(res_data)
-                // {#关闭模态框并清除框内数据，否则下次打开还是上次的数据#}
+            success: function (res) {
+                if (res.code == 200) {
+                    swal("新增", "租客记录已添加",
+                        "success");
+                } else {
+                    swal("添加失败", res.msg, "error")
+                }
+                 // {#关闭模态框并清除框内数据，否则下次打开还是上次的数据#}
+                 $("#table").bootstrapTable('refresh');
                 $("#addOrUpdateform")[0].reset();
+                $('#id').val('');   // 租客id作为隐藏字段无法通过reset()清除，需要单独处理
                 $('#addOrUpdateModal').modal('hide');
                 $("#mytab").bootstrapTable('refresh');
+            },
+            error: function (data) {
+                swal("添加失败", res.responseJSON.msg, "error")
             }
         })
     }
@@ -189,24 +205,27 @@ function addOrUpdate() {
     else {
         $.ajax({
             type: "PUT",
-            dataType: "json",
-            url: "room/roomNoList", // 待后端提供PUT修改接口
-            // data: $('#addOrUpdateform').serialize(),
-
-            success: function (data) {
-                console.log(data);
-                if (data.code == 200) {
-                    toastr.success("修改成功");
-                    $("#addOrUpdateform")[0].reset();
-                    $('#project_id').val("")
-                    $('#addOrUpdateModal').modal('hide');
-                    $("#mytab").bootstrapTable('refresh');
+            url: "/member", // 待后端提供PUT修改接口
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data),  // 设置请求体
+            success: function (res) {
+                console.log(res);
+                if (res.code == 200) {
+                     swal("修改", "租客信息已修改",
+                                            "success");
                 } else {
-                    toastr.warning('请填写所有数据');
+                    swal("修改失败", res.msg, "error")
                 }
+                 // {#关闭模态框并清除框内数据，否则下次打开还是上次的数据#}
+                 $("#table").bootstrapTable('refresh');
+                $("#addOrUpdateform")[0].reset();
+                $('#id').val('');   // 租客id作为隐藏字段无法通过reset()清除，需要单独处理
+                $('#addOrUpdateModal').modal('hide');
+                $("#mytab").bootstrapTable('refresh');
             },
             error: function () {
-                toastr.warning("修改失败");
+                 swal("修改失败", res.responseJSON.msg, "error")
             }
         })
     }
@@ -214,12 +233,13 @@ function addOrUpdate() {
 
 
 function searchMember() {
+    selectedRows = [];
     $("#table").bootstrapTable('refresh');
 }
 
 function deleteRows() {
-    var rows = $("#table").bootstrapTable('getSelections');
-    let length = rows.length;
+//    var rows = $("#table").bootstrapTable('getSelections');
+    let length = selectedRows.length;
     if (length === 0) {
         swal("请选择要删除的租客")
         return
@@ -237,22 +257,17 @@ function deleteRows() {
         },
         function (isConfirm) {
             if (isConfirm) {
-                var arr = [];
-                $.each(rows, function (i, e) {
-                    arr.push(e.memberId);
-                });
-                $.ajax("/member/deleteData", {
-                    type: "get",
-                    dataType: "json",
-                    data: {
-                        ids: arr
-                    },
+                $.ajax("/member/delete?ids=" + selectedRows, {
+                  type: "get",
+                  dataType: "json",
                     success: function (data) {
                         if (data.code == 200) {
                             swal("删除", "所选租客记录已删除",
                                 "success");
+                                selectedRows = [];
                             $("#table").bootstrapTable('refresh');
                         } else {
+                        selectedRows = [];
                             swal("删除失败", data.msg, "error")
                         }
                     },
@@ -312,12 +327,7 @@ function validate() {
         console.log('表单验证通过');
         // 在此处进行相应的操作
         addOrUpdate();
-    } else {
-        console.log('表单验证失败');
-        console.log('111')
     }
-
-
 }
 
 <!--  租客信息表单校验规则  -->
@@ -348,3 +358,25 @@ function initValidate() {
 function cleanValidate() {
     $("#addOrUpdateform").data('bootstrapValidator').destroy();
 }
+
+$('#table').on('check.bs.table', function (e, row) {
+    if ($.inArray(row.memberId, selectedRows) === -1) {
+        selectedRows.push(row.memberId);
+    }
+});
+
+$('#table').on('uncheck.bs.table', function (e, row) {
+    var index = $.inArray(row.memberId, selectedRows);
+    if (index !== -1) {
+        selectedRows.splice(index, 1);
+    }
+});
+
+$('#table').on('post-body.bs.table', function () {
+    var rows = $('#table').bootstrapTable('getData');
+    for (var i = 0; i < rows.length; i++) {
+        if ($.inArray(rows[i].memberId, selectedRows) !== -1) {
+            $('#table').bootstrapTable('check', i);
+        }
+    }
+});

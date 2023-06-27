@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,37 +27,41 @@ public class MemberController {
     @Autowired
     MemberService memberService;
 
-    @GetMapping
-    public String search(HttpServletRequest request){
+    @GetMapping("/page")
+    public String getPage(HttpServletRequest request){
         return "member_list";
     }
 
-    @RequestMapping("/data")
+    @GetMapping
     @ResponseBody
-    public PHResp<Map<String, Object>> getData(@RequestBody MemberPo memberPo) {
-        // 通过前段传过来的po实体构建分页对象page
-        Page<MemberVo> page = RequestHandleUtil.getPage(memberPo);
+    public PHResp<Map<String, Object>> getData(HttpServletRequest request) throws Exception {
+        // 通过前端参数构建分页对象page
+        Page<MemberVo> page = RequestHandleUtil.getPage(request);
+        // 通过前端参数构建查询实体po
+        MemberPo memberPo = RequestHandleUtil.buildPoEntity(request, MemberPo.class);
         // 把分页对象page和查询实体po传到service层，查询结果返回封装成Page对象
         IPage<MemberVo> pageResult = memberService.pageQueryMember(page, memberPo);
         // 获取查询总数和记录，构建返回前端的Map对象
         return RequestHandleUtil.successPageResult(pageResult);
     }
 
-    @RequestMapping("/deleteData")
+    @GetMapping("/delete")
     @ResponseBody
-    public PHResp<String> deleteData(@RequestParam("ids[]") Long[] ids) {
-        /*if (true) {
-            throw new PHServiceException(PHExceptionCodeEnum.DATA_NOT_FOUND);
-        }*/
+    public PHResp<String> deleteData(@RequestParam("ids") Long[] ids) {
         memberService.batchDelete(ids);
         return PHResp.success();
     }
 
-    @PostMapping("/insert")
+    @PutMapping
     @ResponseBody
-    public PHResp<String> insertData(@RequestBody MemberPo memberPo) {
-//        memberService.batchDelete(ids);
-        System.out.printf("111111111111");
+    public PHResp<String> insert(@RequestBody MemberPo memberPo) {
+        memberService.updateMemberInfo(memberPo);
+        return PHResp.success();
+    }
+    @PostMapping
+    @ResponseBody
+    public PHResp<String> update(@RequestBody MemberPo memberPo) {
+        memberService.insertMember(memberPo);
         return PHResp.success();
     }
 

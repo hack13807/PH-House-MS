@@ -2,42 +2,52 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>房间总览</title>
+    <title>PH租房管理平台-房间管理</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/lib/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/lib/css/homepage.css">
-    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/static/lib/css/controller.css">
+    <link rel="stylesheet" href="/static/lib/css/bootstrap-table.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/lib/css/sweetalert.css">
 </head>
 <body>
-<div th:include="../static/common/headbar::headbar"></div>
-<div th:include="./detail_user::homepage"></div>
+<div th:insert="~{./common/headbar::headbar}"></div>
+<div th:insert="~{./detail_user::homepage}"></div>
 <div class="panel panel-default" style="width: 90%;margin-left: 5%">
+    <!--标题栏-->
     <div class="panel-heading">
         <h3 class="panel-title" style="text-align:center">房间总览</h3>
     </div>
+    <!--工具栏-->
+    <div id="toolbar" class="div-toolbar">
+        <select name="select" id="roomStatus" class="form-condition">
+            <option value="-1">全部</option>
+            <option value="1">在租</option>
+            <option value="2">待租</option>
+        </select>
+<!--        <input name="memberSearch" id="memberSearch" class="form-condition" placeholder="租客姓名"/>-->
+<!--        <input name="roomSearch" id="roomSearch" class="form-condition" placeholder="房间号"/>-->
+<!--        &lt;!&ndash;操作按钮&ndash;&gt;-->
+<!--        <button id="search" class="btn btn-primary" th:onclick="|searchRoom();|">搜 索</button>-->
+<!--        <button class="btn btn-success" th:onclick="|addRoom()|">新 增-->
+<!--        </button>-->
+<!--        <button class="btn btn-info" th:onclick="|edit()|">编 辑</button>-->
+<!--        <button class="btn btn-danger" th:onclick="|deleteRows();|">删 除</button>-->
+    </div>
+    <!--表格-->
     <div class="panel-body">
-        <table class="table table-hover" style="text-align:center">
-            <thead>
-            <tr>
-                <th>房间号</th>
-                <th>出租状态</th>
-                <th>租客</th>
-                <th>备注描述</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="room: ${list}">
-                <td th:text="${room.number}"></td>
-                <td th:text="${room.status}"></td>
-                <td th:text="${room.memberName}"></td>
-                <td th:text="${room.description}"></td>
-                <td><button type="button" class="btn btn-success disabled">处理中</button></td>
-            </tr>
-            </tbody>
+        <table id="table" class="table-striped-warner">
         </table>
     </div>
 </div>
-
+<script src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js"></script>
+<script src="/static/lib/js/bootstrap.min.js"></script>
+<script src="/static/lib/js/bootstrap-table.min.js"></script>
+<script src="/static/lib/js/sweetalert-dev.js"></script>
+<script src="/static/lib/js/moment.min.js"></script>
+<script src="/static/lib/js/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/lib/js/bootstrapValidator.min.js"></script>
+<script src="/static/tempjs/common.js"></script>
+<script src="/static/tempjs/room_list.js"></script>
 </body>
 </html>

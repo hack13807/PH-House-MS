@@ -1,21 +1,21 @@
 package com.panghu.housemanage.pojo.vo;
 
-import com.panghu.housemanage.pojo.po.Room;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.panghu.housemanage.common.enumeration.RoomStatusEnum;
+import lombok.*;
 import lombok.experimental.Accessors;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-public class RoomVo {
-    private Long id;
-    private String number;
-    private String description;
-    private String status;
+public class RoomVo  extends PHBaseVo {
+    private Long roomId;
+    private String roomNo;
+    private String roomDesc;
+    @EnumValue
+    private RoomStatusEnum roomStatus;
     private String memberName;
 }

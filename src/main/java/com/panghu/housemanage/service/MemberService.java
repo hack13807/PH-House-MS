@@ -13,4 +13,8 @@ public interface MemberService {
      IPage<MemberVo> pageQueryMember(Page<MemberVo> page, PHBasePo po);
 
     int batchDelete(Long[] ids);
+
+    int insertMember(MemberPo memberPo);
+
+    int updateMemberInfo(MemberPo memberPo);
 }

@@ -2,15 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>房间总览</title>
+    <title>PH租房管理平台-租客管理</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" href="/static/lib/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/lib/css/homepage.css">
     <link rel="stylesheet" href="/static/lib/css/controller.css">
     <link rel="stylesheet" href="/static/lib/css/bootstrap-table.min.css">
     <link rel="stylesheet" type="text/css" href="/static/lib/css/sweetalert.css">
-<!--    <link rel="stylesheet" type="text/css" href="/static/lib/css/bootstrapValidator.min.css">-->
-<!--    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/jquery.bootstrapvalidator/0.5.3/css/bootstrapValidator.min.css">-->
 </head>
 <body>
 <div th:insert="~{./common/headbar::headbar}"></div>
@@ -60,8 +58,7 @@
                 </div>
                 <!--                    {# 模态框body #}-->
                 <div class="modal-body" style="height: 100%;">
-                    <form id="addOrUpdateform" class="form-horizontal" role="form" method="post" enctype="multipart/form-data"
-                          action="/member/insert">
+                    <form id="addOrUpdateform" class="form-horizontal" role="form">
                         <div class="form-group">
                             <label class="col-sm-3 control-label">租客姓名</label>
                             <div class="col-sm-7">
@@ -103,10 +100,20 @@
                                 </select>
                             </div>
                         </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">租住状态</label>
+                            <div class="col-sm-7">
+                                <select name="status" id="status" class="form-condition">
+                                    <option value="1">租住中</option>
+                                    <option value="2">已退租</option>
+                                </select>
+                            </div>
+                        </div>
                         <!--                    {# 模态框底部 #}-->
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal" th:onclick="cleanValidate()">关闭</button>
-                            <input type="submit" th:onclick="validate()" class="btn btn-primary" id="submitBtn" value="提交"/>
+                            <input type="button" th:onclick="validate()" class="btn btn-primary" id="submitBtn" value="提交"/>
                         </div>
                     </form>
                 </div>
@@ -116,7 +123,8 @@
     </div>
 
 </div>
-<script src="/static/lib/js/jquery.min.js"></script>
+<!--<script src="/static/lib/js/jquery.min.js"></script>-->
+<script src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js"></script>
 <script src="/static/lib/js/bootstrap.min.js"></script>
 <script src="/static/lib/js/bootstrap-table.min.js"></script>
 <script src="/static/lib/js/sweetalert-dev.js"></script>

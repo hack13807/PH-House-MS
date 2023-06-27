@@ -360,12 +360,18 @@ function cleanValidate() {
     $("#addOrUpdateform").data('bootstrapValidator').destroy();
 }
 
+/**
+ * 勾选记录
+ */
 $('#table').on('check.bs.table', function (e, row) {
     if ($.inArray(row.memberId, selectedRows) === -1) {
         selectedRows.push(row.memberId);
     }
 });
 
+/**
+ * 取消勾选
+ */
 $('#table').on('uncheck.bs.table', function (e, row) {
     var index = $.inArray(row.memberId, selectedRows);
     if (index !== -1) {
@@ -373,6 +379,9 @@ $('#table').on('uncheck.bs.table', function (e, row) {
     }
 });
 
+/**
+ * 翻页渲染表格后，加载勾选记录
+ */
 $('#table').on('post-body.bs.table', function () {
     var rows = $('#table').bootstrapTable('getData');
     for (var i = 0; i < rows.length; i++) {
@@ -380,4 +389,35 @@ $('#table').on('post-body.bs.table', function () {
             $('#table').bootstrapTable('check', i);
         }
     }
+});
+
+/**
+ * 页面全选
+ */
+$('#table').on('check-all.bs.table', function (e, rows) {
+    $.each(rows, function(index, row) {
+        if ($.inArray(row.memberId, selectedRows) === -1) {
+            selectedRows.push(row.memberId);
+        }
+    });
+});
+
+/**
+ * 取消全选，从页面配置中获取当前页的下标范围，再从selectedRows中移除
+ */
+$('#table').on('uncheck-all.bs.table', function (e) {
+    var options = $('#table').bootstrapTable('getOptions');
+    var pageSize = options.pageSize;
+    var currentPage = options.pageNumber;
+    var data = $('#table').bootstrapTable('getData');
+    var startIndex = (currentPage - 1) * pageSize;
+    var endIndex = startIndex + pageSize;
+    var rows = data.slice(startIndex, endIndex);
+
+    $.each(rows, function(index, row) {
+        var index = selectedRows.indexOf(row.memberId);
+        if (index > -1) {
+            selectedRows.splice(index, 1);
+        }
+    });
 });

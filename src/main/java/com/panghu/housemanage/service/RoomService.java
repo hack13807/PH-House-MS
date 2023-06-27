@@ -11,4 +11,6 @@ import java.util.Map;
 
 public interface RoomService {
     IPage<RoomVo> pageQueryRoom(Page<RoomVo> page, RoomPo roomPo);
+
+    List<RoomVo> queryRoom(Map<String, Object> params);
 }

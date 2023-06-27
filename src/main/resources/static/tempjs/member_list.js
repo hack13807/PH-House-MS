@@ -282,7 +282,7 @@ function deleteRows() {
 }
 
 function initRoom() {
-    $.ajax("/room/roomNoList", {
+    $.ajax("/room/roomList", {
         type: 'get',
         dataType: "json",
         success: function (data) {
@@ -349,6 +349,10 @@ function initValidate() {
                         notEmpty: {
                             message: '身份证号不能为空'
                         },
+                        regexp: {
+                            regexp: /^\d{17}[\d|x]|\d{15}$/,
+                            message: '请输入正确的身份证号码'
+                        }
                     }
                 }
             }

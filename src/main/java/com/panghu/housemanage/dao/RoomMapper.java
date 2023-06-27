@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 @Mapper
-public interface RoomMapper extends BaseMapper<RoomVo> {
+public interface RoomMapper extends BaseMapper<RoomPo> {
 
     int insertBatch(List<RoomVo> list);
 

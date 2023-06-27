@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -41,6 +42,13 @@ public class RoomController {
         IPage<RoomVo> pageResult = roomService.pageQueryRoom(page, roomPo);
         // 获取查询总数和记录，构建返回前端的Map对象
         return RequestHandleUtil.successPageResult(pageResult);
+    }
+
+    @GetMapping("/roomList")
+    @ResponseBody
+    public PHResp<List<RoomVo>> queryAllRooms(){
+        List<RoomVo> rooms = roomService.queryRoom(null);
+        return PHResp.success(rooms);
     }
 
 }

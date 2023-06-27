@@ -1,5 +1,4 @@
 var selectedRows = [];
-
 /*表格初始化*/
 $('#table').bootstrapTable({
     url: '/member',
@@ -189,8 +188,8 @@ function addOrUpdate() {
                 } else {
                     swal("添加失败", res.msg, "error")
                 }
-                 // {#关闭模态框并清除框内数据，否则下次打开还是上次的数据#}
-                 $("#table").bootstrapTable('refresh');
+                // {#关闭模态框并清除框内数据，否则下次打开还是上次的数据#}
+                $("#table").bootstrapTable('refresh');
                 $("#addOrUpdateform")[0].reset();
                 $('#id').val('');   // 租客id作为隐藏字段无法通过reset()清除，需要单独处理
                 $('#addOrUpdateModal').modal('hide');
@@ -212,20 +211,20 @@ function addOrUpdate() {
             success: function (res) {
                 console.log(res);
                 if (res.code == 200) {
-                     swal("修改", "租客信息已修改",
-                                            "success");
+                    swal("修改", "租客信息已修改",
+                        "success");
                 } else {
                     swal("修改失败", res.msg, "error")
                 }
-                 // {#关闭模态框并清除框内数据，否则下次打开还是上次的数据#}
-                 $("#table").bootstrapTable('refresh');
+                // {#关闭模态框并清除框内数据，否则下次打开还是上次的数据#}
+                $("#table").bootstrapTable('refresh');
                 $("#addOrUpdateform")[0].reset();
                 $('#id').val('');   // 租客id作为隐藏字段无法通过reset()清除，需要单独处理
                 $('#addOrUpdateModal').modal('hide');
                 $("#mytab").bootstrapTable('refresh');
             },
             error: function () {
-                 swal("修改失败", res.responseJSON.msg, "error")
+                swal("修改失败", res.responseJSON.msg, "error")
             }
         })
     }
@@ -257,17 +256,19 @@ function deleteRows() {
         },
         function (isConfirm) {
             if (isConfirm) {
-                $.ajax("/member/delete?ids=" + selectedRows, {
-                  type: "get",
-                  dataType: "json",
+                $.ajax("/member", {
+                    type: "delete",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(selectedRows),
                     success: function (data) {
                         if (data.code == 200) {
                             swal("删除", "所选租客记录已删除",
                                 "success");
-                                selectedRows = [];
+                            selectedRows = [];
                             $("#table").bootstrapTable('refresh');
                         } else {
-                        selectedRows = [];
+                            selectedRows = [];
                             swal("删除失败", data.msg, "error")
                         }
                     },

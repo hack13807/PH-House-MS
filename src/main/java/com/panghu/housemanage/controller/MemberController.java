@@ -45,9 +45,9 @@ public class MemberController {
         return RequestHandleUtil.successPageResult(pageResult);
     }
 
-    @GetMapping("/delete")
+    @DeleteMapping
     @ResponseBody
-    public PHResp<String> deleteData(@RequestParam("ids") Long[] ids) {
+    public PHResp<String> deleteData(@RequestBody Long[] ids) {
         memberService.batchDelete(ids);
         return PHResp.success();
     }

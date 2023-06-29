@@ -32,7 +32,8 @@
         <button class="btn btn-success" th:onclick="|addRoom()|">新 增</button>
         <button class="btn btn-info" th:onclick="|edit()|">编 辑</button>
         <button class="btn btn-warning" th:onclick="|edit()|">一键退租</button>
-        <button class="btn btn-danger" th:onclick="disableRows()">禁 用</button>
+        <button id="disable" class="btn btn-danger" th:onclick="disableRows()">禁 用</button>
+        <button id="enable" class="btn btn-primary" th:onclick="enableRows()">启 用</button>
     </div>
     <!--表格-->
     <div class="panel-body">

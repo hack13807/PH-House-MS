@@ -60,7 +60,7 @@ $('#table').bootstrapTable({
     cellStyle: function (value, row, index) {
         return {css: {'background-color': '#F3F3F4'}};
     },
-    onLoadError: function(status, res) {
+    onLoadError: function (status, res) {
         swal("获取房间列表失败", res.responseJSON.msg, "error")
     }
 });
@@ -87,7 +87,7 @@ function disableRows() {
             if (res.code == 200) {
                 doDisable();
             } else {
-                swal("禁用失败", res.msg +"\n"+ res.data, "error")
+                swal("禁用失败", res.msg + "\n" + res.data, "error")
             }
         },
         error: function (res) {
@@ -135,6 +135,14 @@ function doDisable() {
         });
 }
 
+function disableRows() {
+    let length = selectedRows.length;
+    if (length === 0) {
+        swal("请选择要启用的房间")
+        return
+    }
+}
+
 function edit() {
     initValidate();
     let selecton = $("#table").bootstrapTable('getSelections'); //获取该行数据
@@ -175,3 +183,28 @@ function initValidate() {
         });
     });
 }
+
+// 获取下拉框元素
+var dropdown = document.getElementById("roomStatus");
+
+// 绑定 change 事件
+dropdown.addEventListener("change", function () {
+    var enableBtn = document.getElementById("enable");
+    var disableBtn = document.getElementById("disable");
+    // 获取当前选中的值
+    var selectedValue = dropdown.value;
+    if (selectedValue === '0') {
+        enableBtn.classList.remove("hidden")
+        disableBtn.classList.add("hidden")
+    } else {
+        enableBtn.classList.add("hidden")
+        disableBtn.classList.remove("hidden")
+    }
+    $("#table").bootstrapTable('refresh');
+});
+
+$(document).ready(function () {
+    // 在页面加载完成后执行的脚本
+    var enableBtn = document.getElementById("enable");
+    enableBtn.classList.add("hidden")
+});

@@ -54,13 +54,21 @@ public class MemberController {
 
     @PutMapping
     @ResponseBody
-    public PHResp<String> insert(@RequestBody MemberPo memberPo) {
+    public PHResp<String> update(@RequestBody MemberPo memberPo) {
         memberService.updateMemberInfo(memberPo);
         return PHResp.success();
     }
+
+    @PutMapping("/batchUpdate")
+    @ResponseBody
+    public PHResp<String> batchUpdate(@RequestBody List<MemberPo> list) {
+        memberService.batchUpdate(list);
+        return PHResp.success();
+    }
+
     @PostMapping
     @ResponseBody
-    public PHResp<String> update(@RequestBody MemberPo memberPo) {
+    public PHResp<String> insert(@RequestBody MemberPo memberPo) {
         memberService.insertMember(memberPo);
         return PHResp.success();
     }

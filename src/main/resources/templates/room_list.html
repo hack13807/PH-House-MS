@@ -16,28 +16,74 @@
 <div class="panel panel-default" style="width: 90%;margin-left: 5%">
     <!--标题栏-->
     <div class="panel-heading">
-        <h3 class="panel-title" style="text-align:center">房间总览</h3>
+        <h3 class="panel-title" style="text-align:center"><b>房间总览</b></h3>
     </div>
     <!--工具栏-->
     <div id="toolbar" class="div-toolbar">
         <select name="select" id="roomStatus" class="form-condition">
-            <option value="-1">全部</option>
-            <option value="1">在租</option>
-            <option value="2">待租</option>
+            <option value="-1">全 部</option>
+            <option value="1">出租中</option>
+            <option value="2">待 租</option>
+            <option value="0">禁 用</option>
         </select>
-<!--        <input name="memberSearch" id="memberSearch" class="form-condition" placeholder="租客姓名"/>-->
-<!--        <input name="roomSearch" id="roomSearch" class="form-condition" placeholder="房间号"/>-->
-<!--        &lt;!&ndash;操作按钮&ndash;&gt;-->
-<!--        <button id="search" class="btn btn-primary" th:onclick="|searchRoom();|">搜 索</button>-->
-<!--        <button class="btn btn-success" th:onclick="|addRoom()|">新 增-->
-<!--        </button>-->
-<!--        <button class="btn btn-info" th:onclick="|edit()|">编 辑</button>-->
-<!--        <button class="btn btn-danger" th:onclick="|deleteRows();|">删 除</button>-->
+        <input name="roomSearch" id="roomSearch" class="form-condition" placeholder="房间号"/>
+        <!--操作按钮-->
+        <button id="search" class="btn btn-primary" th:onclick="search()">搜 索</button>
+        <button class="btn btn-success" th:onclick="|addRoom()|">新 增</button>
+        <button class="btn btn-info" th:onclick="|edit()|">编 辑</button>
+        <button class="btn btn-warning" th:onclick="|edit()|">一键退租</button>
+        <button class="btn btn-danger" th:onclick="disableRows()">禁 用</button>
     </div>
     <!--表格-->
     <div class="panel-body">
         <table id="table" class="table-striped-warner">
         </table>
+    </div>
+</div>
+
+<!-- （新增、修改） 模态框容器 -->
+<div>
+    <!-- 新增和修改共用一个模态框（Modal） -->
+    <div class="modal fade" id="addOrUpdateModal" tabindex="-1" role="dialog"
+         aria-labelledby="addOrUpdateModalLabel"
+         aria-hidden="true">
+        房间号
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" th:onclick="cleanValidate()">
+                        ×
+                    </button>
+                    <h4 class="modal-title" id="addOrUpdateModalLabel"/>
+                </div>
+                <!--                    {# 模态框body #}-->
+                <div class="modal-body" style="height: 100%;">
+                    <form id="addOrUpdateform" class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">房间号</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" id="roomNo" name="roomNo" required data-bv-field="name"
+                                       placeholder="请输入房间号">
+                                <input type="hidden" class="form-control" id="id" name="id">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">房间描述</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" id="roomDesc" name="roomDesc"
+                                       placeholder="请输入房间描述">
+                            </div>
+                        </div>
+                        <!--                    {# 模态框底部 #}-->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal" th:onclick="cleanValidate()">关闭</button>
+                            <input type="button" th:onclick="validate()" class="btn btn-primary" id="submitBtn" value="提交"/>
+                        </div>
+                    </form>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
     </div>
 </div>
 <script src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js"></script>

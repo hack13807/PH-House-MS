@@ -24,9 +24,8 @@ $('#table').bootstrapTable({
         return {
             offset: params.offset,
             limit: params.limit,
-//            roomStatus: document.getElementById("roomStatus").value,
-//            roomNo: $("#roomSearch").val(),
-//            memberName: $("#memberSearch").val()
+            roomStatus: document.getElementById("roomStatus").value,
+            roomNo: $("#roomSearch").val(),
         }
     },
     responseHandler: function (res) {
@@ -60,5 +59,119 @@ $('#table').bootstrapTable({
     }],
     cellStyle: function (value, row, index) {
         return {css: {'background-color': '#F3F3F4'}};
+    },
+    onLoadError: function(status, res) {
+        swal("获取房间列表失败", res.responseJSON.msg, "error")
     }
 });
+
+/*新增房间*/
+function addRoom() {
+    initValidate();
+    $('.modal-title').text("新增租客")
+    $('#addOrUpdateModal').modal('show')
+    $('#addOrUpdateform')[0].reset()  //重置表单
+}
+
+/*删除房间*/
+function disableRows() {
+    let length = selectedRows.length;
+    if (length === 0) {
+        swal("请选择要禁用的房间")
+        return
+    }
+    //    检查房间是否有租客
+    $.ajax("/room/isInUse?ids=" + selectedRows, {
+        type: "get",
+        success: function (res) {
+            if (res.code == 200) {
+                doDisable();
+            } else {
+                swal("禁用失败", res.msg +"\n"+ res.data, "error")
+            }
+        },
+        error: function (res) {
+            swal("禁用失败", res.responseJSON.msg, "error")
+        }
+    })
+}
+
+function doDisable() {
+    swal({
+            title: "确定禁用吗？",
+            text: "是否禁用选中的" + length + "条记录",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "确定禁用",
+            cancelButtonText: "取消禁用",
+            closeOnConfirm: false,
+            // closeOnCancel: false //取消时不自动关闭弹框
+        },
+        function (isConfirm) {
+            if (isConfirm) {
+                $.ajax("/room", {
+                    type: "delete",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(selectedRows),
+                    success: function (data) {
+                        if (data.code == 200) {
+                            swal("禁 用", "所选房间已禁用",
+                                "success");
+                            selectedRows = [];
+                            $("#table").bootstrapTable('refresh');
+                        } else {
+                            selectedRows = [];
+                            swal("禁用失败", data.msg, "error")
+                        }
+                    },
+                    error: function (data) {
+                        swal("禁用失败", data.responseJSON.msg, "error")
+                    }
+                })
+
+            }
+        });
+}
+
+function edit() {
+    initValidate();
+    let selecton = $("#table").bootstrapTable('getSelections'); //获取该行数据
+    if (selecton.length == 0) {
+        swal("请选择需要修改的数据")
+        return;
+    } else if (selecton.length > 1) {
+        swal("请选择单条数据修改")
+        return;
+    } else {
+        let row = $("#table").bootstrapTable('getSelections')[0]; //获取该行数据
+        if (row.id !== null) {
+            // {# 修改modal框的标题 #}
+            $('.modal-title').text('修改租客信息')
+        }
+        $('#addOrUpdateModal').modal('show')
+        // 回填数据，记得回填隐藏的input框的value值为要修改的数据的id主键值
+        $("#id").val(row.rowId);
+        $("#roomNo").val(row.roomNo);
+        $("#roomDesc").val(row.roomDesc);
+    }
+};
+
+<!--  房间信息表单校验规则  -->
+function initValidate() {
+    $(document).ready(function () {
+        $('#addOrUpdateform').bootstrapValidator({
+            <!--  excluded: [':disabled', ':hidden', ':not(:visible)', ':empty'],-->
+            fields: {
+                roomNo: {
+                    validators: {
+                        notEmpty: {
+                            message: '房间号不能为空'
+                        },
+                    }
+                }
+            }
+        });
+    });
+}

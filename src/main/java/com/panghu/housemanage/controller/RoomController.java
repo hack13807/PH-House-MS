@@ -2,17 +2,19 @@ package com.panghu.housemanage.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.panghu.housemanage.common.enumeration.PHExceptionCodeEnum;
+import com.panghu.housemanage.common.exception.PHServiceException;
 import com.panghu.housemanage.common.util.PHResp;
 import com.panghu.housemanage.common.util.RequestHandleUtil;
+import com.panghu.housemanage.pojo.po.MemberPo;
 import com.panghu.housemanage.pojo.po.RoomPo;
 import com.panghu.housemanage.pojo.vo.RoomVo;
+import com.panghu.housemanage.service.MemberService;
 import com.panghu.housemanage.service.RoomService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -25,6 +27,8 @@ import java.util.Map;
 public class RoomController {
     @Autowired
     RoomService roomService;
+    @Autowired
+    MemberService memberService;
 
     @GetMapping("/page")
     public String getPage(){
@@ -46,9 +50,39 @@ public class RoomController {
 
     @GetMapping("/roomList")
     @ResponseBody
-    public PHResp<List<RoomVo>> queryAllRooms(){
-        List<RoomVo> rooms = roomService.queryRoom(null);
+    public PHResp<List<RoomPo>> queryAllRooms(){
+        List<RoomPo> rooms = roomService.getRoomNoSelector(null);
         return PHResp.success(rooms);
     }
 
+    @DeleteMapping
+    @ResponseBody
+    public PHResp<String> deleteData(@RequestBody Long[] ids) {
+        roomService.batchDelete(ids);
+        return PHResp.success();
+    }
+
+    @PutMapping
+    @ResponseBody
+    public PHResp<String> update(@RequestBody RoomPo roomPo) {
+        roomService.updateRoomInfo(roomPo);
+        return PHResp.success();
+    }
+    @PostMapping
+    @ResponseBody
+    public PHResp<String> insert(@RequestBody RoomPo roomPo) {
+        roomService.insertRoom(roomPo);
+        return PHResp.success();
+    }
+
+    @GetMapping("/isInUse")
+    @ResponseBody
+    public PHResp<String> isInUse(Long[] ids){
+        List<MemberPo> members = memberService.queryMemberByRoomId(ids);
+        if (members.isEmpty()) {
+            return PHResp.success();
+        }
+        String memberNames = String.join(", ", members.stream().map(MemberPo::getName).toList());
+        throw new PHServiceException(PHExceptionCodeEnum.ROOM_INUSE, memberNames);
+    }
 }

@@ -1,32 +1,26 @@
 package com.panghu.housemanage.common.enumeration;
 
-public enum RoomStatusEnum {
-    UNUSED(0,"待出租"),
-    NORMAL(1,"出租中"),
-    PENDING(2,"待处理");
+import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.baomidou.mybatisplus.annotation.IEnum;
+import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.Getter;
 
-    RoomStatusEnum(int code , String value){
+@Getter
+public enum RoomStatusEnum implements IEnum<Integer> {
+    DELETE(0,"禁用"),
+    INUSE(1,"出租中"),
+    UNUSED(2,"待租"),
+    PENDING(3,"待处理");
+
+    @EnumValue
+    private final int code;
+
+    @JsonValue
+    private final String msg;
+
+    RoomStatusEnum(int code , String msg){
         this.code = code ;
-        this.value = value ;
-    }
-
-    private int code;
-    private String value;
-
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
+        this.msg = msg ;
     }
 
     /**
@@ -36,25 +30,30 @@ public enum RoomStatusEnum {
      */
     public static String getValueByCode(int code){
 
-        for(RoomStatusEnum typeEnum:RoomStatusEnum.values()){
-            if(typeEnum.getCode() == code){
-                return typeEnum.getValue();
+        for(RoomStatusEnum typeEnum: RoomStatusEnum.values()){
+            if(typeEnum.getValue() == code){
+                return typeEnum.getMsg();
             }
         }
         return "";
     }
 
     /**
-     * 通过code获取实例
+     * 通过value获取实例
      * @param code
      * @return
      */
     public static RoomStatusEnum getTypeEnumBytypeId(int code){
         for(RoomStatusEnum topType : values()){
-            if(topType.getCode() == code){
+            if(topType.code == code){
                 return topType;
             }
         }
         return null;
+    }
+
+    @Override
+    public Integer getValue() {
+        return code;
     }
 }

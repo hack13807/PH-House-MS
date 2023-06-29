@@ -15,7 +15,6 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class MemberVo extends PHBaseVo {
-    private Long memberId;
     private Long roomId;
     private String memberName;
     private String roomNo;

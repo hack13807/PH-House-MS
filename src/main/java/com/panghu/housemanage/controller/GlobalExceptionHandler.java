@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.OK)
     @ExceptionHandler(PHServiceException.class)
     public <T> PHResp<T> serviceExceptionHandler(PHServiceException e) {
-        return PHResp.error(e.getCode(), e.getMsg(), null);
+        return PHResp.error(e.getCode(), e.getMsg(), (T) e.getDetail());
     }
 
     // 捕捉其他所有异常

@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.panghu.housemanage.dao.RoomMapper">
     <resultMap id="roomVoMap" type="com.panghu.housemanage.pojo.vo.RoomVo" >
-        <id column="roomId" property="roomId"/>
+        <id column="rowId" property="rowId"/>
         <result column="roomStatus" property="roomStatus" typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
         <result column="memberName" property="memberName"/>
         <result column="roomNo" property="roomNo"/>
@@ -19,9 +19,23 @@
     </insert>
 
     <select id="pageQueryRoom" parameterType="java.util.HashMap" resultMap="roomVoMap">
-        select r.id as roomId, r.number as roomNo, r.status as roomStatus, r.description as roomDesc, GROUP_CONCAT(m.name SEPARATOR ',') as memberName
+        select r.id as rowId, r.number as roomNo, r.status as roomStatus, r.description as roomDesc, GROUP_CONCAT(m.name SEPARATOR ',') as memberName
         from t_room r
         left join t_member m on m.room_id = r.id
+        <where>
+            1 = 1
+            <if test=" roomPo.number != null and roomPo.number != '' ">
+                and r.number = #{roomPo.roomNo}
+            </if>
+            <choose>
+                <when test=" roomPo.roomStatus != null and roomPo.roomStatus != '' and roomPo.roomStatus != '-1' ">
+                    and r.status = #{roomPo.roomStatus}
+                </when>
+                <otherwise>
+                    and r.status != 0
+                </otherwise>
+            </choose>
+        </where>
         group by r.id, r.number, r.status, r.description
     </select>
 </mapper>

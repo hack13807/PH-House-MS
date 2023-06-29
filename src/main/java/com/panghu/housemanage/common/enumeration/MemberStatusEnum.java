@@ -40,12 +40,12 @@ public enum MemberStatusEnum implements IEnum<Integer> {
 
     /**
      * 通过value获取实例
-     * @param value
+     * @param code
      * @return
      */
-    public static MemberStatusEnum getTypeEnumBytypeId(int value){
+    public static MemberStatusEnum getTypeEnumBytypeId(int code){
         for(MemberStatusEnum topType : values()){
-            if(topType.getValue() == value){
+            if(topType.code == code){
                 return topType;
             }
         }

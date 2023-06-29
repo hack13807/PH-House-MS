@@ -7,6 +7,9 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @TableName("t_room")
 public class RoomPo extends PHBasePo {
@@ -28,4 +31,5 @@ public class RoomPo extends PHBasePo {
     private String roomStatus;
     @TableField(exist = false)
     private String roomDesc;
+
 }

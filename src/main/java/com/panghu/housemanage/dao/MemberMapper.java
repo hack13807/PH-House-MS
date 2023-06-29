@@ -1,5 +1,6 @@
 package com.panghu.housemanage.dao;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.panghu.housemanage.pojo.po.MemberPo;
@@ -14,4 +15,5 @@ import java.util.Map;
 @Mapper
 public interface MemberMapper extends BaseMapper<MemberPo> {
     Page<MemberVo> pageQueryMember(Page<MemberVo> page, @Param("memberVo") PHBasePo po);
+
 }

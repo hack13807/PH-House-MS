@@ -12,7 +12,6 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class RoomVo  extends PHBaseVo {
-    private Long roomId;
     private String roomNo;
     private String roomDesc;
     @EnumValue

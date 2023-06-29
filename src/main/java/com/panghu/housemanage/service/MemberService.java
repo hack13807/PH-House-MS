@@ -12,9 +12,13 @@ import java.util.Map;
 public interface MemberService {
      IPage<MemberVo> pageQueryMember(Page<MemberVo> page, PHBasePo po);
 
-    int batchDelete(Long[] ids);
+    void batchDelete(Long[] ids);
 
-    int insertMember(MemberPo memberPo);
+    void insertMember(MemberPo memberPo);
 
-    int updateMemberInfo(MemberPo memberPo);
+    void updateMemberInfo(MemberPo memberPo);
+
+    List<MemberPo> queryMemberByRoomId(Long[] ids);
+
+    void batchUpdate(List<MemberPo> list);
 }

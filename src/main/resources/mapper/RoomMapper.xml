@@ -24,7 +24,7 @@
         left join t_member m on m.room_id = r.id
         <where>
             1 = 1
-            <if test=" roomPo.number != null and roomPo.number != '' ">
+            <if test=" roomPo.roomNo != null and roomPo.roomNo != '' ">
                 and r.number = #{roomPo.roomNo}
             </if>
             <choose>

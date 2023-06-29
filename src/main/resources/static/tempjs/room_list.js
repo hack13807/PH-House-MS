@@ -135,7 +135,7 @@ function doDisable() {
         });
 }
 
-function disableRows() {
+function enableRows() {
     let length = selectedRows.length;
     if (length === 0) {
         swal("请选择要启用的房间")

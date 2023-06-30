@@ -27,8 +27,8 @@
                 and r.number = #{memberVo.roomNo}
             </if>
             <choose>
-                <when test=" memberVo.memberStatus != null and memberVo.memberStatus != '' and memberVo.memberStatus != '-1' ">
-                    and m.status = #{memberVo.memberStatus}
+                <when test=" memberVo.voStatus != null and memberVo.voStatus != '' and memberVo.voStatus != '-1' ">
+                    and m.status = #{memberVo.voStatus}
                 </when>
                 <otherwise>
                     and m.status != 0

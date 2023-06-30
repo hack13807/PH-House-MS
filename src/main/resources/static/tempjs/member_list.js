@@ -25,7 +25,7 @@ $('#table').bootstrapTable({
         return {
             offset: params.offset,
             limit: params.limit,
-            memberStatus: document.getElementById("memberStatus").value,
+            voStatus: document.getElementById("memberStatus").value,
             memberName: $("#memberSearch").val(),
             roomNo: $("#roomSearch").val()
         }
@@ -125,7 +125,6 @@ $('td[data-rowcolor]').attr("style", "background-color:yellow;");
 /*添加租客*/
 function addMember() {
     initValidate();
-    initRoom();
     $('.modal-title').text("新增租客")
     $('#addOrUpdateModal').modal('show')
     $('#addOrUpdateform')[0].reset()  //重置表单
@@ -133,7 +132,6 @@ function addMember() {
 
 function edit() {
     initValidate();
-    initRoom();
     let selecton = $("#table").bootstrapTable('getSelections'); //获取该行数据
     if (selecton.length == 0) {
         swal("请选择需要修改的数据")
@@ -149,7 +147,7 @@ function edit() {
         }
         $('#addOrUpdateModal').modal('show')
         // 回填数据，记得回填隐藏的input框的value值为要修改的数据的id主键值
-        $("#memberName").val(row.memberName);
+        $("#name").val(row.memberName);
         $("#id").val(row.rowId);
         $("#tel").val(row.tel);
         $("#sex").val(row.sex === '男' ? 1 : 2);
@@ -163,13 +161,13 @@ function addOrUpdate() {
     let memberId = $('#id').val();
     console.log("memberId的值为：" + memberId)
     var data = {
-        id: memberId,
-        name: $('#memberName').val(),
+        rowId: memberId,
+        memberName: $('#name').val(),
         tel: $('#tel').val(),
         sex: $('#sex').val(),
         idCard: $('#idCard').val(),
         roomId: $('#roomId').val(),
-        status: $('#status').val()
+        memberStatus: $('#status').val()
     };
     // {# 如果不存在project_id就是新增 #}
     if (!memberId) {
@@ -193,19 +191,21 @@ function addOrUpdate() {
                 $('#addOrUpdateModal').modal('hide');
                 $("#mytab").bootstrapTable('refresh');
             },
-            error: function (data) {
+            error: function (res) {
                 swal("添加失败", res.responseJSON.msg, "error")
             }
         })
     }
     // {# 如果project_id存在就是修改 #}
     else {
+    var arr = [];
+    arr.push(data);
         $.ajax({
             type: "PUT",
             url: "/member", // 待后端提供PUT修改接口
             dataType: 'json',
             contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify(data),  // 设置请求体
+            data: JSON.stringify(arr),  // 设置请求体
             success: function (res) {
                 console.log(res);
                 if (res.code == 200) {
@@ -340,16 +340,16 @@ function terminate() {
     },
     function (isConfirm) {
         if (isConfirm) {
-            var data = {
-                ids: selectedRows,
-                status: 2
-            };
+            for (var index = 0; index < selectedObjRows.length; index++) {
+                var obj = selectedObjRows[index];
+                obj.memberStatus = 2;
+            }
             $.ajax({
                 type: "PUT",
                 url: "/member", // 待后端提供PUT修改接口
                 dataType: 'json',
                 contentType: 'application/json; charset=utf-8',
-                data: JSON.stringify(data),  // 设置请求体
+                data: JSON.stringify(selectedObjRows),  // 设置请求体
                 success: function (res) {
                     console.log(res);
                     if (res.code == 200) {
@@ -365,10 +365,33 @@ function terminate() {
                     $('#addOrUpdateModal').modal('hide');
                     $("#mytab").bootstrapTable('refresh');
                 },
-                error: function () {
+                error: function (res) {
                     swal("修改失败", res.responseJSON.msg, "error")
                 }
             })
         }
     });
 }
+
+// 获取下拉框元素
+var dropdown = document.getElementById("memberStatus");
+// 绑定 change 事件
+dropdown.addEventListener("change", function () {
+    var terminateBtn = document.getElementById("terminate");
+    // 获取当前选中的值
+    var selectedValue = dropdown.value;
+    if (selectedValue === '2') {
+        terminateBtn.classList.add("hidden")
+    } else {
+        terminateBtn.classList.remove("hidden")
+    }
+    selectedRows = [];
+    $("#table").bootstrapTable('refresh');
+});
+
+$(document).ready(function () {
+    // 在页面加载完成后执行的脚本
+//    var enableBtn = document.getElementById("enable");
+//    enableBtn.classList.add("hidden")
+    initRoom();
+});

@@ -24,7 +24,7 @@ $('#table').bootstrapTable({
         return {
             offset: params.offset,
             limit: params.limit,
-            roomStatus: document.getElementById("roomStatus").value,
+            voStatus: document.getElementById("roomStatus").value,
             roomNo: $("#roomSearch").val(),
         }
     },
@@ -96,6 +96,74 @@ function disableRows() {
     })
 }
 
+function addOrUpdate() {
+    let roomId = $('#id').val();
+    console.log("roomId的值为：" + memberId)
+    var data = {
+        rowId: roomId,
+        roomNo: $('#roomNo').val(),
+        roomDesc: $('#roomDesc').val(),
+        roomStatus: $('#status').val()
+    };
+    // {# 如果不存在project_id就是新增 #}
+    if (!memberId) {
+        $.ajax({
+            type: "POST",
+            url: "/member",
+            dataType: "json",
+            contentType: "application/json;charset=UTF-8",  // 设置请求头部
+            data: JSON.stringify(data),  // 设置请求体
+            success: function (res) {
+                if (res.code == 200) {
+                    swal("新 增", "租客记录已添加",
+                        "success");
+                } else {
+                    swal("添加失败", res.msg, "error")
+                }
+                // {#关闭模态框并清除框内数据，否则下次打开还是上次的数据#}
+                $("#table").bootstrapTable('refresh');
+                $("#addOrUpdateform")[0].reset();
+                $('#id').val('');   // 租客id作为隐藏字段无法通过reset()清除，需要单独处理
+                $('#addOrUpdateModal').modal('hide');
+                $("#mytab").bootstrapTable('refresh');
+            },
+            error: function (data) {
+                swal("添加失败", res.responseJSON.msg, "error")
+            }
+        })
+    }
+    // {# 如果project_id存在就是修改 #}
+    else {
+    var arr = [];
+    arr.push(data);
+        $.ajax({
+            type: "PUT",
+            url: "/member", // 待后端提供PUT修改接口
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(arr),  // 设置请求体
+            success: function (res) {
+                console.log(res);
+                if (res.code == 200) {
+                    swal("修 改", "租客信息已修改",
+                        "success");
+                } else {
+                    swal("修改失败", res.msg, "error")
+                }
+                // {#关闭模态框并清除框内数据，否则下次打开还是上次的数据#}
+                $("#table").bootstrapTable('refresh');
+                $("#addOrUpdateform")[0].reset();
+                $('#id').val('');   // 租客id作为隐藏字段无法通过reset()清除，需要单独处理
+                $('#addOrUpdateModal').modal('hide');
+                $("#mytab").bootstrapTable('refresh');
+            },
+            error: function () {
+                swal("修改失败", res.responseJSON.msg, "error")
+            }
+        })
+    }
+}
+
 function doDisable() {
     swal({
             title: "确定禁用吗？",
@@ -110,6 +178,10 @@ function doDisable() {
         },
         function (isConfirm) {
             if (isConfirm) {
+                for (var index = 0; index < selectedObjRows.length; index++) {
+                    var obj = selectedObjRows[index];
+                    obj.memberStatus = 0;
+                }
                 $.ajax("/room", {
                     type: "delete",
                     dataType: "json",
@@ -141,6 +213,46 @@ function enableRows() {
         swal("请选择要启用的房间")
         return
     }
+    swal({
+        title: "确定启用吗？",
+        text: "是否启用选中的" + length + "个房间",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#2e6da4",
+        confirmButtonText: "确定启用",
+        cancelButtonText: "取消启用",
+        closeOnConfirm: false,
+        // closeOnCancel: false //取消时不自动关闭弹框
+    },
+    function (isConfirm) {
+        if (isConfirm) {
+            for (var index = 0; index < selectedObjRows.length; index++) {
+                var obj = selectedObjRows[index];
+                obj.memberStatus = 2;
+            }
+            $.ajax("/room", {
+                type: "put",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(selectedRows),
+                success: function (data) {
+                    if (data.code == 200) {
+                        swal("启 用", "所选房间已启用",
+                            "success");
+                        selectedRows = [];
+                        $("#table").bootstrapTable('refresh');
+                    } else {
+                        selectedRows = [];
+                        swal("启用失败", data.msg, "error")
+                    }
+                },
+                error: function (data) {
+                    swal("启用失败", data.responseJSON.msg, "error")
+                }
+            })
+
+        }
+    });
 }
 
 function edit() {
@@ -186,7 +298,6 @@ function initValidate() {
 
 // 获取下拉框元素
 var dropdown = document.getElementById("roomStatus");
-
 // 绑定 change 事件
 dropdown.addEventListener("change", function () {
     var enableBtn = document.getElementById("enable");
@@ -200,6 +311,7 @@ dropdown.addEventListener("change", function () {
         enableBtn.classList.add("hidden")
         disableBtn.classList.remove("hidden")
     }
+    selectedRows = [];
     $("#table").bootstrapTable('refresh');
 });
 

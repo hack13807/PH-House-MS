@@ -1,10 +1,12 @@
 var selectedRows = [];
+var selectedObjRows = [];
 /**
  * 勾选记录
  */
 $('#table').on('check.bs.table', function (e, row) {
     if ($.inArray(row.rowId, selectedRows) === -1) {
         selectedRows.push(row.rowId);
+        selectedObjRows.push(row);
     }
 });
 
@@ -15,6 +17,7 @@ $('#table').on('uncheck.bs.table', function (e, row) {
     var index = $.inArray(row.rowId, selectedRows);
     if (index !== -1) {
         selectedRows.splice(index, 1);
+        selectedObjRows.splice(index, 1);
     }
 });
 
@@ -37,6 +40,7 @@ $('#table').on('check-all.bs.table', function (e, rows) {
     $.each(rows, function(index, row) {
         if ($.inArray(row.rowId, selectedRows) === -1) {
             selectedRows.push(row.rowId);
+            selectedObjRows.push(row);
         }
     });
 });
@@ -57,6 +61,7 @@ $('#table').on('uncheck-all.bs.table', function (e) {
         var index = selectedRows.indexOf(row.rowId);
         if (index > -1) {
             selectedRows.splice(index, 1);
+            selectedObjRows.splice(index, 1);
         }
     });
 });

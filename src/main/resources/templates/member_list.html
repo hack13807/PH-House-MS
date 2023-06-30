@@ -22,8 +22,9 @@
     <div id="toolbar" class="div-toolbar">
         <select name="select" id="memberStatus" class="form-condition">
             <option value="-1">全部</option>
-            <option value="0">租住中</option>
-            <option value="1">已退租</option>
+            <option value="1" selected>租住中</option>
+            <option value="2">已退租</option>
+            <option value="0">删 除</option>
         </select>
         <input name="memberSearch" id="memberSearch" class="form-condition" placeholder="租客姓名"/>
         <input name="roomSearch" id="roomSearch" class="form-condition" placeholder="房间号"/>
@@ -31,7 +32,7 @@
         <button id="search" class="btn btn-primary" th:onclick="search()">搜 索</button>
         <button class="btn btn-success" th:onclick="|addMember()|">新 增</button>
         <button class="btn btn-info" th:onclick="|edit()|">编 辑</button>
-        <button class="btn btn-warning" th:onclick="terminate()">退 租</button>
+        <button id="terminate" class="btn btn-warning" th:onclick="terminate()">退 租</button>
         <button class="btn btn-danger" th:onclick="|deleteRows();|">删 除</button>
     </div>
     <!--表格-->
@@ -62,7 +63,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">租客姓名</label>
                             <div class="col-sm-7">
-                                <input type="text" class="form-control" id="memberName" name="memberName" required data-bv-field="name"
+                                <input type="text" class="form-control" id="name" name="name" required data-bv-field="name"
                                        placeholder="请输入租客姓名">
                                 <input type="hidden" class="form-control" id="id" name="id">
                             </div>

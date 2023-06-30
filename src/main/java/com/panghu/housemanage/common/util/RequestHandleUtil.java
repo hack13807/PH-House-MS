@@ -2,14 +2,17 @@ package com.panghu.housemanage.common.util;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.panghu.housemanage.common.enumeration.MemberSexEnum;
 import com.panghu.housemanage.pojo.po.MemberPo;
 import com.panghu.housemanage.pojo.po.PHBasePo;
+import com.panghu.housemanage.pojo.po.RoomPo;
+import com.panghu.housemanage.pojo.vo.MemberVo;
 import com.panghu.housemanage.pojo.vo.PHBaseVo;
+import com.panghu.housemanage.pojo.vo.RoomVo;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Controller处理请求工具类
@@ -52,7 +55,7 @@ public class RequestHandleUtil {
      * @return {@link T}
      * @throws Exception 异常
      */
-    public static <T> T buildPoEntity(HttpServletRequest request, Class<? extends PHBasePo> clazz) throws Exception {
+    public static <T> T buildPoEntity(HttpServletRequest request, Class<? extends PHBaseVo> clazz) throws Exception {
 // 实例化类对象
         T instance = (T) clazz.newInstance();
 
@@ -90,5 +93,34 @@ public class RequestHandleUtil {
         } else {
             throw new IllegalArgumentException("Unsupported field type: " + fieldType.getName());
         }
+    }
+
+    public static List<MemberPo> memberDTOTrans(List<MemberVo> volist) {
+        List<MemberPo> poList = new ArrayList<>(volist.size());
+        volist.forEach(memberVo -> {
+            MemberPo memberPo = new MemberPo();
+            Optional.ofNullable(memberVo.getRowId()).ifPresent(memberPo::setId);
+            Optional.ofNullable(memberVo.getMemberName()).ifPresent(memberPo::setName);
+            Optional.ofNullable(memberVo.getSex()).ifPresent(sex -> memberPo.setSex(sex.getCode()));
+            Optional.ofNullable(memberVo.getTel()).ifPresent(memberPo::setTel);
+            Optional.ofNullable(memberVo.getIdCard()).ifPresent(memberPo::setIdCard);
+            Optional.ofNullable(memberVo.getRoomId()).ifPresent(memberPo::setRoomId);
+            Optional.ofNullable(memberVo.getMemberStatus()).ifPresent(status -> memberPo.setStatus(status.getCode()));
+            poList.add(memberPo);
+        });
+        return poList;
+    }
+
+    public static List<RoomPo> roomDTOTrans(List<RoomVo> volist) {
+        List<RoomPo> poList = new ArrayList<>(volist.size());
+        volist.forEach(roomVo -> {
+            RoomPo roomPo = new RoomPo();
+            Optional.ofNullable(roomVo.getRowId()).ifPresent(roomPo::setId);
+            Optional.ofNullable(roomVo.getRoomNo()).ifPresent(roomPo::setNumber);
+            Optional.ofNullable(roomVo.getRoomDesc()).ifPresent(roomPo::setDescription);
+            Optional.ofNullable(roomVo.getRoomStatus()).ifPresent(status -> roomPo.setStatus(status.getCode()));
+            poList.add(roomPo);
+        });
+        return poList;
     }
 }

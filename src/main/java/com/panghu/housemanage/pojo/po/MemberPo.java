@@ -1,9 +1,7 @@
 package com.panghu.housemanage.pojo.po;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+import com.panghu.housemanage.common.enumeration.MemberSexEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -20,18 +18,4 @@ public class MemberPo extends PHBasePo{
     private String idCard;
     private Long roomId;
     private Integer status;
-
-    /**
-     * 页面参数
-     */
-    @TableField(exist = false)
-    private Long memberId;
-    @TableField(exist = false)
-    private String memberName;
-    @TableField(exist = false)
-    private String roomNo;
-    @TableField(exist = false)
-    private String memberStatus;
-    @TableField(exist = false)
-    private String roomDesc;
 }

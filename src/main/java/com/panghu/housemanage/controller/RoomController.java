@@ -8,6 +8,7 @@ import com.panghu.housemanage.common.util.PHResp;
 import com.panghu.housemanage.common.util.RequestHandleUtil;
 import com.panghu.housemanage.pojo.po.MemberPo;
 import com.panghu.housemanage.pojo.po.RoomPo;
+import com.panghu.housemanage.pojo.vo.MemberVo;
 import com.panghu.housemanage.pojo.vo.RoomVo;
 import com.panghu.housemanage.service.MemberService;
 import com.panghu.housemanage.service.RoomService;
@@ -41,9 +42,9 @@ public class RoomController {
         // 通过前端参数构建分页对象page
         Page<RoomVo> page = RequestHandleUtil.getPage(request);
         // 通过前端参数构建查询实体po
-        RoomPo roomPo = RequestHandleUtil.buildPoEntity(request, RoomPo.class);
+        RoomVo roomVo = RequestHandleUtil.buildPoEntity(request, RoomVo.class);
         // 把分页对象page和查询实体po传到service层，查询结果返回封装成Page对象
-        IPage<RoomVo> pageResult = roomService.pageQueryRoom(page, roomPo);
+        IPage<RoomVo> pageResult = roomService.pageQueryRoom(page, roomVo);
         // 获取查询总数和记录，构建返回前端的Map对象
         return RequestHandleUtil.successPageResult(pageResult);
     }
@@ -64,8 +65,10 @@ public class RoomController {
 
     @PutMapping
     @ResponseBody
-    public PHResp<String> update(@RequestBody RoomPo roomPo) {
-        roomService.updateRoomInfo(roomPo);
+    public PHResp<String> update(@RequestBody List<RoomVo> volist) {
+        List<RoomPo> roomList = RequestHandleUtil.roomDTOTrans(volist);
+        // 更新租客信息
+        roomService.updateBatch(roomList);
         return PHResp.success();
     }
     @PostMapping

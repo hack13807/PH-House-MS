@@ -17,4 +17,7 @@ public class RoomVo  extends PHBaseVo {
     @EnumValue
     private RoomStatusEnum roomStatus;
     private String memberName;
+
+    /*页面参数*/
+    private String voStatus;
 }

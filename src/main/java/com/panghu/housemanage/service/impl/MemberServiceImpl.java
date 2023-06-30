@@ -8,9 +8,11 @@ import com.panghu.housemanage.dao.MemberMapper;
 import com.panghu.housemanage.pojo.po.MemberPo;
 import com.panghu.housemanage.pojo.po.PHBasePo;
 import com.panghu.housemanage.pojo.vo.MemberVo;
+import com.panghu.housemanage.pojo.vo.PHBaseVo;
 import com.panghu.housemanage.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -21,8 +23,8 @@ public class MemberServiceImpl implements MemberService {
     MemberMapper memberMapper;
 
     @Override
-    public IPage<MemberVo> pageQueryMember(Page<MemberVo> page, PHBasePo po) {
-        return memberMapper.pageQueryMember(page, po);
+    public IPage<MemberVo> pageQueryMember(Page<MemberVo> page, PHBaseVo vo) {
+        return memberMapper.pageQueryMember(page, vo);
     }
 
     @Override
@@ -50,8 +52,9 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void batchUpdate(List<MemberPo> list) {
-        // memberMapper.up(memberPo);
+    @Transactional
+    public void updateBatch(List<MemberPo> list) {
+        list.forEach(memberPo -> memberMapper.updateById(memberPo));
     }
 
 }

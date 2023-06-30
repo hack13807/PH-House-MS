@@ -15,5 +15,5 @@ public interface RoomMapper extends BaseMapper<RoomPo> {
 
     int insertBatch(List<RoomVo> list);
 
-    IPage<RoomVo> pageQueryRoom(Page<RoomVo> page, RoomPo roomPo);
+    IPage<RoomVo> pageQueryRoom(Page<RoomVo> page, RoomVo roomVo);
 }

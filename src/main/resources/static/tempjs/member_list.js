@@ -167,7 +167,7 @@ function addOrUpdate() {
         sex: $('#sex').val(),
         idCard: $('#idCard').val(),
         roomId: $('#roomId').val(),
-        memberStatus: $('#status').val()
+        memberStatus: $('#status').val(),
     };
     // {# 如果不存在project_id就是新增 #}
     if (!memberId) {
@@ -199,7 +199,8 @@ function addOrUpdate() {
     // {# 如果project_id存在就是修改 #}
     else {
     var arr = [];
-    arr.push(data);
+        data.optType = 1;
+        arr.push(data);
         $.ajax({
             type: "PUT",
             url: "/member", // 待后端提供PUT修改接口
@@ -221,7 +222,7 @@ function addOrUpdate() {
                 $('#addOrUpdateModal').modal('hide');
                 $("#mytab").bootstrapTable('refresh');
             },
-            error: function () {
+            error: function (res) {
                 swal("修改失败", res.responseJSON.msg, "error")
             }
         })
@@ -235,6 +236,23 @@ function deleteRows() {
         swal("请选择要删除的租客")
         return
     }
+    //    检查租客是否退租
+    $.ajax("/member/isTerminate?ids=" + selectedRows, {
+        type: "get",
+        success: function (res) {
+            if (res.code === 200) {
+                doDelete();
+            } else {
+                swal("删除失败", res.msg + "\n" + res.data, "error")
+            }
+        },
+        error: function (res) {
+            swal("删除失败", res.responseJSON.msg, "error")
+        }
+    })
+}
+
+function doDelete() {
     swal({
             title: "确定删除吗？",
             text: "是否删除选中的" + length + "条记录",
@@ -253,19 +271,19 @@ function deleteRows() {
                     dataType: "json",
                     contentType: 'application/json; charset=utf-8',
                     data: JSON.stringify(selectedRows),
-                    success: function (data) {
-                        if (data.code == 200) {
+                    success: function (res) {
+                        if (res.code === 200) {
                             swal("删 除", "所选租客记录已删除",
                                 "success");
                             selectedRows = [];
                             $("#table").bootstrapTable('refresh');
                         } else {
                             selectedRows = [];
-                            swal("删除失败", data.msg, "error")
+                            swal("删除失败", res.msg, "error")
                         }
                     },
-                    error: function (data) {
-                        swal("删除失败", data.responseJSON.msg, "error")
+                    error: function (res) {
+                        swal("删除失败", res.responseJSON.msg, "error")
                     }
                 })
 
@@ -343,6 +361,7 @@ function terminate() {
             for (var index = 0; index < selectedObjRows.length; index++) {
                 var obj = selectedObjRows[index];
                 obj.memberStatus = 2;
+                obj.optType = 2;
             }
             $.ajax({
                 type: "PUT",

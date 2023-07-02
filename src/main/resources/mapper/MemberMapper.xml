@@ -36,4 +36,15 @@
             </choose>
         </where>
     </select>
+
+    <select id="countMemberByRoomId" resultType="java.util.Map">
+        SELECT m.room_id as roomId, COUNT(m.room_id) AS count
+        FROM t_member m
+        LEFT JOIN t_room r ON m.room_id = r.id
+        WHERE r.id IN
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        GROUP BY m.room_id FOR UPDATE
+    </select>
 </mapper>

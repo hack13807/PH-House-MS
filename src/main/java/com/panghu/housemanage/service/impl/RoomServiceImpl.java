@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class RoomServiceImpl implements RoomService {
@@ -51,45 +52,14 @@ public class RoomServiceImpl implements RoomService {
         roomMapper.insert(roomPo);
     }
 
-    /**
-     * 根据更新的租客涉及的房间和现在房间是否存在租客，判断是否将房间状态改为待租
-     *
-     * @param roomIdlist 租客涉及的房间ids
-     */
     @Override
-    public void updateRoomStatus(Set<Long> roomIdlist, RoomStatusEnum status) {
-        switch (status) {
-            case UNUSED -> {
-                // 查询改动后，租客所涉及的房间
-                List<Long> roomInUseList = memberMapper.selectList(
-                        new QueryWrapper<MemberPo>()
-                                .select("room_id")
-                                .in("room_id", roomIdlist)
-                                .notIn("status", 0, 2)
-                                .groupBy("room_id")
-                ).stream().map(MemberPo::getRoomId).toList();
-                List<Long> list = roomIdlist.stream().filter(roomId -> !roomInUseList.contains(roomId)).toList();
+    public void updateRoomStatus(List<Long> roomIdList, RoomStatusEnum status) {
                 roomMapper.update(null,
                         new UpdateWrapper<RoomPo>()
-                                .set("status", RoomStatusEnum.INUSE.getCode())
-                                .in("id", roomIdlist)
+                                .set("status", status.getCode())
+                                .in("id", roomIdList)
                 );
-                if (!list.isEmpty()) {
-                    roomMapper.update(null,
-                            new UpdateWrapper<RoomPo>()
-                                    .set("status", RoomStatusEnum.UNUSED.getCode())
-                                    .in("id", list)
-                    );
-                }
-            }
-            case INUSE -> {
-                roomMapper.update(null,
-                        new UpdateWrapper<RoomPo>()
-                                .set("status", RoomStatusEnum.INUSE.getCode())
-                                .in("id", roomIdlist)
-                );
-            }
-        }
+
     }
 
     @Override

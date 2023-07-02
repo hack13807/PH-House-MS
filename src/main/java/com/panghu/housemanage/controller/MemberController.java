@@ -2,7 +2,9 @@ package com.panghu.housemanage.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.panghu.housemanage.common.enumeration.PHExceptionCodeEnum;
 import com.panghu.housemanage.common.enumeration.RoomStatusEnum;
+import com.panghu.housemanage.common.exception.PHServiceException;
 import com.panghu.housemanage.common.util.PHResp;
 import com.panghu.housemanage.common.util.RequestHandleUtil;
 import com.panghu.housemanage.pojo.po.MemberPo;
@@ -13,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -50,6 +53,17 @@ public class MemberController {
         return RequestHandleUtil.successPageResult(pageResult);
     }
 
+    @GetMapping("/isTerminate")
+    @ResponseBody
+    public PHResp<String> isTerminate(Long[] ids)  {
+        List<MemberPo> rentingList = memberService.isTerminate(ids);
+        if (CollectionUtils.isEmpty(rentingList)) {
+            return PHResp.success();
+        }
+        String memberNames = String.join(", ", rentingList.stream().map(MemberPo::getName).toList());
+        throw new PHServiceException(PHExceptionCodeEnum.MEMBER_RENTING, memberNames);
+    }
+
     @DeleteMapping
     @ResponseBody
     public PHResp<String> deleteData(@RequestBody Long[] ids) {
@@ -62,21 +76,17 @@ public class MemberController {
     @Transactional
     public PHResp<String> update(@RequestBody List<MemberVo> volist) {
         List<MemberPo> memberList = RequestHandleUtil.memberDTOTrans(volist);
-        // 更新房间状态 TODO bug先查询当前房间，和编辑后的房间做对比
-        roomService.updateRoomStatus(memberList.stream().map(MemberPo::getRoomId).collect(Collectors.toSet()), RoomStatusEnum.UNUSED);
-        // 更新租客信息
-        memberService.updateBatch(memberList);
+        memberService.updateBatch(memberList,volist.get(0).getOptType());
         return PHResp.success();
     }
 
     @PostMapping
     @ResponseBody
+    @Transactional
     public PHResp<String> insert(@RequestBody MemberVo memberVo) {
         MemberPo memberPo = RequestHandleUtil.memberDTOTrans(Collections.singletonList(memberVo)).get(0);
+        // 新增租客记录
         memberService.insertMember(memberPo);
-        // TODO 更新房间状态
-        // 更新房间状态
-        roomService.updateRoomStatus(Set.of(memberVo.getRoomId()), RoomStatusEnum.INUSE);
         return PHResp.success();
     }
 

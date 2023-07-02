@@ -20,7 +20,7 @@ public interface RoomService {
 
     void insertRoom(RoomPo roomPo);
 
-    void updateRoomStatus(Set<Long> list, RoomStatusEnum status);
+    void updateRoomStatus(List<Long> roomIdList, RoomStatusEnum status);
 
     void updateBatch(List<RoomPo> roomList);
 }

@@ -22,9 +22,9 @@
     <div id="toolbar" class="div-toolbar">
         <select name="select" id="memberStatus" class="form-condition">
             <option value="-1">全部</option>
+            <option value="0">新增</option>
             <option value="1" selected>租住中</option>
             <option value="2">已退租</option>
-            <option value="0">删 除</option>
         </select>
         <input name="memberSearch" id="memberSearch" class="form-condition" placeholder="租客姓名"/>
         <input name="roomSearch" id="roomSearch" class="form-condition" placeholder="房间号"/>
@@ -55,7 +55,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true" th:onclick="cleanValidate()">
                         ×
                     </button>
-                    <h4 class="modal-title" id="addOrUpdateModalLabel"/>
+                    <h4 class="modal-title text-center font-weight-bold" id="addOrUpdateModalLabel"/>
                 </div>
                 <!--                    {# 模态框body #}-->
                 <div class="modal-body" style="height: 100%;">
@@ -98,16 +98,6 @@
                             <label class="col-sm-3 control-label">租住房间</label>
                             <div class="col-sm-7">
                                 <select name="roomId" id="roomId" class="form-condition">
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">租住状态</label>
-                            <div class="col-sm-7">
-                                <select name="status" id="status" class="form-condition" disabled>
-                                    <option value="1">租住中</option>
-                                    <option value="2">已退租</option>
                                 </select>
                             </div>
                         </div>

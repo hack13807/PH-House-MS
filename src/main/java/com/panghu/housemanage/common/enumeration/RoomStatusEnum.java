@@ -7,10 +7,9 @@ import lombok.Getter;
 
 @Getter
 public enum RoomStatusEnum implements IEnum<Integer> {
-    DELETE(0,"禁用"),
+    UNUSED(0,"待租"),
     INUSE(1,"出租中"),
-    UNUSED(2,"待租"),
-    PENDING(3,"待处理");
+    PENDING(2,"待处理");
 
     @EnumValue
     private final int code;

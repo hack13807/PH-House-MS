@@ -9,6 +9,8 @@
         <result column="rent" property="rent"/>
         <result column="start_date" property="startDate"/>
         <result column="end_date" property="endDate"/>
+        <result column="roomNo" property="roomNo"/>
+        <result column="memberName" property="memberName"/>
     </resultMap>
 
 
@@ -19,6 +21,26 @@
         left join t_room r on r.id = l.room_id
         <where>
             m.id = #{memberId}
+        </where>
+    </select>
+
+    <select id="pageQueryLease" parameterType="com.panghu.housemanage.pojo.vo.LeaseVo" resultMap="leaseVoMap">
+        Select r.number as roomNo, m.name as memberName, l.id as leaseId,l.lease_type as leaseType,l.unit,l.rent,l.start_date,l.end_date
+        from t_lease l
+        left join t_member m on m.id = l.member_id
+        left join t_room r on r.id = l.room_id
+        <where>
+            1 = 1
+            <if test=" leaseVo.memberName != null and leaseVo.memberName != '' ">
+                and m.name = #{leaseVo.memberName}
+            </if>
+            <if test=" leaseVo.roomNo != null and leaseVo.roomNo != '' ">
+                and r.number = #{leaseVo.roomNo}
+            </if>
+            <if test=" leaseVo.voLeaseType != null and leaseVo.voLeaseType != '' and leaseVo.voLeaseType != '-1' ">
+                and l.lease_type = #{leaseVo.voLeaseType}
+            </if>
+            and m.isdelete = 0
         </where>
     </select>
 </mapper>

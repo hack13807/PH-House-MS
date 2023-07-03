@@ -30,7 +30,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public <T> PHResp<T> globalException(Exception e) {
-        return PHResp.error(PHExceptionCodeEnum.SERVICE_ERROR.getCode(), PHExceptionCodeEnum.SERVICE_ERROR.getMsg(), (T) e.toString());
+        return PHResp.error(PHExceptionCodeEnum.SERVICE_ERROR.getCode(), PHExceptionCodeEnum.SERVICE_ERROR.getMsg(), (T) e);
     }
 
 }

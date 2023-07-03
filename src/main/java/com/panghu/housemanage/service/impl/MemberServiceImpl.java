@@ -36,7 +36,6 @@ public class MemberServiceImpl implements MemberService {
         LambdaUpdateWrapper<MemberPo> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.set(MemberPo::getStatus, 0).in(MemberPo::getId, ids);
         memberMapper.update(null, updateWrapper);
-        // TODO 删除表示已经退租了，其实不用处理，直接控制退租删除
     }
 
     @Override

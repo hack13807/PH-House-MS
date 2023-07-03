@@ -20,12 +20,16 @@
     </div>
     <!--工具栏-->
     <div id="toolbar" class="div-toolbar">
-        <select name="select" id="roomStatus" class="form-condition">
-            <option value="-1">全 部</option>
-            <option value="1">出租中</option>
-            <option value="2">待 租</option>
+        <select name="select" id="enableStatus" class="form-condition">
+            <option value="1">启 用</option>
             <option value="0">禁 用</option>
         </select>
+        <select name="select" id="roomStatus" class="form-condition">
+            <option value="-1">全 部</option>
+            <option value="0">待 租</option>
+            <option value="1">出租中</option>
+        </select>
+
         <input name="roomSearch" id="roomSearch" class="form-condition" placeholder="房间号"/>
         <!--操作按钮-->
         <button id="search" class="btn btn-primary" th:onclick="search()">搜 索</button>
@@ -55,7 +59,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true" th:onclick="cleanValidate()">
                         ×
                     </button>
-                    <h4 class="modal-title" id="addOrUpdateModalLabel"/>
+                    <h4 class="modal-title text-center" id="addOrUpdateModalLabel">
                 </div>
                 <!--                    {# 模态框body #}-->
                 <div class="modal-body" style="height: 100%;">

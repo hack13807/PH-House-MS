@@ -7,9 +7,10 @@ import lombok.Getter;
 
 @Getter
 public enum LeaseTypeEnum implements IEnum<Integer> {
-    DEFAULT(0,"默认"),
-    DAILY(1,"按日租"),
-    MONTHLY(2,"按月租");
+    DEFAULT(0,"默认", ""),
+    DAILY(1,"按日租", "天"),
+    MONTHLY(2,"按月租", "月"),
+    YEARLY(3,"按年租", "年");
 
     @EnumValue
     private final int code;
@@ -17,9 +18,12 @@ public enum LeaseTypeEnum implements IEnum<Integer> {
     @JsonValue
     private final String msg;
 
-    LeaseTypeEnum(int code , String msg){
+    private final String unit;
+
+    LeaseTypeEnum(int code , String msg, String unit){
         this.code = code ;
         this.msg = msg ;
+        this.unit = unit;
     }
 
     /**

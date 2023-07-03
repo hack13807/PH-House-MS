@@ -76,7 +76,7 @@ $('#table').bootstrapTable({
     <!--展开子表-->
     onExpandRow: function (index, row, $detail) {
         $detail.html('<table></table>').find('table').bootstrapTable({
-            url: '/lease',
+            url: '/lease/getByMemberId',
             method: 'get',
             queryParams: {memberId: row.rowId},
             clickToSelect: true,
@@ -153,7 +153,6 @@ function edit() {
         $("#sex").val(row.sex === '男' ? 1 : 2);
         $("#idCard").val(row.idCard);
         $("#roomId").val(row.roomId);
-        $("#status").val(row.memberStatus === '租住中' ? 1 : 2);
     }
 };
 
@@ -167,7 +166,6 @@ function addOrUpdate() {
         sex: $('#sex').val(),
         idCard: $('#idCard').val(),
         roomId: $('#roomId').val(),
-        memberStatus: $('#status').val(),
     };
     // {# 如果不存在project_id就是新增 #}
     if (!memberId) {

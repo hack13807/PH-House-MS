@@ -20,4 +20,5 @@ public class RoomVo  extends PHBaseVo {
 
     /*页面参数*/
     private String voStatus;
+    private String enableStatus;
 }

@@ -21,20 +21,19 @@
     <select id="pageQueryRoom" parameterType="java.util.HashMap" resultMap="roomVoMap">
         select r.id as rowId, r.number as roomNo, r.status as roomStatus, r.description as roomDesc, GROUP_CONCAT(m.name SEPARATOR ',') as memberName
         from t_room r
-        left join t_member m on m.room_id = r.id and m.status not in (0,2)
+        left join t_member m on m.room_id = r.id
         <where>
             1 = 1
             <if test=" roomVo.roomNo != null and roomVo.roomNo != '' ">
                 and r.number = #{roomVo.roomNo}
             </if>
-            <choose>
-                <when test=" roomVo.voStatus != null and roomVo.voStatus != '' and roomVo.voStatus != '-1' ">
-                    and r.status = #{roomVo.voStatus}
-                </when>
-                <otherwise>
-                    and r.status != 0
-                </otherwise>
-            </choose>
+            <if test=" roomVo.voStatus != null and roomVo.voStatus != '' and roomVo.voStatus != '-1' ">
+                and r.status = #{roomVo.voStatus}
+            </if>
+            <if test=" roomVo.enableStatus != null and roomVo.enableStatus != '' ">
+                and r.enable = #{roomVo.enableStatus}
+            </if>
+            and r.enable != 0
         </where>
         group by r.id, r.number, r.status, r.description
     </select>

@@ -26,14 +26,10 @@
             <if test=" memberVo.roomNo != null and memberVo.roomNo != '' ">
                 and r.number = #{memberVo.roomNo}
             </if>
-            <choose>
-                <when test=" memberVo.voStatus != null and memberVo.voStatus != '' and memberVo.voStatus != '-1' ">
-                    and m.status = #{memberVo.voStatus}
-                </when>
-                <otherwise>
-                    and m.status != 0
-                </otherwise>
-            </choose>
+            <if test=" memberVo.voStatus != null and memberVo.voStatus != '' and memberVo.voStatus != '-1' ">
+                and m.status = #{memberVo.voStatus}
+            </if>
+            and m.isdelete = 0
         </where>
     </select>
 

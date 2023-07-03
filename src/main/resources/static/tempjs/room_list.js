@@ -26,6 +26,7 @@ $('#table').bootstrapTable({
             limit: params.limit,
             voStatus: document.getElementById("roomStatus").value,
             roomNo: $("#roomSearch").val(),
+            enableStatus: $("#enableStatus").val(),
         }
     },
     responseHandler: function (res) {
@@ -68,7 +69,7 @@ $('#table').bootstrapTable({
 /*新增房间*/
 function addRoom() {
     initValidate();
-    $('.modal-title').text("新增租客")
+    $('.modal-title').text("新增房间")
     $('#addOrUpdateModal').modal('show')
     $('#addOrUpdateform')[0].reset()  //重置表单
 }
@@ -125,9 +126,15 @@ function addOrUpdate() {
                 $('#id').val('');   // id作为隐藏字段无法通过reset()清除，需要单独处理
                 $('#addOrUpdateModal').modal('hide');
                 $("#mytab").bootstrapTable('refresh');
+                selectedRows = [];
+                               selectedObjRows = [];
+                               $('#table').bootstrapTable('uncheckAll');
             },
             error: function (data) {
                 swal("添加失败", res.responseJSON.msg, "error")
+                selectedRows = [];
+                                selectedObjRows = [];
+                                $('#table').bootstrapTable('uncheckAll');
             }
         })
     }
@@ -155,9 +162,15 @@ function addOrUpdate() {
                 $('#id').val('');   // id作为隐藏字段无法通过reset()清除，需要单独处理
                 $('#addOrUpdateModal').modal('hide');
                 $("#mytab").bootstrapTable('refresh');
+                selectedRows = [];
+                selectedObjRows = [];
+                $('#table').bootstrapTable('uncheckAll');
             },
             error: function () {
                 swal("修改失败", res.responseJSON.msg, "error")
+                selectedRows = [];
+                                selectedObjRows = [];
+                                $('#table').bootstrapTable('uncheckAll');
             }
         })
     }
@@ -191,14 +204,21 @@ function doDisable() {
                             swal("禁 用", "所选房间已禁用",
                                 "success");
                             selectedRows = [];
+                            selectedObjRows = [];
                             $("#table").bootstrapTable('refresh');
+                            $('#table').bootstrapTable('uncheckAll');
                         } else {
                             selectedRows = [];
+                            selectedObjRows = [];
+                            $('#table').bootstrapTable('uncheckAll');
                             swal("禁用失败", data.msg, "error")
                         }
                     },
                     error: function (data) {
                         swal("禁用失败", data.responseJSON.msg, "error")
+                        selectedRows = [];
+                                                    selectedObjRows = [];
+                        $('#table').bootstrapTable('uncheckAll');
                     }
                 })
 
@@ -239,14 +259,21 @@ function enableRows() {
                         swal("启 用", "所选房间已启用",
                             "success");
                         selectedRows = [];
+                        selectedObjRows = [];
                         $("#table").bootstrapTable('refresh');
+                        $('#table').bootstrapTable('uncheckAll');
                     } else {
                         selectedRows = [];
+                        selectedObjRows = [];
+                        $('#table').bootstrapTable('uncheckAll');
                         swal("启用失败", data.msg, "error")
                     }
                 },
                 error: function (data) {
                     swal("启用失败", data.responseJSON.msg, "error")
+                    selectedRows = [];
+                                            selectedObjRows = [];
+                    $('#table').bootstrapTable('uncheckAll');
                 }
             })
 
@@ -296,21 +323,39 @@ function initValidate() {
 }
 
 // 获取下拉框元素
-var dropdown = document.getElementById("roomStatus");
+var enableStatusSelector = document.getElementById("enableStatus");
 // 绑定 change 事件
-dropdown.addEventListener("change", function () {
+enableStatusSelector.addEventListener("change", function () {
+    console.log(enableStatusSelector)
     var enableBtn = document.getElementById("enable");
     var disableBtn = document.getElementById("disable");
     // 获取当前选中的值
-    var selectedValue = dropdown.value;
+    var selectedValue = enableStatusSelector.value;
+    console.log(selectedValue);
     if (selectedValue === '0') {
         enableBtn.classList.remove("hidden")
         disableBtn.classList.add("hidden")
+        // 清除其余条件
+        $('#roomStatus').val('-1')
+        $('#roomSearch').val('')
     } else {
         enableBtn.classList.add("hidden")
         disableBtn.classList.remove("hidden")
     }
+//    selectedRows = [];
+//    selectedObjRows = [];
+//    $('#table').bootstrapTable('uncheckAll');
+    $("#table").bootstrapTable('refresh');
+});
+
+// 获取下拉框元素
+var dropdown = document.getElementById("roomStatus");
+// 绑定 change 事件
+dropdown.addEventListener("change", function () {
+var selectedValue = dropdown.value;
+console.log(selectedValue);
     selectedRows = [];
+    selectedObjRows = [];
     $("#table").bootstrapTable('refresh');
 });
 

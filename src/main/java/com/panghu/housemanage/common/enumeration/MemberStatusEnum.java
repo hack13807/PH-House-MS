@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 public enum MemberStatusEnum implements IEnum<Integer> {
-    DELETE(0,"删除"),
+    NEW(0,"新增"),
     RENTING(1,"租住中"),
     SURRENDER(2,"已退租");
 

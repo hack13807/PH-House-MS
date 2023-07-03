@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -67,14 +68,15 @@ public class RoomController {
     @ResponseBody
     public PHResp<String> update(@RequestBody List<RoomVo> volist) {
         List<RoomPo> roomList = RequestHandleUtil.roomDTOTrans(volist);
-        // 更新租客信息
+        // 更新信息
         roomService.updateBatch(roomList);
         return PHResp.success();
     }
     @PostMapping
     @ResponseBody
-    public PHResp<String> insert(@RequestBody RoomPo roomPo) {
-        roomService.insertRoom(roomPo);
+    public PHResp<String> insert(@RequestBody RoomVo roomVo) {
+        List<RoomPo> roomList = RequestHandleUtil.roomDTOTrans(Collections.singletonList(roomVo));
+        roomService.insertRoom(roomList.get(0));
         return PHResp.success();
     }
 

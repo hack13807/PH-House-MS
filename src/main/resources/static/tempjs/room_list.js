@@ -98,24 +98,23 @@ function disableRows() {
 
 function addOrUpdate() {
     let roomId = $('#id').val();
-    console.log("roomId的值为：" + memberId)
+    console.log("roomId的值为：" + roomId)
     var data = {
         rowId: roomId,
         roomNo: $('#roomNo').val(),
         roomDesc: $('#roomDesc').val(),
-        roomStatus: $('#status').val()
     };
     // {# 如果不存在project_id就是新增 #}
-    if (!memberId) {
+    if (!roomId) {
         $.ajax({
             type: "POST",
-            url: "/member",
+            url: "/room",
             dataType: "json",
             contentType: "application/json;charset=UTF-8",  // 设置请求头部
             data: JSON.stringify(data),  // 设置请求体
             success: function (res) {
                 if (res.code == 200) {
-                    swal("新 增", "租客记录已添加",
+                    swal("新 增", "房间已添加",
                         "success");
                 } else {
                     swal("添加失败", res.msg, "error")
@@ -123,7 +122,7 @@ function addOrUpdate() {
                 // {#关闭模态框并清除框内数据，否则下次打开还是上次的数据#}
                 $("#table").bootstrapTable('refresh');
                 $("#addOrUpdateform")[0].reset();
-                $('#id').val('');   // 租客id作为隐藏字段无法通过reset()清除，需要单独处理
+                $('#id').val('');   // id作为隐藏字段无法通过reset()清除，需要单独处理
                 $('#addOrUpdateModal').modal('hide');
                 $("#mytab").bootstrapTable('refresh');
             },
@@ -138,14 +137,14 @@ function addOrUpdate() {
     arr.push(data);
         $.ajax({
             type: "PUT",
-            url: "/member", // 待后端提供PUT修改接口
+            url: "/room", // 待后端提供PUT修改接口
             dataType: 'json',
             contentType: 'application/json; charset=utf-8',
             data: JSON.stringify(arr),  // 设置请求体
             success: function (res) {
                 console.log(res);
                 if (res.code == 200) {
-                    swal("修 改", "租客信息已修改",
+                    swal("修 改", "房间信息已修改",
                         "success");
                 } else {
                     swal("修改失败", res.msg, "error")
@@ -153,7 +152,7 @@ function addOrUpdate() {
                 // {#关闭模态框并清除框内数据，否则下次打开还是上次的数据#}
                 $("#table").bootstrapTable('refresh');
                 $("#addOrUpdateform")[0].reset();
-                $('#id').val('');   // 租客id作为隐藏字段无法通过reset()清除，需要单独处理
+                $('#id').val('');   // id作为隐藏字段无法通过reset()清除，需要单独处理
                 $('#addOrUpdateModal').modal('hide');
                 $("#mytab").bootstrapTable('refresh');
             },

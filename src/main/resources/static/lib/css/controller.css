@@ -4,6 +4,9 @@
     margin: 0 auto;
     margin-right: 10px;
 }
+.form-selector {
+    width: 80px;
+}
 
 .div-condition {
     float: left;
@@ -54,9 +57,9 @@
    #selectBox {
    margin-left: 15px; /* 向右移动的距离 */
        display: block;
-           width: 70%;
+           width: 300px;
            padding: 6px 12px;
-           font-size: 16px;
+           font-size: 15px;
            line-height: 1.42857143;
            color: #555;
            background-color: #fff;
@@ -71,5 +74,4 @@
            transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
            transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
            transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s, -webkit-box-shadow ease-in-out .15s
-
    }

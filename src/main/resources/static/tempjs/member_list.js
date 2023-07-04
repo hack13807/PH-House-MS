@@ -1,4 +1,3 @@
-var selectedRows = [];
 /*表格初始化*/
 $('#table').bootstrapTable({
     url: '/member',

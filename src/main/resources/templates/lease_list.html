@@ -20,7 +20,7 @@
     </div>
     <!--工具栏-->
     <div id="toolbar" class="div-toolbar">
-        <select name="select" id="leaseType" class="form-condition">
+        <select name="select" id="voLeaseType" class="form-condition">
             <option value="-1">全部类型</option>
             <option value="1">日 租</option>
             <option value="2">月 租</option>
@@ -49,10 +49,11 @@
          aria-labelledby="addOrUpdateModalLabel"
          aria-hidden="true">
 
-        <div class="modal-dialog"  style="width: 50%;">
+        <div class="modal-dialog" style="width: 45%;">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" th:onclick="cleanValidate()">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                            th:onclick="cleanValidate()">
                         ×
                     </button>
                     <h4 class="modal-title text-center font-weight-bold" id="addOrUpdateModalLabel"/>
@@ -71,21 +72,24 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">租客姓名</label>
                                     <div class="col-sm-7">
-                                        <input type="text" class="form-control" id="memberName" name="memberName" oninput="matchAndShow()" data-bv-field="name"
+                                        <input type="text" class="form-control" id="memberName" name="memberName"
+                                               oninput="matchAndShow()" data-bv-field="name"
                                                placeholder="请输入租客姓名" autocomplete="off">
-                                        <div id="selectBox" class="dropdown-menu selectBox" style="display: none;"></div>
-                                        <input type="hidden" class="form-control" id="id" name="id">
+                                        <div id="selectBox" class="dropdown-menu selectBox"
+                                             style="display: none;"></div>
+                                        <input type="text" class="form-control" id="id" name="id">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label">性别</label>
+                                    <label class="col-sm-3 control-label">身份证号</label>
                                     <div class="col-sm-7">
-                                        <select name="sex" id="sex" class="form-condition">
-                                            <option value="1">男</option>
-                                            <option value="2">女</option>
-                                        </select>
+                                        <input type="text" class="form-control" id="idCard" name="idCard"
+                                               data-bv-field="idCard"
+                                               placeholder="请输入租客身份证号">
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-sm-6">
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">手机号</label>
                                     <div class="col-sm-7">
@@ -93,13 +97,13 @@
                                                placeholder="请输入租客手机号">
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label">身份证号</label>
+                                    <label class="col-sm-3 control-label">性别</label>
                                     <div class="col-sm-7">
-                                        <input type="text" class="form-control" id="idCard" name="idCard" data-bv-field="idCard"
-                                               placeholder="请输入租客身份证号">
+                                        <select name="sex" id="sex" class="form-condition form-selector">
+                                            <option value="1">男</option>
+                                            <option value="2">女</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -116,27 +120,56 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">租住房间</label>
                                     <div class="col-sm-7">
-                                        <select name="roomId" id="roomId" class="form-condition">
+                                        <select name="roomId" id="roomId" class="form-condition form-selector">
                                         </select>
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">租住类型</label>
+                                    <div class="col-sm-7">
+                                        <select name="leaseType" id="leaseType" class="form-condition form-selector">
+                                            <option value="1">按日租</option>
+                                            <option value="2">按月租</option>
+                                            <option value="3">按年租</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">租住时长</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" id="unit" name="unit" >
+                                    </div>
+                                </div>
+
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label">租住状态</label>
+                                    <label class="col-sm-3 control-label">租金额</label>
                                     <div class="col-sm-7">
-                                        <select name="status" id="status" class="form-condition" disabled>
-                                            <option value="1">租住中</option>
-                                            <option value="2">已退租</option>
-                                        </select>
+                                        <input type="text" class="form-control" id="rentAmount" name="rentAmount" step="10">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">开始日期:</label>
+                                    <div class="col-sm-7">
+                                        <input type="date" name="startDate" class="form-control" min="2023-01-01" max="2099-12-31"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">结束日期:</label>
+                                    <div class="col-sm-7">
+                                        <input type="date" name="endDate" class="form-control" min="2023-01-01" max="2099-12-31"/>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <!--                    {# 模态框底部 #}-->
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal" th:onclick="cleanValidate()">关闭</button>
-                            <input type="button" th:onclick="validate()" class="btn btn-primary" id="submitBtn" value="提交"/>
+                            <button type="button" class="btn btn-default" data-dismiss="modal"
+                                    th:onclick="cleanValidate()">关闭
+                            </button>
+                            <input type="button" th:onclick="validate()" class="btn btn-primary" id="submitBtn"
+                                   value="提交"/>
                         </div>
                     </form>
                 </div>
@@ -144,8 +177,7 @@
         </div><!-- /.modal -->
     </div>
 </div>
-<!--<script src="/static/lib/js/jquery.min.js"></script>-->
-<script src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js"></script>
+<script src="/static/lib/js/jquery3.5.1.min.js"></script>
 <script src="/static/lib/js/bootstrap.min.js"></script>
 <script src="/static/lib/js/bootstrap-table.min.js"></script>
 <script src="/static/lib/js/sweetalert-dev.js"></script>

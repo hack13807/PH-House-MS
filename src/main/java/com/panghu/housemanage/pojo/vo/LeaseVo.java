@@ -21,7 +21,7 @@ public class LeaseVo extends PHBaseVo {
     @EnumValue
     private LeaseTypeEnum leaseType;
     private String unit;
-    private BigDecimal rent;
+    private String rentAmount;
     private Date startDate;
     private Date endDate;
 

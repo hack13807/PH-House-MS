@@ -1,4 +1,4 @@
-var selectedRows = [];
+var memberCache = [];
 var hideSelectBoxTask = null;  // 延迟隐藏选择框的任务
 /*表格初始化*/
 $('#table').bootstrapTable({
@@ -26,7 +26,7 @@ $('#table').bootstrapTable({
         return {
             offset: params.offset,
             limit: params.limit,
-            voLeaseType: document.getElementById("leaseType").value,
+            voLeaseType: document.getElementById("voLeaseType").value,
             memberName: $("#memberSearch").val(),
             roomNo: $("#roomSearch").val()
         }
@@ -55,7 +55,7 @@ $('#table').bootstrapTable({
                     title: '租约时长',
                     align: "center",
                 }, {
-                    field: 'rent',
+                    field: 'rentAmount',
                     title: '租金额',
                     formatter: amountFormatter,
                     align: "center",
@@ -81,7 +81,7 @@ $('td[data-rowcolor]').attr("style", "background-color:yellow;");
 
 /*添加租约*/
 function addLease() {
-//    initValidate();
+    initValidate();
     $('.modal-title').text("新增租约")
     $('#addOrUpdateModal').modal('show')
     $('#addOrUpdateform')[0].reset()  //重置表单
@@ -91,63 +91,32 @@ function addLease() {
 var matchData = ["苹果", "香蕉1", "橘子"];
 
 function matchAndShow() {
-    // 获取输入框的值
-    var inputValue = $('#memberName').val();
-    // 获取选择框元素
-                    var selectBox = $('#selectBox');
-
-                    // 清空已有内容，并添加新的选项
-                    selectBox.empty();
-                    for (var i=0; i<matchData.length; i++) {
-                        var item = $('<li>').text(matchData[i]);
-                        selectBox.append(item);
-                    }
-
-                    // 显示选择框
-                    selectBox.show();
-    // 发送Ajax请求
-//    $.ajax({
-//        url: '/match-data',  // 后台接口地址，需要根据实际情况修改
-//        data: {inputValue: inputValue},  // 向后台传递参数
-//        success: function(matchData) {  // Ajax请求成功后执行的回调函数
-//            if (matchData.length > 0) {  // 如果有匹配数据，则渲染下拉菜单
-//                // 获取选择框元素
-//                var selectBox = $('#selectBox');
-//
-//                // 清空已有内容，并添加新的选项
-//                selectBox.empty();
-//                for (var i=0; i<matchData.length; i++) {
-//                    var item = $('<li>').text(matchData[i]);
-//                    selectBox.append(item);
-//                }
-//
-//                // 显示选择框
-//                selectBox.show();
-//            } else {  // 如果没有匹配数据，则隐藏选择框
-//                $('#selectBox').hide();
-//            }
-//        },
-//        error: function() {  // Ajax请求失败后执行的回调函数
-//            console.log('Ajax request failed');
-//        }
-//    });
 }
-//$(document).on('click', '#selectBox li', function() {
-//    var selectedValue = $(this).text();
-//    $('#memberName').val(selectedValue);
-//    $('#selectBox').hide();
-//});
+
 // 监听输入框的oninput事件
     $('#memberName').on('input', function() {
         var inputValue = $(this).val();
         // 发送Ajax请求获取匹配数据并渲染选择框
-        // ...
+        // 获取输入框的值
+            var inputValue = $('#memberName').val();
+            // 获取选择框元素
+                            var selectBox = $('#selectBox');
+                        selectBox.empty();
+                        $.each(memberCache, function(index, item) {
+                                  if (item.name.indexOf(inputValue) !== -1) {
+                                  var name = $('<li>').text(item.name+ '/'+ item.tel + '/'+ item.idCard + '/'+item.id);
+                                    selectBox.append(name);
+                                  }
+                                });
+                        // 显示选择框
+                        selectBox.show();
     });
 
     // 监听选择框的点击事件
     $(document).on('click', '#selectBox li', function() {
         var selectedValue = $(this).text();
         $('#memberName').val(selectedValue);
+        // TODO 回填
         $('#selectBox').hide();
     });
 
@@ -193,79 +162,81 @@ function matchAndShow() {
 //        $("#status").val(row.memberStatus === '租住中' ? 1 : 2);
 //    }
 //};
-//
-//function addOrUpdate() {
-//    let memberId = $('#id').val();
-//    console.log("memberId的值为：" + memberId)
-//    var data = {
-//        rowId: memberId,
-//        memberName: $('#name').val(),
-//        tel: $('#tel').val(),
-//        sex: $('#sex').val(),
-//        idCard: $('#idCard').val(),
-//        roomId: $('#roomId').val(),
-//        memberStatus: $('#status').val(),
-//    };
-//    // {# 如果不存在project_id就是新增 #}
-//    if (!memberId) {
-//        $.ajax({
-//            type: "POST",
-//            url: "/member",
-//            dataType: "json",
-//            contentType: "application/json;charset=UTF-8",  // 设置请求头部
-//            data: JSON.stringify(data),  // 设置请求体
-//            success: function (res) {
-//                if (res.code == 200) {
-//                    swal("新 增", "租客记录已添加",
-//                        "success");
-//                } else {
-//                    swal("添加失败", res.msg, "error")
-//                }
-//                // {#关闭模态框并清除框内数据，否则下次打开还是上次的数据#}
-//                $("#table").bootstrapTable('refresh');
-//                $("#addOrUpdateform")[0].reset();
-//                $('#id').val('');   // 租客id作为隐藏字段无法通过reset()清除，需要单独处理
-//                $('#addOrUpdateModal').modal('hide');
-//                $("#mytab").bootstrapTable('refresh');
-//            },
-//            error: function (res) {
-//                swal("添加失败", res.responseJSON.msg, "error")
-//            }
-//        })
-//    }
-//    // {# 如果project_id存在就是修改 #}
-//    else {
-//    var arr = [];
-//        data.optType = 1;
-//        arr.push(data);
-//        $.ajax({
-//            type: "PUT",
-//            url: "/member", // 待后端提供PUT修改接口
-//            dataType: 'json',
-//            contentType: 'application/json; charset=utf-8',
-//            data: JSON.stringify(arr),  // 设置请求体
-//            success: function (res) {
-//                console.log(res);
-//                if (res.code == 200) {
-//                    swal("修 改", "租客信息已修改",
-//                        "success");
-//                } else {
-//                    swal("修改失败", res.msg, "error")
-//                }
-//                // {#关闭模态框并清除框内数据，否则下次打开还是上次的数据#}
-//                $("#table").bootstrapTable('refresh');
-//                $("#addOrUpdateform")[0].reset();
-//                $('#id').val('');   // 租客id作为隐藏字段无法通过reset()清除，需要单独处理
-//                $('#addOrUpdateModal').modal('hide');
-//                $("#mytab").bootstrapTable('refresh');
-//            },
-//            error: function (res) {
-//                swal("修改失败", res.responseJSON.msg, "error")
-//            }
-//        })
-//    }
-//}
-//
+
+function addOrUpdate() {
+alert("1");
+return
+    let memberId = $('#id').val();
+    console.log("memberId的值为：" + memberId)
+    var data = {
+        rowId: memberId,
+        memberName: $('#name').val(),
+        tel: $('#tel').val(),
+        sex: $('#sex').val(),
+        idCard: $('#idCard').val(),
+        roomId: $('#roomId').val(),
+        memberStatus: $('#status').val(),
+    };
+    // {# 如果不存在project_id就是新增 #}
+    if (!memberId) {
+        $.ajax({
+            type: "POST",
+            url: "/member",
+            dataType: "json",
+            contentType: "application/json;charset=UTF-8",  // 设置请求头部
+            data: JSON.stringify(data),  // 设置请求体
+            success: function (res) {
+                if (res.code == 200) {
+                    swal("新 增", "租客记录已添加",
+                        "success");
+                } else {
+                    swal("添加失败", res.msg, "error")
+                }
+                // {#关闭模态框并清除框内数据，否则下次打开还是上次的数据#}
+                $("#table").bootstrapTable('refresh');
+                $("#addOrUpdateform")[0].reset();
+                $('#id').val('');   // 租客id作为隐藏字段无法通过reset()清除，需要单独处理
+                $('#addOrUpdateModal').modal('hide');
+                $("#mytab").bootstrapTable('refresh');
+            },
+            error: function (res) {
+                swal("添加失败", res.responseJSON.msg, "error")
+            }
+        })
+    }
+    // {# 如果project_id存在就是修改 #}
+    else {
+    var arr = [];
+        data.optType = 1;
+        arr.push(data);
+        $.ajax({
+            type: "PUT",
+            url: "/member", // 待后端提供PUT修改接口
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(arr),  // 设置请求体
+            success: function (res) {
+                console.log(res);
+                if (res.code == 200) {
+                    swal("修 改", "租客信息已修改",
+                        "success");
+                } else {
+                    swal("修改失败", res.msg, "error")
+                }
+                // {#关闭模态框并清除框内数据，否则下次打开还是上次的数据#}
+                $("#table").bootstrapTable('refresh');
+                $("#addOrUpdateform")[0].reset();
+                $('#id').val('');   // 租客id作为隐藏字段无法通过reset()清除，需要单独处理
+                $('#addOrUpdateModal').modal('hide');
+                $("#mytab").bootstrapTable('refresh');
+            },
+            error: function (res) {
+                swal("修改失败", res.responseJSON.msg, "error")
+            }
+        })
+    }
+}
+
 //
 //function deleteRows() {
 //    let length = selectedRows.length;
@@ -328,53 +299,90 @@ function matchAndShow() {
 //        });
 //}
 //
-//function initRoom() {
-//    $.ajax("/room/roomList", {
-//        type: 'get',
-//        dataType: "json",
-//        success: function (data) {
-//            var roomList = data.data;
-//            var opts = "";
-//            for (var index = 0; index < roomList.length; index++) {
-//                var room = roomList[index];
-//                opts += "<option value='" + room.id + "'>" + room.number + '房' + "</option>";
-//            }
-//// 查询界面
-//            $("#roomId").append(opts);
-//            // $("#roomId").selectpicker("refresh");
-//        }
-//    });
-//}
-//
-//<!--  租客信息表单校验规则  -->
-//function initValidate() {
-//    $(document).ready(function () {
-//        $('#addOrUpdateform').bootstrapValidator({
-//            <!--  excluded: [':disabled', ':hidden', ':not(:visible)', ':empty'],-->
-//            fields: {
-//                memberName: {
-//                    validators: {
-//                        notEmpty: {
-//                            message: '姓名不能为空'
-//                        },
-//                    }
-//                },
-//                idCard: {
-//                    validators: {
-//                        notEmpty: {
-//                            message: '身份证号不能为空'
-//                        },
-//                        regexp: {
-//                            regexp: /^\d{17}[\d|x]|\d{15}$/,
-//                            message: '请输入正确的身份证号码'
-//                        }
-//                    }
-//                }
-//            }
-//        });
-//    });
-//}
-//
+
+
+<!--  租约信息表单校验规则  -->
+function initValidate() {
+    $(document).ready(function () {
+        $('#addOrUpdateform').bootstrapValidator({
+            <!--  excluded: [':disabled', ':hidden', ':not(:visible)', ':empty'],-->
+            fields: {
+                memberName: {
+                    validators: {
+                        notEmpty: {
+                            message: '姓名不能为空'
+                        },
+                    }
+                },
+                idCard: {
+                    validators: {
+                        notEmpty: {
+                            message: '身份证号不能为空'
+                        },
+                        regexp: {
+                            regexp: /^\d{17}[\d|x]|\d{15}$/,
+                            message: '请输入正确的身份证号码'
+                        }
+                    }
+                },
+                tel: {
+                    validators: {
+                        notEmpty: {
+                            message: '手机号不能为空'
+                        },
+                        regexp: {
+                            regexp: /^1[3456789]\d{9}$/,
+                            message: '手机号码格式错误'
+                        }
+                    }
+                },
+                rentAmount: {
+                    validators: {
+                        notEmpty: {
+                            message: '租金额不能为空'
+                        },
+                        regexp: {
+                            regexp: /^([1-9]\d{0,4}|\d{2,4})(\.\d{1,1})?$/,
+                            message: '租金金额格式错误，请重新输入'
+                        }
+                    }
+                },
+                unit: {
+                    validators: {
+                         notEmpty: {
+                             message: '租住时长不能为空'
+                         },
+                         integer: {
+                             message: '请输入整数'
+                         },
+                         callback: {
+                             message: '请输入 1 至 1000 范围内的整数',
+                             callback: function(input) {
+                                 var value = parseInt(input);
+                                 return value >= 1 && value <= 1000;
+                             }
+                         }
+                    }
+                },
+                startDate: {
+                  validators: {
+                    notEmpty: {
+                      message: '开始日期不能为空'
+                    }
+                  }
+                },
+                 endDate: {
+                   validators: {
+                     notEmpty: {
+                       message: '结束日期不能为空'
+                     }
+                   }
+                 }
+            }
+        });
+    });
+}
+
 //<!--  租客退租  -->
 //function terminate() {
 //    let length = selectedRows.length;
@@ -430,15 +438,27 @@ function matchAndShow() {
 //}
 //
 // 获取下拉框元素
-var dropdown = document.getElementById("leaseType");
+var dropdown = document.getElementById("voLeaseType");
 // 绑定 change 事件
 dropdown.addEventListener("change", function () {
     $("#table").bootstrapTable('refresh');
 });
-//
-//$(document).ready(function () {
-//    // 在页面加载完成后执行的脚本
-////    var enableBtn = document.getElementById("enable");
-////    enableBtn.classList.add("hidden")
-//    initRoom();
-//});
+
+$(document).ready(function () {
+    // 在页面加载完成后执行的脚本
+//    var enableBtn = document.getElementById("enable");
+//    enableBtn.classList.add("hidden")
+    initRoom();
+    initMemberCache();
+});
+
+/*初始化房间下拉框*/
+function initMemberCache() {
+    $.ajax("/member/cache", {
+        type: 'get',
+        dataType: "json",
+        success: function (res) {
+            memberCache = res.data;
+        }
+    });
+}

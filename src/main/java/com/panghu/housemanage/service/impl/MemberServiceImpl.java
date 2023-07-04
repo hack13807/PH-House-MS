@@ -82,6 +82,13 @@ public class MemberServiceImpl implements MemberService {
         return memberPos.stream().filter(memberPo -> memberPo.getStatus() == 1).toList();
     }
 
+    @Override
+    public List<MemberPo> getAllMember() {
+        QueryWrapper<MemberPo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("id","idcard", "name", "tel").ne("isdelete", 1);
+        return memberMapper.selectList(queryWrapper);
+    }
+
     /**
      * 更新房间状态-编辑
      *

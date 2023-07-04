@@ -106,3 +106,21 @@ function validate() {
         addOrUpdate();
     }
 }
+/*初始化房间下拉框*/
+function initRoom() {
+    $.ajax("/room/roomList", {
+        type: 'get',
+        dataType: "json",
+        success: function (data) {
+            var roomList = data.data;
+            var opts = "";
+            for (var index = 0; index < roomList.length; index++) {
+                var room = roomList[index];
+                opts += "<option value='" + room.id + "'>" + room.number + '房' + "</option>";
+            }
+// 查询界面
+            $("#roomId").append(opts);
+            // $("#roomId").selectpicker("refresh");
+        }
+    });
+}

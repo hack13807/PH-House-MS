@@ -22,4 +22,6 @@ public interface MemberService {
     void updateBatch(List<MemberPo> list, Integer optType);
 
     List<MemberPo> isTerminate(Long[] ids);
+
+    List<MemberPo> getAllMember();
 }

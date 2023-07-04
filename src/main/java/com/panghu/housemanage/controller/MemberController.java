@@ -3,7 +3,6 @@ package com.panghu.housemanage.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.panghu.housemanage.common.enumeration.PHExceptionCodeEnum;
-import com.panghu.housemanage.common.enumeration.RoomStatusEnum;
 import com.panghu.housemanage.common.exception.PHServiceException;
 import com.panghu.housemanage.common.util.PHResp;
 import com.panghu.housemanage.common.util.RequestHandleUtil;
@@ -19,7 +18,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 租客控制器
@@ -62,6 +60,13 @@ public class MemberController {
         }
         String memberNames = String.join(", ", rentingList.stream().map(MemberPo::getName).toList());
         throw new PHServiceException(PHExceptionCodeEnum.MEMBER_RENTING, memberNames);
+    }
+
+    @GetMapping("/cache")
+    @ResponseBody
+    public PHResp<List<MemberPo>> getCache()  {
+        List<MemberPo> memberList = memberService.getAllMember();
+        return PHResp.success(memberList);
     }
 
     @DeleteMapping

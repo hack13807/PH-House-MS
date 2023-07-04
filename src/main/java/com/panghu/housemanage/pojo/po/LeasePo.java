@@ -24,7 +24,7 @@ public class LeasePo extends PHBasePo{
     private Long id;
     private Integer leaseType;
     private Integer unit;
-    private BigDecimal rent;
+    private BigDecimal rentAmount;
     private Date startDate;
     private Date endDate;
     private Long roomId;

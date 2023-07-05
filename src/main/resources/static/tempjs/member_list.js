@@ -110,12 +110,12 @@ $('#table').bootstrapTable({
                 formatter: dateFormatter,
                 align: "center",
             }],
-            onLoadError: function(status, res) {
+            onLoadError: function (status, res) {
                 swal("获取租约列表失败", res.responseJSON.msg, "error")
             }
         });
     },
-    onLoadError: function(status, res) {
+    onLoadError: function (status, res) {
         swal("获取租客列表失败", res.responseJSON.msg, "error")
     }
 });
@@ -193,7 +193,7 @@ function addOrUpdate() {
     }
     // {# 如果project_id存在就是修改 #}
     else {
-    var arr = [];
+        var arr = [];
         data.optType = 1;
         arr.push(data);
         $.ajax({
@@ -207,7 +207,7 @@ function addOrUpdate() {
                 if (res.code == 200) {
                     swal("修 改", "租客信息已修改",
                         "success");
-                        cleanSelectRows();
+                    cleanSelectRows();
                 } else {
                     swal("修改失败", res.msg, "error")
                 }
@@ -341,51 +341,51 @@ function terminate() {
         return
     }
     swal({
-        title: "确定退租吗？",
-        text: "是否将选中的" + length + "位租客退租",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#DD6B55",
-        confirmButtonText: "确定退租",
-        cancelButtonText: "取消退租",
-        closeOnConfirm: false,
-        // closeOnCancel: false
-    },
-    function (isConfirm) {
-        if (isConfirm) {
-            for (var index = 0; index < selectedObjRows.length; index++) {
-                var obj = selectedObjRows[index];
-                obj.memberStatus = 2;
-                obj.optType = 2;
-            }
-            $.ajax({
-                type: "PUT",
-                url: "/member", // 待后端提供PUT修改接口
-                dataType: 'json',
-                contentType: 'application/json; charset=utf-8',
-                data: JSON.stringify(selectedObjRows),  // 设置请求体
-                success: function (res) {
-                    console.log(res);
-                    if (res.code == 200) {
-                        swal("修 改", "租客信息已修改",
-                            "success");
-                            cleanSelectRows();
-                    } else {
-                        swal("修改失败", res.msg, "error")
-                    }
-                    // {#关闭模态框并清除框内数据，否则下次打开还是上次的数据#}
-                    $("#table").bootstrapTable('refresh');
-                    $("#addOrUpdateform")[0].reset();
-                    $('#id').val('');   // 租客id作为隐藏字段无法通过reset()清除，需要单独处理
-                    $('#addOrUpdateModal').modal('hide');
-                    $("#table").bootstrapTable('refresh');
-                },
-                error: function (res) {
-                    swal("修改失败", res.responseJSON.msg, "error")
+            title: "确定退租吗？",
+            text: "是否将选中的" + length + "位租客退租",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "确定退租",
+            cancelButtonText: "取消退租",
+            closeOnConfirm: false,
+            // closeOnCancel: false
+        },
+        function (isConfirm) {
+            if (isConfirm) {
+                for (var index = 0; index < selectedObjRows.length; index++) {
+                    var obj = selectedObjRows[index];
+                    obj.memberStatus = 2;
+                    obj.optType = 2;
                 }
-            })
-        }
-    });
+                $.ajax({
+                    type: "PUT",
+                    url: "/member", // 待后端提供PUT修改接口
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(selectedObjRows),  // 设置请求体
+                    success: function (res) {
+                        console.log(res);
+                        if (res.code == 200) {
+                            swal("修 改", "租客信息已修改",
+                                "success");
+                            cleanSelectRows();
+                        } else {
+                            swal("修改失败", res.msg, "error")
+                        }
+                        // {#关闭模态框并清除框内数据，否则下次打开还是上次的数据#}
+                        $("#table").bootstrapTable('refresh');
+                        $("#addOrUpdateform")[0].reset();
+                        $('#id').val('');   // 租客id作为隐藏字段无法通过reset()清除，需要单独处理
+                        $('#addOrUpdateModal').modal('hide');
+                        $("#table").bootstrapTable('refresh');
+                    },
+                    error: function (res) {
+                        swal("修改失败", res.responseJSON.msg, "error")
+                    }
+                })
+            }
+        });
 }
 
 // 获取下拉框元素

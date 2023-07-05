@@ -133,8 +133,8 @@ function addOrUpdate() {
     }
     // {# 如果project_id存在就是修改 #}
     else {
-    var arr = [];
-    arr.push(data);
+        var arr = [];
+        arr.push(data);
         $.ajax({
             type: "PUT",
             url: "/room", // 待后端提供PUT修改接口
@@ -146,7 +146,7 @@ function addOrUpdate() {
                 if (res.code == 200) {
                     swal("修 改", "房间信息已修改",
                         "success");
-                        cleanSelectRows();
+                    cleanSelectRows();
                 } else {
                     swal("修改失败", res.msg, "error")
                 }
@@ -204,7 +204,7 @@ function doDisable() {
                     error: function (data) {
                         swal("禁用失败", data.responseJSON.msg, "error")
                         selectedRows = [];
-                                                    selectedObjRows = [];
+                        selectedObjRows = [];
                         $('#table').bootstrapTable('uncheckAll');
                     }
                 })
@@ -220,52 +220,52 @@ function enableRows() {
         return
     }
     swal({
-        title: "确定启用吗？",
-        text: "是否启用选中的" + length + "个房间",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#2e6da4",
-        confirmButtonText: "确定启用",
-        cancelButtonText: "取消启用",
-        closeOnConfirm: false,
-        // closeOnCancel: false //取消时不自动关闭弹框
-    },
-    function (isConfirm) {
-        if (isConfirm) {
-            for (var index = 0; index < selectedObjRows.length; index++) {
-                var obj = selectedObjRows[index];
-                obj.memberStatus = 2;
-            }
-            $.ajax("/room", {
-                type: "put",
-                dataType: "json",
-                contentType: 'application/json; charset=utf-8',
-                data: JSON.stringify(selectedRows),
-                success: function (data) {
-                    if (data.code == 200) {
-                        swal("启 用", "所选房间已启用",
-                            "success");
-                        selectedRows = [];
-                        selectedObjRows = [];
-                        $("#table").bootstrapTable('refresh');
-                        $('#table').bootstrapTable('uncheckAll');
-                    } else {
-                        selectedRows = [];
-                        selectedObjRows = [];
-                        $('#table').bootstrapTable('uncheckAll');
-                        swal("启用失败", data.msg, "error")
-                    }
-                },
-                error: function (data) {
-                    swal("启用失败", data.responseJSON.msg, "error")
-                    selectedRows = [];
-                                            selectedObjRows = [];
-                    $('#table').bootstrapTable('uncheckAll');
+            title: "确定启用吗？",
+            text: "是否启用选中的" + length + "个房间",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#2e6da4",
+            confirmButtonText: "确定启用",
+            cancelButtonText: "取消启用",
+            closeOnConfirm: false,
+            // closeOnCancel: false //取消时不自动关闭弹框
+        },
+        function (isConfirm) {
+            if (isConfirm) {
+                for (var index = 0; index < selectedObjRows.length; index++) {
+                    var obj = selectedObjRows[index];
+                    obj.memberStatus = 2;
                 }
-            })
+                $.ajax("/room", {
+                    type: "put",
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(selectedRows),
+                    success: function (data) {
+                        if (data.code == 200) {
+                            swal("启 用", "所选房间已启用",
+                                "success");
+                            selectedRows = [];
+                            selectedObjRows = [];
+                            $("#table").bootstrapTable('refresh');
+                            $('#table').bootstrapTable('uncheckAll');
+                        } else {
+                            selectedRows = [];
+                            selectedObjRows = [];
+                            $('#table').bootstrapTable('uncheckAll');
+                            swal("启用失败", data.msg, "error")
+                        }
+                    },
+                    error: function (data) {
+                        swal("启用失败", data.responseJSON.msg, "error")
+                        selectedRows = [];
+                        selectedObjRows = [];
+                        $('#table').bootstrapTable('uncheckAll');
+                    }
+                })
 
-        }
-    });
+            }
+        });
 }
 
 function edit() {
@@ -338,8 +338,8 @@ enableStatusSelector.addEventListener("change", function () {
 var dropdown = document.getElementById("roomStatus");
 // 绑定 change 事件
 dropdown.addEventListener("change", function () {
-var selectedValue = dropdown.value;
-console.log(selectedValue);
+    var selectedValue = dropdown.value;
+    console.log(selectedValue);
     selectedRows = [];
     selectedObjRows = [];
     $("#table").bootstrapTable('refresh');

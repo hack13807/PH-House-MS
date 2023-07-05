@@ -91,11 +91,11 @@ $('#table').bootstrapTable({
                 title: '租约类型',
                 align: "center",
             }, {
-                field: 'unit',
+                field: 'voUnit',
                 title: '租约时长',
                 align: "center",
             }, {
-                field: 'rent',
+                field: 'rentAmount',
                 title: '租金额',
                 formatter: amountFormatter,
                 align: "center",
@@ -123,14 +123,12 @@ $('td[data-rowcolor]').attr("style", "background-color:yellow;");
 
 /*添加租客*/
 function addMember() {
-    initValidate();
     $('.modal-title').text("新增租客")
     $('#addOrUpdateModal').modal('show')
     $('#addOrUpdateform')[0].reset()  //重置表单
 }
 
 function edit() {
-    initValidate();
     let selecton = $("#table").bootstrapTable('getSelections'); //获取该行数据
     if (selecton.length == 0) {
         swal("请选择需要修改的数据")
@@ -209,6 +207,7 @@ function addOrUpdate() {
                 if (res.code == 200) {
                     swal("修 改", "租客信息已修改",
                         "success");
+                        cleanSelectRows();
                 } else {
                     swal("修改失败", res.msg, "error")
                 }
@@ -217,7 +216,7 @@ function addOrUpdate() {
                 $("#addOrUpdateform")[0].reset();
                 $('#id').val('');   // 租客id作为隐藏字段无法通过reset()清除，需要单独处理
                 $('#addOrUpdateModal').modal('hide');
-                $("#mytab").bootstrapTable('refresh');
+                $("#table").bootstrapTable('refresh');
             },
             error: function (res) {
                 swal("修改失败", res.responseJSON.msg, "error")
@@ -272,10 +271,9 @@ function doDelete() {
                         if (res.code === 200) {
                             swal("删 除", "所选租客记录已删除",
                                 "success");
-                            selectedRows = [];
+                            cleanSelectRows();
                             $("#table").bootstrapTable('refresh');
                         } else {
-                            selectedRows = [];
                             swal("删除失败", res.msg, "error")
                         }
                     },
@@ -312,7 +310,7 @@ function initValidate() {
         $('#addOrUpdateform').bootstrapValidator({
             <!--  excluded: [':disabled', ':hidden', ':not(:visible)', ':empty'],-->
             fields: {
-                memberName: {
+                name: {
                     validators: {
                         notEmpty: {
                             message: '姓名不能为空'
@@ -371,6 +369,7 @@ function terminate() {
                     if (res.code == 200) {
                         swal("修 改", "租客信息已修改",
                             "success");
+                            cleanSelectRows();
                     } else {
                         swal("修改失败", res.msg, "error")
                     }
@@ -379,7 +378,7 @@ function terminate() {
                     $("#addOrUpdateform")[0].reset();
                     $('#id').val('');   // 租客id作为隐藏字段无法通过reset()清除，需要单独处理
                     $('#addOrUpdateModal').modal('hide');
-                    $("#mytab").bootstrapTable('refresh');
+                    $("#table").bootstrapTable('refresh');
                 },
                 error: function (res) {
                     swal("修改失败", res.responseJSON.msg, "error")
@@ -401,7 +400,6 @@ dropdown.addEventListener("change", function () {
     } else {
         terminateBtn.classList.remove("hidden")
     }
-    selectedRows = [];
     $("#table").bootstrapTable('refresh');
 });
 
@@ -410,4 +408,5 @@ $(document).ready(function () {
 //    var enableBtn = document.getElementById("enable");
 //    enableBtn.classList.add("hidden")
     initRoom();
+    initValidate();
 });

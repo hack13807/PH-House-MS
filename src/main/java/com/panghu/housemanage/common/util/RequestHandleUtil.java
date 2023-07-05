@@ -2,10 +2,11 @@ package com.panghu.housemanage.common.util;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.panghu.housemanage.common.enumeration.MemberSexEnum;
+import com.panghu.housemanage.pojo.po.LeasePo;
 import com.panghu.housemanage.pojo.po.MemberPo;
 import com.panghu.housemanage.pojo.po.PHBasePo;
 import com.panghu.housemanage.pojo.po.RoomPo;
+import com.panghu.housemanage.pojo.vo.LeaseVo;
 import com.panghu.housemanage.pojo.vo.MemberVo;
 import com.panghu.housemanage.pojo.vo.PHBaseVo;
 import com.panghu.housemanage.pojo.vo.RoomVo;
@@ -123,4 +124,40 @@ public class RequestHandleUtil {
         });
         return poList;
     }
+
+    public static List<LeasePo> leaseDTOTrans(List<LeaseVo> leaseVos) {
+        List<LeasePo> poList = new ArrayList<>(leaseVos.size());
+        leaseVos.forEach(leaseVo -> {
+            LeasePo leasePo = new LeasePo();
+            Optional.ofNullable(leaseVo.getRowId()).ifPresent(leasePo::setId);
+            Optional.ofNullable(leaseVo.getRoomId()).ifPresent(leasePo::setRoomId);
+            Optional.ofNullable(leaseVo.getMemberId()).ifPresent(leasePo::setMemberId);
+            Optional.ofNullable(leaseVo.getStartDate()).ifPresent(leasePo::setStartDate);
+            Optional.ofNullable(leaseVo.getStartDate()).ifPresent(leasePo::setStartDate);
+            Optional.ofNullable(leaseVo.getEndDate()).ifPresent(leasePo::setEndDate);
+            Optional.ofNullable(leaseVo.getUnit()).ifPresent(leasePo::setUnit);
+            Optional.ofNullable(leaseVo.getRentAmount()).ifPresent(leasePo::setRentAmount);
+            Optional.ofNullable(leaseVo.getLeaseType()).ifPresent(typeEnum -> leasePo.setLeaseType(typeEnum.getCode()));
+            poList.add(leasePo);
+        });
+        return poList;
+    }
+
+
+    public static <T extends PHBaseVo, R extends PHBasePo> List<R> modelDTOTrans(List<T> voList) {
+        T firstVo = voList.get(0);
+        switch (firstVo) {
+            case MemberVo m -> {
+                return (List<R>) memberDTOTrans((List<MemberVo>) voList);
+            }
+            case RoomVo r -> {
+                return (List<R>) roomDTOTrans((List<RoomVo>) voList);
+            }
+            case LeaseVo l -> {
+                return (List<R>) leaseDTOTrans((List<LeaseVo>) voList);
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + firstVo);
+        }
+    }
+
 }

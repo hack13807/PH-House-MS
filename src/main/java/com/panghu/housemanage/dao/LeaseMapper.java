@@ -13,7 +13,7 @@ import java.util.List;
 
 @Mapper
 public interface LeaseMapper extends BaseMapper<LeasePo> {
-    List<LeasePo> queryLeaseByMemberId(@Param("memberId") Long memberId);
+    List<LeaseVo> queryLeaseByMemberId(@Param("memberId") Long memberId);
 
     Page<LeaseVo> pageQueryLease(Page<LeaseVo> page, @Param("leaseVo") PHBaseVo vo);
 }

@@ -4,18 +4,14 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.panghu.housemanage.common.enumeration.LeaseTypeEnum;
 import com.panghu.housemanage.dao.LeaseMapper;
-import com.panghu.housemanage.dao.MemberMapper;
 import com.panghu.housemanage.pojo.po.LeasePo;
-import com.panghu.housemanage.pojo.po.PHBasePo;
 import com.panghu.housemanage.pojo.vo.LeaseVo;
-import com.panghu.housemanage.pojo.vo.MemberVo;
 import com.panghu.housemanage.service.LeaseService;
-import com.panghu.housemanage.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class LeaseServiceImpl implements LeaseService {
@@ -24,14 +20,21 @@ public class LeaseServiceImpl implements LeaseService {
 
 
     @Override
-    public List<LeasePo> queryLeaseByMemberId(Long memberId) {
-        return leaseMapper.queryLeaseByMemberId(memberId);
+    public List<LeaseVo> queryLeaseByMemberId(Long memberId) {
+        List<LeaseVo> leaseVos = leaseMapper.queryLeaseByMemberId(memberId);
+        leaseVos.forEach(vo -> vo.setVoUnit(vo.getUnit()+ vo.getLeaseType().getUnit()));
+        return leaseVos;
     }
 
     @Override
     public IPage<LeaseVo> pageQueryLease(Page<LeaseVo> page, LeaseVo leaseVo) {
         Page<LeaseVo> leaseVoPage = leaseMapper.pageQueryLease(page, leaseVo);
-        leaseVoPage.getRecords().forEach(vo -> vo.setUnit(vo.getUnit()+vo.getLeaseType().getUnit()));
+        leaseVoPage.getRecords().forEach(vo -> vo.setVoUnit(vo.getUnit()+vo.getLeaseType().getUnit()));
         return leaseVoPage;
+    }
+
+    @Override
+    public void insertLease(LeasePo leasePo) {
+        leaseMapper.insert(leasePo);
     }
 }

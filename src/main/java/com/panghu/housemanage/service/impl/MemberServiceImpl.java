@@ -63,14 +63,9 @@ public class MemberServiceImpl implements MemberService {
     public void updateBatch(List<MemberPo> memberList, Integer optType) {
 
         switch (MemberOptTypeEnum.getTypeEnumBytypeId(optType)) {
-            case MODIFY -> {
-                // 编辑
-                updateRoomStatusForModify(memberList);
-            }
-            case TERMINATE -> {
-                // 退租
-                updateRoomStatusForTerminate(memberList);
-            }
+            case MODIFY -> updateRoomStatusForModify(memberList);
+            case TERMINATE -> updateRoomStatusForTerminate(memberList);
+            case null -> {}
         }
         // 更新租客信息
         memberList.forEach(memberPo -> memberMapper.updateById(memberPo));
@@ -85,7 +80,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public List<MemberPo> getAllMember() {
         QueryWrapper<MemberPo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("id","idcard", "name", "tel").ne("isdelete", 1);
+        queryWrapper.select("id","idcard", "name", "tel", "sex").ne("isdelete", 1);
         return memberMapper.selectList(queryWrapper);
     }
 

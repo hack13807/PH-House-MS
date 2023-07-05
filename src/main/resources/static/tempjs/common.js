@@ -76,9 +76,15 @@ $(function () {
     });
 });
 
+function cleanSelectRows() {
+    selectedRows = [];
+    selectedObjRows = [];
+    $('#table').bootstrapTable('uncheckAll')
+}
+
 /*列表搜索*/
 function search() {
-    selectedRows = [];
+    cleanSelectRows();
     $("#table").bootstrapTable('refresh');
 }
 
@@ -93,9 +99,16 @@ function amountFormatter(value) {
 }
 
 /*销毁校验器*/
-function cleanValidate() {
-    $("#addOrUpdateform").data('bootstrapValidator').destroy();
+function resetValidate() {
+    if ($("#addOrUpdateform").data('bootstrapValidator')) { // 判断是否存在Validator
+      $("#addOrUpdateform").data('bootstrapValidator').destroy(); // 销毁Validator
+    }
+    initValidate();
 }
+$('#addOrUpdateModal').on('hidden.bs.modal', function () {
+    // 执行校验器重置操作
+    resetValidate();
+});
 
 /*发起表单校验并提交*/
 function validate() {

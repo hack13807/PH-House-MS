@@ -68,7 +68,6 @@ $('#table').bootstrapTable({
 
 /*新增房间*/
 function addRoom() {
-    initValidate();
     $('.modal-title').text("新增房间")
     $('#addOrUpdateModal').modal('show')
     $('#addOrUpdateform')[0].reset()  //重置表单
@@ -126,15 +125,9 @@ function addOrUpdate() {
                 $('#id').val('');   // id作为隐藏字段无法通过reset()清除，需要单独处理
                 $('#addOrUpdateModal').modal('hide');
                 $("#mytab").bootstrapTable('refresh');
-                selectedRows = [];
-                               selectedObjRows = [];
-                               $('#table').bootstrapTable('uncheckAll');
             },
             error: function (data) {
                 swal("添加失败", res.responseJSON.msg, "error")
-                selectedRows = [];
-                                selectedObjRows = [];
-                                $('#table').bootstrapTable('uncheckAll');
             }
         })
     }
@@ -153,6 +146,7 @@ function addOrUpdate() {
                 if (res.code == 200) {
                     swal("修 改", "房间信息已修改",
                         "success");
+                        cleanSelectRows();
                 } else {
                     swal("修改失败", res.msg, "error")
                 }
@@ -161,16 +155,9 @@ function addOrUpdate() {
                 $("#addOrUpdateform")[0].reset();
                 $('#id').val('');   // id作为隐藏字段无法通过reset()清除，需要单独处理
                 $('#addOrUpdateModal').modal('hide');
-                $("#mytab").bootstrapTable('refresh');
-                selectedRows = [];
-                selectedObjRows = [];
-                $('#table').bootstrapTable('uncheckAll');
             },
             error: function () {
                 swal("修改失败", res.responseJSON.msg, "error")
-                selectedRows = [];
-                                selectedObjRows = [];
-                                $('#table').bootstrapTable('uncheckAll');
             }
         })
     }
@@ -282,7 +269,6 @@ function enableRows() {
 }
 
 function edit() {
-    initValidate();
     let selecton = $("#table").bootstrapTable('getSelections'); //获取该行数据
     if (selecton.length == 0) {
         swal("请选择需要修改的数据")
@@ -363,4 +349,5 @@ $(document).ready(function () {
     // 在页面加载完成后执行的脚本
     var enableBtn = document.getElementById("enable");
     enableBtn.classList.add("hidden")
+    initValidate();
 });

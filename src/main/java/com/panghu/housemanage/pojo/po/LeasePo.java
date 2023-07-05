@@ -43,4 +43,6 @@ public class LeasePo extends PHBasePo{
     private String memberStatus;
     @TableField(exist = false)
     private String roomDesc;
+    @TableField(exist = false)
+    private String voUnit;
 }

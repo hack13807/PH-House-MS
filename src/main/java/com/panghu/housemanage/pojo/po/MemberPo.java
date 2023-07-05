@@ -2,11 +2,14 @@ package com.panghu.housemanage.pojo.po;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.panghu.housemanage.common.enumeration.MemberSexEnum;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+import lombok.experimental.Accessors;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @TableName("t_member")
 public class MemberPo extends PHBasePo{
     @TableId(value = "id", type = IdType.AUTO)

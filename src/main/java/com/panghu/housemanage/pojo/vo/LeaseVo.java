@@ -20,15 +20,21 @@ public class LeaseVo extends PHBaseVo {
     private Long leaseId;
     @EnumValue
     private LeaseTypeEnum leaseType;
-    private String unit;
-    private String rentAmount;
+    private Integer unit;
+    private BigDecimal rentAmount;
     private Date startDate;
     private Date endDate;
+    private String voUnit;
 
     /**
      * 页面参数
      */
     private String voLeaseType;
     private String memberName;
+    private Long roomId;
     private String roomNo;
+    private Long memberId;
+    private String tel;
+    private Integer sex;
+    private String idCard;
 }

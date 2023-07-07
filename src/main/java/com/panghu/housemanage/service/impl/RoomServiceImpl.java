@@ -37,13 +37,14 @@ public class RoomServiceImpl implements RoomService {
     public List<RoomPo> getRoomNoSelector(Map<String, Object> params) {
         LambdaQueryWrapper<RoomPo> wrapper = new LambdaQueryWrapper<>();
         wrapper.select(RoomPo::getId, RoomPo::getNumber);
+        wrapper.eq(RoomPo::getEnable, 1);
         return roomMapper.selectList(wrapper);
     }
 
     @Override
     public void batchDelete(Long[] ids) {
         LambdaUpdateWrapper<RoomPo> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper.set(RoomPo::getStatus, 0).in(RoomPo::getId, ids);
+        updateWrapper.set(RoomPo::getEnable, 0).in(RoomPo::getId, ids);
         roomMapper.update(null, updateWrapper);
     }
 

@@ -87,6 +87,10 @@ $('#table').bootstrapTable({
                 title: '租约ID',
                 visible: false,
             }, {
+                field: 'leaseNumber',
+                title: '租约编号',
+                align: "center",
+            }, {
                 field: 'leaseType',
                 title: '租约类型',
                 align: "center",
@@ -184,7 +188,7 @@ function addOrUpdate() {
                 $("#addOrUpdateform")[0].reset();
                 $('#id').val('');   // 租客id作为隐藏字段无法通过reset()清除，需要单独处理
                 $('#addOrUpdateModal').modal('hide');
-                $("#mytab").bootstrapTable('refresh');
+                $("#table").bootstrapTable('refresh');
             },
             error: function (res) {
                 swal("添加失败", res.responseJSON.msg, "error")
@@ -237,7 +241,7 @@ function deleteRows() {
         type: "get",
         success: function (res) {
             if (res.code === 200) {
-                doDelete();
+                doDelete(length);
             } else {
                 swal("删除失败", res.msg + "\n" + res.data, "error")
             }
@@ -248,7 +252,7 @@ function deleteRows() {
     })
 }
 
-function doDelete() {
+function doDelete(length) {
     swal({
             title: "确定删除吗？",
             text: "是否删除选中的" + length + "条记录",
@@ -393,20 +397,23 @@ var dropdown = document.getElementById("memberStatus");
 // 绑定 change 事件
 dropdown.addEventListener("change", function () {
     var terminateBtn = document.getElementById("terminate");
+    var deleteBtn = document.getElementById("delete");
     // 获取当前选中的值
     var selectedValue = dropdown.value;
     if (selectedValue === '2') {
         terminateBtn.classList.add("hidden")
+        deleteBtn.classList.remove("hidden")
     } else {
         terminateBtn.classList.remove("hidden")
+        deleteBtn.classList.add("hidden")
     }
     $("#table").bootstrapTable('refresh');
 });
 
 $(document).ready(function () {
     // 在页面加载完成后执行的脚本
-//    var enableBtn = document.getElementById("enable");
-//    enableBtn.classList.add("hidden")
+    var deleteBtn = document.getElementById("delete");
+    deleteBtn.classList.add("hidden")
     initRoom();
     initValidate();
 });

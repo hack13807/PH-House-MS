@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.panghu.housemanage.dao.LeaseMapper">
     <resultMap id="leaseVoMap" type="com.panghu.housemanage.pojo.vo.LeaseVo" >
-        <id column="leaseId" property="leaseId"/>
+        <id column="rowId" property="rowId"/>
         <result column="leaseType" property="leaseType" typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
         <result column="unit" property="unit"/>
         <result column="rent_amount" property="rentAmount"/>
@@ -11,11 +11,13 @@
         <result column="end_date" property="endDate"/>
         <result column="roomNo" property="roomNo"/>
         <result column="memberName" property="memberName"/>
+        <result column="number" property="leaseNumber"/>
+        <result column="effective" property="effective" typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
     </resultMap>
 
 
     <select id="queryLeaseByMemberId" parameterType="java.util.Map" resultMap="leaseVoMap">
-        Select l.id as leaseId,l.lease_type as leaseType,l.unit,l.rent_amount,l.start_date,l.end_date
+        Select l.id as rowId,l.lease_type as leaseType,l.unit,l.rent_amount,l.start_date,l.end_date,l.number
         from t_lease l
         left join t_member m on m.id = l.member_id
         left join t_room r on r.id = l.room_id
@@ -25,7 +27,8 @@
     </select>
 
     <select id="pageQueryLease" parameterType="com.panghu.housemanage.pojo.vo.LeaseVo" resultMap="leaseVoMap">
-        Select r.number as roomNo, m.name as memberName, l.id as leaseId,l.lease_type as leaseType,l.unit,l.rent_amount,l.start_date,l.end_date
+        Select r.number as roomNo, m.name as memberName, l.id as rowId,l.lease_type as leaseType,l.unit,l.rent_amount,l.start_date,l.end_date,l.number,
+        r.id as roomId, m.id as memberId, l.effective
         from t_lease l
         left join t_member m on m.id = l.member_id
         left join t_room r on r.id = l.room_id
@@ -40,7 +43,11 @@
             <if test=" leaseVo.voLeaseType != null and leaseVo.voLeaseType != '' and leaseVo.voLeaseType != '-1' ">
                 and l.lease_type = #{leaseVo.voLeaseType}
             </if>
+            <if test=" leaseVo.voEffective != null and leaseVo.voEffective != '' ">
+                and l.effective = #{leaseVo.voEffective}
+            </if>
             and m.isdelete = 0
+            and l.isdelete = 0
         </where>
     </select>
 </mapper>

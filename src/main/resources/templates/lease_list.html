@@ -20,6 +20,10 @@
     </div>
     <!--工具栏-->
     <div id="toolbar" class="div-toolbar">
+        <select name="select" id="effectiveSelect" class="form-condition">
+            <option value="1">生效中</option>
+            <option value="0">已失效</option>
+        </select>
         <select name="select" id="voLeaseType" class="form-condition">
             <option value="-1">全部类型</option>
             <option value="1">日 租</option>
@@ -32,8 +36,9 @@
         <button id="search" class="btn btn-primary" th:onclick="search()">搜 索</button>
         <button class="btn btn-success" th:onclick="addLease()">新 增</button>
         <button class="btn btn-info" th:onclick="|edit()|">编 辑</button>
-        <button id="terminate" class="btn btn-warning" th:onclick="terminate()">退 租</button>
-        <button class="btn btn-danger" th:onclick="|deleteRows();|">删 除</button>
+        <button id="terminate" class="btn btn-warning" th:onclick="terminate()">手动失效</button>
+        <button id="effective" class="btn btn-primary" th:onclick="enableRows()">手动生效</button>
+        <button id="delete" class="btn btn-danger" th:onclick="|deleteRows();|">删 除</button>
     </div>
     <!--表格-->
     <div class="panel-body">
@@ -70,6 +75,7 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <input type="hidden" class="form-control" id="id" name="id">
+                                <input type="hidden" class="form-control" id="number" name="number">
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">租客姓名</label>
                                     <div class="col-sm-7">
@@ -160,13 +166,13 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">开始日期:</label>
                                     <div class="col-sm-7">
-                                        <input type="date" id="startDate" class="form-control" min="2023-01-01" max="2099-12-31"/>
+                                        <input type="date" id="startDate" name="startDate" class="form-control" min="2023-01-01" max="2099-12-31"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">结束日期:</label>
                                     <div class="col-sm-7">
-                                        <input type="date" id="endDate" class="form-control" min="2023-01-01" max="2099-12-31"/>
+                                        <input type="date" id="endDate" name="endDate" class="form-control" min="2023-01-01" max="2099-12-31"/>
                                     </div>
                                 </div>
                             </div>

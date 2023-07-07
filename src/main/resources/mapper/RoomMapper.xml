@@ -33,7 +33,6 @@
             <if test=" roomVo.enableStatus != null and roomVo.enableStatus != '' ">
                 and r.enable = #{roomVo.enableStatus}
             </if>
-            and r.enable != 0
         </where>
         group by r.id, r.number, r.status, r.description
     </select>

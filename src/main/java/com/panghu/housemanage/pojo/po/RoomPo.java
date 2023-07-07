@@ -16,4 +16,5 @@ public class RoomPo extends PHBasePo {
     private String description;
     private Integer status;
     private String memberId;
+    private Integer enable;
 }

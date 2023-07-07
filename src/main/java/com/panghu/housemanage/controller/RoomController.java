@@ -5,10 +5,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.panghu.housemanage.common.enumeration.PHExceptionCodeEnum;
 import com.panghu.housemanage.common.exception.PHServiceException;
 import com.panghu.housemanage.common.util.PHResp;
-import com.panghu.housemanage.common.util.RequestHandleUtil;
+import com.panghu.housemanage.common.util.RequestHandleUtils;
 import com.panghu.housemanage.pojo.po.MemberPo;
 import com.panghu.housemanage.pojo.po.RoomPo;
-import com.panghu.housemanage.pojo.vo.MemberVo;
 import com.panghu.housemanage.pojo.vo.RoomVo;
 import com.panghu.housemanage.service.MemberService;
 import com.panghu.housemanage.service.RoomService;
@@ -41,13 +40,13 @@ public class RoomController {
     @ResponseBody
     public PHResp<Map<String, Object>> getData(HttpServletRequest request) throws Exception {
         // 通过前端参数构建分页对象page
-        Page<RoomVo> page = RequestHandleUtil.getPage(request);
+        Page<RoomVo> page = RequestHandleUtils.getPage(request);
         // 通过前端参数构建查询实体po
-        RoomVo roomVo = RequestHandleUtil.buildPoEntity(request, RoomVo.class);
+        RoomVo roomVo = RequestHandleUtils.buildPoEntity(request, RoomVo.class);
         // 把分页对象page和查询实体po传到service层，查询结果返回封装成Page对象
         IPage<RoomVo> pageResult = roomService.pageQueryRoom(page, roomVo);
         // 获取查询总数和记录，构建返回前端的Map对象
-        return RequestHandleUtil.successPageResult(pageResult);
+        return RequestHandleUtils.successPageResult(pageResult);
     }
 
     @GetMapping("/roomList")
@@ -67,7 +66,7 @@ public class RoomController {
     @PutMapping
     @ResponseBody
     public PHResp<String> update(@RequestBody List<RoomVo> volist) {
-        List<RoomPo> roomList = RequestHandleUtil.roomDTOTrans(volist);
+        List<RoomPo> roomList = RequestHandleUtils.roomDTOTrans(volist);
         // 更新信息
         roomService.updateBatch(roomList);
         return PHResp.success();
@@ -75,7 +74,7 @@ public class RoomController {
     @PostMapping
     @ResponseBody
     public PHResp<String> insert(@RequestBody RoomVo roomVo) {
-        List<RoomPo> roomList = RequestHandleUtil.roomDTOTrans(Collections.singletonList(roomVo));
+        List<RoomPo> roomList = RequestHandleUtils.roomDTOTrans(Collections.singletonList(roomVo));
         roomService.insertRoom(roomList.get(0));
         return PHResp.success();
     }

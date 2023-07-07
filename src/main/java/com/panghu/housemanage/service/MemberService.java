@@ -7,6 +7,7 @@ import com.panghu.housemanage.pojo.vo.MemberVo;
 import com.panghu.housemanage.pojo.vo.PHBaseVo;
 
 import java.util.List;
+import java.util.Map;
 
 public interface MemberService {
      IPage<MemberVo> pageQueryMember(Page<MemberVo> page, PHBaseVo vo);
@@ -24,4 +25,6 @@ public interface MemberService {
     List<MemberPo> isTerminate(Long[] ids);
 
     List<MemberPo> getAllMember();
+
+    List<MemberPo> queryMember(Map<String, Object> params);
 }

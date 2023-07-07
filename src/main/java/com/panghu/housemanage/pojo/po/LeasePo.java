@@ -29,6 +29,10 @@ public class LeasePo extends PHBasePo{
     private Date endDate;
     private Long roomId;
     private Long memberId;
+    private String number;
+    private Integer effective;
+    @TableField("isdelete")
+    private Integer isDelete;
 
     /**
      * 页面参数

@@ -1,5 +1,6 @@
 var selectedRows = [];
 var selectedObjRows = [];
+var roomList = [];
 /**
  * 勾选记录
  */
@@ -37,12 +38,12 @@ $('#table').on('post-body.bs.table', function () {
  * 页面全选
  */
 $('#table').on('check-all.bs.table', function (e, rows) {
-    $.each(rows, function (index, row) {
+    `$.each(rows, function(index, row) {
         if ($.inArray(row.rowId, selectedRows) === -1) {
             selectedRows.push(row.rowId);
             selectedObjRows.push(row);
         }
-    });
+    });`
 });
 
 /**
@@ -57,7 +58,7 @@ $('#table').on('uncheck-all.bs.table', function (e) {
     var endIndex = startIndex + pageSize;
     var rows = data.slice(startIndex, endIndex);
 
-    $.each(rows, function (index, row) {
+    $.each(rows, function(index, row) {
         var index = selectedRows.indexOf(row.rowId);
         if (index > -1) {
             selectedRows.splice(index, 1);
@@ -101,11 +102,10 @@ function amountFormatter(value) {
 /*销毁校验器*/
 function resetValidate() {
     if ($("#addOrUpdateform").data('bootstrapValidator')) { // 判断是否存在Validator
-        $("#addOrUpdateform").data('bootstrapValidator').destroy(); // 销毁Validator
+      $("#addOrUpdateform").data('bootstrapValidator').destroy(); // 销毁Validator
     }
     initValidate();
 }
-
 $('#addOrUpdateModal').on('hidden.bs.modal', function () {
     // 执行校验器重置操作
     resetValidate();
@@ -120,14 +120,13 @@ function validate() {
         addOrUpdate();
     }
 }
-
 /*初始化房间下拉框*/
 function initRoom() {
     $.ajax("/room/roomList", {
         type: 'get',
         dataType: "json",
         success: function (data) {
-            var roomList = data.data;
+            roomList = data.data;
             var opts = "";
             for (var index = 0; index < roomList.length; index++) {
                 var room = roomList[index];
@@ -138,4 +137,15 @@ function initRoom() {
             // $("#roomId").selectpicker("refresh");
         }
     });
+}
+
+// 根据房间ID获取房间号
+function getRoomNumber(roomId) {
+    for (var index = 0; index < roomList.length; index++) {
+        var room = roomList[index];
+        if (String(room.id) === roomId) {
+            return room.number;
+        }
+    }
+    return null; // 如果未找到对应的房间号，返回 null 或其他适当的默认值
 }

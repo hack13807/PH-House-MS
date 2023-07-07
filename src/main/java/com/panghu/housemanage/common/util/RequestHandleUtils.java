@@ -18,9 +18,9 @@ import java.util.*;
 /**
  * Controller处理请求工具类
  */
-public class RequestHandleUtil {
+public class RequestHandleUtils {
 
-    private RequestHandleUtil() {
+    private RequestHandleUtils() {
         throw new IllegalStateException("Utility class");
     }
 
@@ -120,6 +120,7 @@ public class RequestHandleUtil {
             Optional.ofNullable(roomVo.getRoomNo()).ifPresent(roomPo::setNumber);
             Optional.ofNullable(roomVo.getRoomDesc()).ifPresent(roomPo::setDescription);
             Optional.ofNullable(roomVo.getRoomStatus()).ifPresent(status -> roomPo.setStatus(status.getCode()));
+            Optional.ofNullable(roomVo.getEnableStatus()).ifPresent(enable -> roomPo.setEnable(Integer.parseInt(enable)));
             poList.add(roomPo);
         });
         return poList;
@@ -138,6 +139,7 @@ public class RequestHandleUtil {
             Optional.ofNullable(leaseVo.getUnit()).ifPresent(leasePo::setUnit);
             Optional.ofNullable(leaseVo.getRentAmount()).ifPresent(leasePo::setRentAmount);
             Optional.ofNullable(leaseVo.getLeaseType()).ifPresent(typeEnum -> leasePo.setLeaseType(typeEnum.getCode()));
+            Optional.ofNullable(leaseVo.getVoEffective()).ifPresent(eff -> leasePo.setEffective(Integer.parseInt(eff)));
             poList.add(leasePo);
         });
         return poList;

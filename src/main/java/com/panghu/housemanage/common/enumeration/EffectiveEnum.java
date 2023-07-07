@@ -7,15 +7,17 @@ import com.panghu.housemanage.common.exception.PHServiceException;
 import lombok.Getter;
 
 @Getter
-public enum MemberOptTypeEnum {
-    MODIFY(1,"修改"),
-    TERMINATE(2,"退租");
+public enum EffectiveEnum implements IEnum<Integer> {
+    UN_EFFECTIVE(0,"已失效"),
+    EFFECTIVE(1,"生效中");
 
+    @EnumValue
     private final int code;
 
+    @JsonValue
     private final String msg;
 
-    MemberOptTypeEnum(int code , String msg){
+    EffectiveEnum(int code , String msg){
         this.code = code ;
         this.msg = msg ;
     }
@@ -27,7 +29,7 @@ public enum MemberOptTypeEnum {
      */
     public static String getValueByCode(int code){
 
-        for(MemberOptTypeEnum typeEnum: MemberOptTypeEnum.values()){
+        for(EffectiveEnum typeEnum: EffectiveEnum.values()){
             if(typeEnum.getCode() == code){
                 return typeEnum.getMsg();
             }
@@ -40,12 +42,17 @@ public enum MemberOptTypeEnum {
      * @param code
      * @return
      */
-    public static MemberOptTypeEnum getTypeEnumBytypeId(int code){
-        for(MemberOptTypeEnum topType : values()){
+    public static EffectiveEnum getTypeEnumBytypeId(int code){
+        for(EffectiveEnum topType : values()){
             if(topType.code == code){
                 return topType;
             }
         }
-        throw new PHServiceException(PHExceptionCodeEnum.OPT_TYPE_NOT_FOUNG, String.valueOf(code));
+        throw new PHServiceException(PHExceptionCodeEnum.EFFECTIVE_STATUS_NOT_FOUNG, String.valueOf(code));
+    }
+
+    @Override
+    public Integer getValue() {
+        return code;
     }
 }

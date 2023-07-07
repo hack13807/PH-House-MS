@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.panghu.housemanage.common.enumeration.MemberOptTypeEnum;
+import com.panghu.housemanage.common.enumeration.PHExceptionCodeEnum;
 import com.panghu.housemanage.common.enumeration.RoomStatusEnum;
+import com.panghu.housemanage.common.exception.PHServiceException;
 import com.panghu.housemanage.dao.MemberMapper;
 import com.panghu.housemanage.pojo.po.MemberPo;
 import com.panghu.housemanage.pojo.vo.MemberVo;
@@ -34,7 +36,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void batchDelete(Long[] ids) {
         LambdaUpdateWrapper<MemberPo> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper.set(MemberPo::getStatus, 0).in(MemberPo::getId, ids);
+        updateWrapper.set(MemberPo::getIsDelete, 1).in(MemberPo::getId, ids);
         memberMapper.update(null, updateWrapper);
     }
 
@@ -65,7 +67,6 @@ public class MemberServiceImpl implements MemberService {
         switch (MemberOptTypeEnum.getTypeEnumBytypeId(optType)) {
             case MODIFY -> updateRoomStatusForModify(memberList);
             case TERMINATE -> updateRoomStatusForTerminate(memberList);
-            case null -> {}
         }
         // 更新租客信息
         memberList.forEach(memberPo -> memberMapper.updateById(memberPo));
@@ -81,6 +82,30 @@ public class MemberServiceImpl implements MemberService {
     public List<MemberPo> getAllMember() {
         QueryWrapper<MemberPo> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("id","idcard", "name", "tel", "sex").ne("isdelete", 1);
+        return memberMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public List<MemberPo> queryMember(Map<String, Object> params) {
+        QueryWrapper<MemberPo> queryWrapper = new QueryWrapper<>();
+
+        // 根据不同属性值拼接查询条件
+        if (params.containsKey("id")) {
+            Long id = Long.parseLong(params.get("id").toString());
+            queryWrapper.eq("id", id);
+        }
+        if (params.containsKey("name")) {
+            String name = (String) params.get("name");
+            queryWrapper.eq("name", name);
+        }
+        if (params.containsKey("sex")) {
+            Integer sex = (Integer) params.get("sex");
+            queryWrapper.eq("sex", sex);
+        }
+        if (params.containsKey("tel")) {
+            String tel = (String) params.get("tel");
+            queryWrapper.eq("tel", tel);
+        }
         return memberMapper.selectList(queryWrapper);
     }
 

@@ -13,5 +13,9 @@ public interface LeaseService {
 
     IPage<LeaseVo> pageQueryLease(Page<LeaseVo> page, LeaseVo leaseVo);
 
-    void insertLease(LeasePo leasePo);
+    void insertLease(LeaseVo leaseVo);
+
+    void updateBatch(List<LeasePo> poList);
+
+    void batchDelete(Long[] ids);
 }

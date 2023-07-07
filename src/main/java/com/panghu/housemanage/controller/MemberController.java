@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.panghu.housemanage.common.enumeration.PHExceptionCodeEnum;
 import com.panghu.housemanage.common.exception.PHServiceException;
 import com.panghu.housemanage.common.util.PHResp;
-import com.panghu.housemanage.common.util.RequestHandleUtil;
+import com.panghu.housemanage.common.util.RequestHandleUtils;
 import com.panghu.housemanage.pojo.po.MemberPo;
 import com.panghu.housemanage.pojo.vo.MemberVo;
 import com.panghu.housemanage.service.MemberService;
@@ -42,15 +42,21 @@ public class MemberController {
     @ResponseBody
     public PHResp<Map<String, Object>> getData(HttpServletRequest request) throws Exception {
         // 通过前端参数构建分页对象page
-        Page<MemberVo> page = RequestHandleUtil.getPage(request);
+        Page<MemberVo> page = RequestHandleUtils.getPage(request);
         // 通过前端参数构建查询实体po
-        MemberVo memberVo = RequestHandleUtil.buildPoEntity(request, MemberVo.class);
+        MemberVo memberVo = RequestHandleUtils.buildPoEntity(request, MemberVo.class);
         // 把分页对象page和查询实体po传到service层，查询结果返回封装成Page对象
         IPage<MemberVo> pageResult = memberService.pageQueryMember(page, memberVo);
         // 获取查询总数和记录，构建返回前端的Map对象
-        return RequestHandleUtil.successPageResult(pageResult);
+        return RequestHandleUtils.successPageResult(pageResult);
     }
 
+    @GetMapping("/queryMember")
+    @ResponseBody
+    public PHResp<List<MemberPo>> queryMember(String id)  {
+        List<MemberPo> memberPos = memberService.queryMember(Map.of("id", id));
+        return PHResp.success(memberPos);
+    }
     @GetMapping("/isTerminate")
     @ResponseBody
     public PHResp<String> isTerminate(Long[] ids)  {
@@ -80,7 +86,7 @@ public class MemberController {
     @ResponseBody
     @Transactional
     public PHResp<String> update(@RequestBody List<MemberVo> volist) {
-        List<MemberPo> memberList = RequestHandleUtil.memberDTOTrans(volist);
+        List<MemberPo> memberList = RequestHandleUtils.memberDTOTrans(volist);
         memberService.updateBatch(memberList,volist.get(0).getOptType());
         return PHResp.success();
     }
@@ -89,7 +95,7 @@ public class MemberController {
     @ResponseBody
     @Transactional
     public PHResp<String> insert(@RequestBody MemberVo memberVo) {
-        MemberPo memberPo = RequestHandleUtil.memberDTOTrans(Collections.singletonList(memberVo)).get(0);
+        MemberPo memberPo = RequestHandleUtils.memberDTOTrans(Collections.singletonList(memberVo)).get(0);
         // 新增租客记录
         memberService.insertMember(memberPo);
         return PHResp.success();

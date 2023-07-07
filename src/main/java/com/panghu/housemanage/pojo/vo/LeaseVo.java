@@ -1,6 +1,7 @@
 package com.panghu.housemanage.pojo.vo;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.panghu.housemanage.common.enumeration.EffectiveEnum;
 import com.panghu.housemanage.common.enumeration.LeaseTypeEnum;
 import com.panghu.housemanage.common.enumeration.MemberSexEnum;
 import com.panghu.housemanage.common.enumeration.MemberStatusEnum;
@@ -25,11 +26,14 @@ public class LeaseVo extends PHBaseVo {
     private Date startDate;
     private Date endDate;
     private String voUnit;
+    private String leaseNumber;
+    private EffectiveEnum effective;
 
     /**
      * 页面参数
      */
     private String voLeaseType;
+    private String voEffective;
     private String memberName;
     private Long roomId;
     private String roomNo;

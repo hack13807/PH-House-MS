@@ -101,6 +101,14 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
+
+        <!--汉字转拼音-->
+        <dependency>
+            <groupId>com.belerweb</groupId>
+            <artifactId>pinyin4j</artifactId>
+            <version>2.5.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -109,15 +117,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-            <!--            <plugin>-->
-            <!--                <groupId>org.apache.maven.plugins</groupId>-->
-            <!--                <artifactId>maven-compiler-plugin</artifactId>-->
-            <!--                <configuration>-->
-            <!--                    <source>11</source>-->
-            <!--                    <target>11</target>-->
-            <!--                    <executable>E:\DevTools\JDK\jdk-11.0.19\bin\javac</executable>-->
-            <!--                </configuration>-->
-            <!--            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

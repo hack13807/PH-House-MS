@@ -115,12 +115,14 @@ $('#table').bootstrapTable({
                 align: "center",
             }],
             onLoadError: function (status, res) {
-                swal("获取租约列表失败", res.responseJSON.msg, "error")
+                swal("获取租客列表失败", res.responseJSON.msg, "error")
             }
         });
     },
     onLoadError: function (status, res) {
-        swal("获取租客列表失败", res.responseJSON.msg, "error")
+         var resJson = res.hasOwnProperty('responseJSON') ? res.responseJSON : null;
+                var errMsg = resJson && resJson.msg ? resJson.msg : null;
+                if(errMsg) swal("获取租客列表失败", errMsg, "error");
     }
 });
 $('td[data-rowcolor]').attr("style", "background-color:yellow;");
@@ -382,7 +384,6 @@ function terminate() {
                         $("#addOrUpdateform")[0].reset();
                         $('#id').val('');   // 租客id作为隐藏字段无法通过reset()清除，需要单独处理
                         $('#addOrUpdateModal').modal('hide');
-                        $("#table").bootstrapTable('refresh');
                     },
                     error: function (res) {
                         swal("修改失败", res.responseJSON.msg, "error")

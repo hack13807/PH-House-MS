@@ -5,9 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.panghu.housemanage.common.enumeration.MemberOptTypeEnum;
-import com.panghu.housemanage.common.enumeration.PHExceptionCodeEnum;
 import com.panghu.housemanage.common.enumeration.RoomStatusEnum;
-import com.panghu.housemanage.common.exception.PHServiceException;
 import com.panghu.housemanage.dao.MemberMapper;
 import com.panghu.housemanage.pojo.po.MemberPo;
 import com.panghu.housemanage.pojo.vo.MemberVo;
@@ -29,8 +27,19 @@ public class MemberServiceImpl implements MemberService {
     RoomService roomService;
 
     @Override
-    public IPage<MemberVo> pageQueryMember(Page<MemberVo> page, PHBaseVo vo) {
+    public IPage<MemberVo> pageQueryMember(Page<MemberVo> page, MemberVo vo) {
+        preprocess(vo);
         return memberMapper.pageQueryMember(page, vo);
+    }
+
+    private void preprocess(MemberVo vo) {
+        String roomNo = vo.getRoomNo();
+        if (roomNo != null && (roomNo.contains(",") || roomNo.contains("，"))) {
+            roomNo = roomNo.replace("，", ",");
+            vo.setRoomNos(Arrays.asList(roomNo.split(",")));
+            vo.setRoomNo(null);
+        }
+        vo.setVoStatus("-1");
     }
 
     @Override
@@ -51,14 +60,6 @@ public class MemberServiceImpl implements MemberService {
         memberMapper.updateById(memberPo);
     }
 
-    @Override
-    public List<MemberPo> queryMemberByRoomId(Long[] ids) {
-        QueryWrapper<MemberPo> wrapper = new QueryWrapper<>();
-        wrapper.in("room_id", ids);
-        return memberMapper.selectList(wrapper);
-
-
-    }
 
     @Override
     @Transactional
@@ -81,7 +82,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public List<MemberPo> getAllMember() {
         QueryWrapper<MemberPo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("id","idcard", "name", "tel", "sex").ne("isdelete", 1);
+        queryWrapper.select("id", "idcard", "name", "tel", "sex").ne("isdelete", 1).ne("status", 2);
         return memberMapper.selectList(queryWrapper);
     }
 

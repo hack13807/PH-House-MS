@@ -15,9 +15,11 @@
 
 
     <select id="pageQueryMember" parameterType="java.util.HashMap" resultMap="memberVoMap">
-        Select m.id as rowId,m.name as memberName, m.sex, m.tel,m.idcard,m.status as memberStatus,r.id as roomId,r.number as roomNo
+        Select m.id as rowId,m.name as memberName, m.sex, m.tel,m.idcard,m.status as memberStatus,r.id as
+        roomId,r.number as roomNo
         from t_member m
-        left join t_room r on m.room_id = r.id
+        left join t_lease l on l.member_id = m.id
+        left join t_room r on l.room_id = r.id
         <where>
             1 = 1
             <if test=" memberVo.memberName != null and memberVo.memberName != '' ">
@@ -25,6 +27,12 @@
             </if>
             <if test=" memberVo.roomNo != null and memberVo.roomNo != '' ">
                 and r.number = #{memberVo.roomNo}
+            </if>
+            <if test=" memberVo.roomNos != null and memberVo.roomNos != '' ">
+                and r.number IN
+                <foreach item="roomNo" collection="memberVo.roomNos" open="(" separator="," close=")">
+                    #{roomNo}
+                </foreach>
             </if>
             <if test=" memberVo.voStatus != null and memberVo.voStatus != '' and memberVo.voStatus != '-1' ">
                 and m.status = #{memberVo.voStatus}
@@ -34,13 +42,14 @@
     </select>
 
     <select id="countMemberByRoomId" resultType="java.util.Map">
-        SELECT m.room_id as roomId, COUNT(m.room_id) AS count
+        SELECT l.room_id as roomId, COUNT(l.room_id) AS count
         FROM t_member m
-        LEFT JOIN t_room r ON m.room_id = r.id
+        left join t_lease l on l.member_id = m.id
+        LEFT JOIN t_room r ON l.room_id = r.id
         WHERE r.id IN
         <foreach item="id" collection="ids" open="(" separator="," close=")">
             #{id}
         </foreach>
-        GROUP BY m.room_id FOR UPDATE
+        GROUP BY l.room_id FOR UPDATE
     </select>
 </mapper>

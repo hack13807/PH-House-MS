@@ -1,6 +1,11 @@
 var selectedRows = [];
 var selectedObjRows = [];
 var roomList = [];
+var tabMapping = {
+    '房间总览': 'roomPage',
+    '租客总览': 'memberPage',
+    '租约总览': 'leasePage'
+};
 /**
  * 勾选记录
  */
@@ -38,12 +43,12 @@ $('#table').on('post-body.bs.table', function () {
  * 页面全选
  */
 $('#table').on('check-all.bs.table', function (e, rows) {
-    `$.each(rows, function(index, row) {
+    $.each(rows, function (index, row) {
         if ($.inArray(row.rowId, selectedRows) === -1) {
             selectedRows.push(row.rowId);
             selectedObjRows.push(row);
         }
-    });`
+    });
 });
 
 /**
@@ -58,7 +63,7 @@ $('#table').on('uncheck-all.bs.table', function (e) {
     var endIndex = startIndex + pageSize;
     var rows = data.slice(startIndex, endIndex);
 
-    $.each(rows, function(index, row) {
+    $.each(rows, function (index, row) {
         var index = selectedRows.indexOf(row.rowId);
         if (index > -1) {
             selectedRows.splice(index, 1);
@@ -102,10 +107,11 @@ function amountFormatter(value) {
 /*销毁校验器*/
 function resetValidate() {
     if ($("#addOrUpdateform").data('bootstrapValidator')) { // 判断是否存在Validator
-      $("#addOrUpdateform").data('bootstrapValidator').destroy(); // 销毁Validator
+        $("#addOrUpdateform").data('bootstrapValidator').destroy(); // 销毁Validator
     }
     initValidate();
 }
+
 $('#addOrUpdateModal').on('hidden.bs.modal', function () {
     // 执行校验器重置操作
     resetValidate();
@@ -120,6 +126,7 @@ function validate() {
         addOrUpdate();
     }
 }
+
 /*初始化房间下拉框*/
 function initRoom() {
     $.ajax("/room/roomList", {
@@ -148,4 +155,23 @@ function getRoomNumber(roomId) {
         }
     }
     return null; // 如果未找到对应的房间号，返回 null 或其他适当的默认值
+}
+
+$(document).ready(function () {
+    tabSwitching();
+});
+
+/*页签切换加粗效果*/
+function tabSwitching() {
+    var titleElement = document.getElementById("title");
+    var titleText = titleElement.innerText;
+    // 根据对应关系对象获取相应的 tabName
+    var tabName = tabMapping[titleText];
+    // 确保页面加载完毕后应用样式
+    $(window).on('load', function() {
+        if (tabName) {
+            let tab = document.getElementById(tabName);
+            tab.classList.add("highlight");
+        }
+    });
 }

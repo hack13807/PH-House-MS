@@ -2,11 +2,8 @@ package com.panghu.housemanage.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.panghu.housemanage.common.enumeration.PHExceptionCodeEnum;
-import com.panghu.housemanage.common.exception.PHServiceException;
 import com.panghu.housemanage.common.util.PHResp;
 import com.panghu.housemanage.common.util.RequestHandleUtils;
-import com.panghu.housemanage.pojo.po.MemberPo;
 import com.panghu.housemanage.pojo.po.RoomPo;
 import com.panghu.housemanage.pojo.vo.RoomVo;
 import com.panghu.housemanage.service.MemberService;
@@ -77,16 +74,5 @@ public class RoomController {
         List<RoomPo> roomList = RequestHandleUtils.roomDTOTrans(Collections.singletonList(roomVo));
         roomService.insertRoom(roomList.get(0));
         return PHResp.success();
-    }
-
-    @GetMapping("/isInUse")
-    @ResponseBody
-    public PHResp<String> isInUse(Long[] ids){
-        List<MemberPo> members = memberService.queryMemberByRoomId(ids);
-        if (members.isEmpty()) {
-            return PHResp.success();
-        }
-        String memberNames = String.join(", ", members.stream().map(MemberPo::getName).toList());
-        throw new PHServiceException(PHExceptionCodeEnum.ROOM_INUSE, memberNames);
     }
 }

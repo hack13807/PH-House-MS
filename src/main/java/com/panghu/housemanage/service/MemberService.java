@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface MemberService {
-     IPage<MemberVo> pageQueryMember(Page<MemberVo> page, PHBaseVo vo);
+     IPage<MemberVo> pageQueryMember(Page<MemberVo> page, MemberVo vo);
 
     void batchDelete(Long[] ids);
 
@@ -18,7 +18,6 @@ public interface MemberService {
 
     void updateMemberInfo(MemberPo memberPo);
 
-    List<MemberPo> queryMemberByRoomId(Long[] ids);
 
     void updateBatch(List<MemberPo> list, Integer optType);
 

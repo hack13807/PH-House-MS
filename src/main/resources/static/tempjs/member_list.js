@@ -129,6 +129,7 @@ $('td[data-rowcolor]').attr("style", "background-color:yellow;");
 
 /*添加租客*/
 function addMember() {
+    $('#roomNoDiv').hide();
     $('.modal-title').text("新增租客")
     $('#addOrUpdateModal').modal('show')
     $('#addOrUpdateform')[0].reset()  //重置表单
@@ -143,6 +144,7 @@ function edit() {
         swal("请选择单条数据修改")
         return;
     } else {
+        $('#roomNoDiv').show();
         let row = $("#table").bootstrapTable('getSelections')[0]; //获取该行数据
         if (row.rowId !== null) {
             // {# 修改modal框的标题 #}
@@ -155,7 +157,7 @@ function edit() {
         $("#tel").val(row.tel);
         $("#sex").val(row.sex === '男' ? 1 : 2);
         $("#idCard").val(row.idCard);
-        $("#roomId").val(row.roomId);
+        $("#roomNo").val(row.roomNo);
     }
 };
 
@@ -168,7 +170,6 @@ function addOrUpdate() {
         tel: $('#tel').val(),
         sex: $('#sex').val(),
         idCard: $('#idCard').val(),
-        roomId: $('#roomId').val(),
     };
     // {# 如果不存在project_id就是新增 #}
     if (!memberId) {
@@ -239,19 +240,17 @@ function deleteRows() {
         return
     }
     //    检查租客是否退租
-    $.ajax("/member/isTerminate?ids=" + selectedRows, {
-        type: "get",
-        success: function (res) {
-            if (res.code === 200) {
-                doDelete(length);
-            } else {
-                swal("删除失败", res.msg + "\n" + res.data, "error")
-            }
-        },
-        error: function (res) {
-            swal("删除失败", res.responseJSON.msg, "error")
+    let msg = '';
+    $.each(selectedObjRows, function(index, row) {
+        if (row.memberStatus === '租住中') {
+            msg += row.memberName+',';
         }
-    })
+    });
+    if(msg){
+        swal("删除失败", '租客未退租，请确定以下租客退租后重新删除' + '\n' + msg.slice(0, -1), "error")
+    } else {
+        doDelete(length);
+    }
 }
 
 function doDelete(length) {
@@ -290,24 +289,6 @@ function doDelete(length) {
 
             }
         });
-}
-
-function initRoom() {
-    $.ajax("/room/roomList", {
-        type: 'get',
-        dataType: "json",
-        success: function (data) {
-            var roomList = data.data;
-            var opts = "";
-            for (var index = 0; index < roomList.length; index++) {
-                var room = roomList[index];
-                opts += "<option value='" + room.id + "'>" + room.number + '房' + "</option>";
-            }
-// 查询界面
-            $("#roomId").append(opts);
-            // $("#roomId").selectpicker("refresh");
-        }
-    });
 }
 
 <!--  租客信息表单校验规则  -->
@@ -397,24 +378,28 @@ function terminate() {
 var dropdown = document.getElementById("memberStatus");
 // 绑定 change 事件
 dropdown.addEventListener("change", function () {
-    var terminateBtn = document.getElementById("terminate");
-    var deleteBtn = document.getElementById("delete");
     // 获取当前选中的值
     var selectedValue = dropdown.value;
-    if (selectedValue === '2') {
-        terminateBtn.classList.add("hidden")
-        deleteBtn.classList.remove("hidden")
+    if (selectedValue === '1') {    // 租住中
+        $('#delete').hide();
+        $('#terminate').show();
     } else {
-        terminateBtn.classList.remove("hidden")
-        deleteBtn.classList.add("hidden")
+        $('#delete').show();
+        $('#terminate').hide();
     }
+    cleanSelectRows();
     $("#table").bootstrapTable('refresh');
 });
 
 $(document).ready(function () {
     // 在页面加载完成后执行的脚本
-    var deleteBtn = document.getElementById("delete");
-    deleteBtn.classList.add("hidden")
+    // var deleteBtn = document.getElementById("delete");
+    // deleteBtn.classList.add("hidden")
+    $('#delete').hide();
     initRoom();
     initValidate();
+    var rooms = $('#roomSearch').val()
+    if (rooms) {
+        $('#memberStatus').val('-1')
+    }
 });

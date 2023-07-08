@@ -16,7 +16,7 @@
 <div class="panel panel-default" style="width: 90%;margin-left: 5%">
     <!--标题栏-->
     <div class="panel-heading">
-        <h3 class="panel-title" style="text-align:center"><b>租客总览</b></h3>
+        <h3 id="title" class="panel-title" style="text-align:center"><b>租客总览</b></h3>
     </div>
     <!--工具栏-->
     <div id="toolbar" class="div-toolbar">
@@ -27,7 +27,7 @@
             <option value="2">已退租</option>
         </select>
         <input name="memberSearch" id="memberSearch" class="form-condition" placeholder="租客姓名"/>
-        <input name="roomSearch" id="roomSearch" class="form-condition" placeholder="房间号"/>
+        <input name="roomSearch" id="roomSearch" class="form-condition" placeholder="房间号" th:value="${roomSearch}"/>
         <!--操作按钮-->
         <button id="search" class="btn btn-primary" th:onclick="search()">搜 索</button>
         <button class="btn btn-success" th:onclick="|addMember()|">新 增</button>
@@ -94,11 +94,10 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group" id="roomNoDiv">
                             <label class="col-sm-3 control-label">租住房间</label>
                             <div class="col-sm-7">
-                                <select name="roomId" id="roomId" class="form-condition">
-                                </select>
+                                <input name="roomNo" id="roomNo" disabled class="form-condition">
                             </div>
                         </div>
                         <!--                    {# 模态框底部 #}-->

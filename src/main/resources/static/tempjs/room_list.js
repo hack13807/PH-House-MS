@@ -81,19 +81,17 @@ function disableRows() {
         return
     }
     //    检查房间是否有租客
-    $.ajax("/room/isInUse?ids=" + selectedRows, {
-        type: "get",
-        success: function (res) {
-            if (res.code == 200) {
-                doDisable(length);
-            } else {
-                swal("禁用失败", res.msg + "\n" + res.data, "error")
-            }
-        },
-        error: function (res) {
-            swal("禁用失败", res.responseJSON.msg, "error")
+    let msg = '';
+    $.each(selectedObjRows, function(index, row) {
+        if (row.roomStatus === '出租中') {
+            msg += row.roomNo+',';
         }
-    })
+    });
+    if(msg){
+        swal("禁用失败", '所选数据存在出租中的房间，请退租后再操作' + '\n' + msg.slice(0, -1), "error")
+    } else {
+        doDisable(length);
+    }
 }
 
 function addOrUpdate() {
@@ -263,7 +261,6 @@ function enableRows() {
                     $('#table').bootstrapTable('uncheckAll');
                 }
             })
-
         }
     });
 }
@@ -328,9 +325,7 @@ enableStatusSelector.addEventListener("change", function () {
         enableBtn.classList.add("hidden")
         disableBtn.classList.remove("hidden")
     }
-//    selectedRows = [];
-//    selectedObjRows = [];
-//    $('#table').bootstrapTable('uncheckAll');
+    cleanSelectRows();
     $("#table").bootstrapTable('refresh');
 });
 
@@ -340,8 +335,7 @@ var dropdown = document.getElementById("roomStatus");
 dropdown.addEventListener("change", function () {
 var selectedValue = dropdown.value;
 console.log(selectedValue);
-    selectedRows = [];
-    selectedObjRows = [];
+    cleanSelectRows();
     $("#table").bootstrapTable('refresh');
 });
 
@@ -351,3 +345,13 @@ $(document).ready(function () {
     enableBtn.classList.add("hidden")
     initValidate();
 });
+
+function gotoMember() {
+    let roomNos = []
+    $.each(selectedObjRows, function(index, row) {
+        roomNos.push(row.roomNo)
+    });
+    let parameter = "福坤"; // 要携带的参数
+    let url = "/member/page?roomSearch=" + encodeURIComponent(roomNos); // 构建带参数的 URL
+    window.location.href = url;
+}

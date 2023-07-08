@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -18,6 +20,7 @@ public class MemberVo extends PHBaseVo {
     private Long roomId;
     private String memberName;
     private String roomNo;
+    private List<String> roomNos;
     private String tel;
     private String idCard;
     @EnumValue

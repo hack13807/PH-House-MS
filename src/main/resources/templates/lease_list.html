@@ -16,7 +16,7 @@
 <div class="panel panel-default" style="width: 90%;margin-left: 5%">
     <!--标题栏-->
     <div class="panel-heading">
-        <h3 class="panel-title" style="text-align:center"><b>租约总览</b></h3>
+        <h3 id="title" class="panel-title" style="text-align:center"><b>租约总览</b></h3>
     </div>
     <!--工具栏-->
     <div id="toolbar" class="div-toolbar">
@@ -97,7 +97,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">
                                         <div class="col-sm-7">
-                                            <input type="button" th:onclick="cheanMemberInfo()" class="btn btn-primary" id="refresh"
+                                            <input type="button" th:onclick="unlockMemberInfo()" class="btn btn-primary" id="refreshMemberInfo"
                                                 value="重置租客信息"/>
                                         </div>
                                     </label>

@@ -637,19 +637,14 @@ dropdown.addEventListener("change", function () {
 
 $(document).ready(function () {
     // 在页面加载完成后执行的脚本
-    initHiddenBtn();
     initRoom();
     initMemberCache();
     initValidate();
+    // 如果带参数跳转，默认过滤条件为全部
+    if ($('#memberSearch').val()) {
+        $('#effectiveSelect').val('-1')
+    }
 });
-
-/*初始化隐藏按钮*/
-function initHiddenBtn() {
-    var effectiveBtn = document.getElementById("effective");
-    var deleteBtn = document.getElementById("delete");
-    effectiveBtn.classList.add("hidden")
-    deleteBtn.classList.add("hidden")
-}
 
 /*初始化租客下拉框*/
 function initMemberCache() {
@@ -667,24 +662,26 @@ var effectiveSelect = document.getElementById("effectiveSelect");
 // 绑定 change 事件
 effectiveSelect.addEventListener("change", function () {
     console.log(effectiveSelect)
-    var terminateBtn = document.getElementById("terminate");
-    var effectiveBtn = document.getElementById("effective");
-    var deleteBtn = document.getElementById("delete");
     // 获取当前选中的值
     var selectedValue = effectiveSelect.value;
     console.log(selectedValue);
     if (selectedValue === '0') {
-        effectiveBtn.classList.remove("hidden")
-        deleteBtn.classList.remove("hidden")
-        terminateBtn.classList.add("hidden")
+        $('#effective').show();
+        $('#delete').show();
+        $('#terminate').hide();
         // 清除其余条件
         $('#voLeaseType').val('-1')
         $('#memberSearch').val('')
         $('#roomSearch').val('')
+    } else if (selectedValue === '-1') {
+        $('#effective').show();
+        $('#delete').show();
+        $('#terminate').show();
     } else {
-        effectiveBtn.classList.add("hidden")
-        deleteBtn.classList.add("hidden")
-        terminateBtn.classList.remove("hidden")
+        $('#effective').hide();
+        $('#delete').hide();
+        $('#terminate').show();
     }
+    cleanSelectRows();
     $("#table").bootstrapTable('refresh');
 });

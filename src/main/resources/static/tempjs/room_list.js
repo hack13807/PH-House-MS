@@ -347,11 +347,15 @@ $(document).ready(function () {
 });
 
 function gotoMember() {
+    let length = selectedRows.length;
+    if (length === 0) {
+        swal("请选择一个或多个房间")
+        return
+    }
     let roomNos = []
     $.each(selectedObjRows, function(index, row) {
         roomNos.push(row.roomNo)
     });
-    let parameter = "福坤"; // 要携带的参数
     let url = "/member/page?roomSearch=" + encodeURIComponent(roomNos); // 构建带参数的 URL
     window.location.href = url;
 }

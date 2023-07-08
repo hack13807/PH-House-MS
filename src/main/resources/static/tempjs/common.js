@@ -172,6 +172,7 @@ function tabSwitching() {
         if (tabName) {
             let tab = document.getElementById(tabName);
             tab.classList.add("highlight");
+            tab.innerText = '·'+titleText+'·';
         }
     });
 }

@@ -86,10 +86,9 @@ public class MemberController {
 
     @PutMapping
     @ResponseBody
-    @Transactional
     public PHResp<String> update(@RequestBody List<MemberVo> volist) {
         List<MemberPo> memberList = RequestHandleUtils.memberDTOTrans(volist);
-        memberService.updateBatch(memberList,volist.get(0).getOptType());
+        memberService.updateBatch(memberList);
         return PHResp.success();
     }
 

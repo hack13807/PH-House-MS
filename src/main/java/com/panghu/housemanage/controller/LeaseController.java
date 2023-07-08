@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +39,8 @@ public class LeaseController {
     MemberService memberService;
 
     @GetMapping("/page")
-    public String getPage(HttpServletRequest request){
+    public String getPage(@RequestParam(required = false, value = "memberSearch") String memberSearch, Model model){
+        model.addAttribute("memberSearch", memberSearch);
         return "lease_list";
     }
 

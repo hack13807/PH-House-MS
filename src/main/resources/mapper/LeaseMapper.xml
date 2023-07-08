@@ -27,7 +27,8 @@
     </select>
 
     <select id="pageQueryLease" parameterType="com.panghu.housemanage.pojo.vo.LeaseVo" resultMap="leaseVoMap">
-        Select r.number as roomNo, m.name as memberName, l.id as rowId,l.lease_type as leaseType,l.unit,l.rent_amount,l.start_date,l.end_date,l.number,
+        Select r.number as roomNo, m.name as memberName, l.id as rowId,l.lease_type as
+        leaseType,l.unit,l.rent_amount,l.start_date,l.end_date,l.number,
         r.id as roomId, m.id as memberId, l.effective
         from t_lease l
         left join t_member m on m.id = l.member_id
@@ -37,13 +38,19 @@
             <if test=" leaseVo.memberName != null and leaseVo.memberName != '' ">
                 and m.name = #{leaseVo.memberName}
             </if>
+            <if test=" leaseVo.memberNames != null and leaseVo.memberNames != '' ">
+                and m.name IN
+                <foreach item="memberName" collection="leaseVo.memberNames" open="(" separator="," close=")">
+                    #{memberName}
+                </foreach>
+            </if>
             <if test=" leaseVo.roomNo != null and leaseVo.roomNo != '' ">
                 and r.number = #{leaseVo.roomNo}
             </if>
             <if test=" leaseVo.voLeaseType != null and leaseVo.voLeaseType != '' and leaseVo.voLeaseType != '-1' ">
                 and l.lease_type = #{leaseVo.voLeaseType}
             </if>
-            <if test=" leaseVo.voEffective != null and leaseVo.voEffective != '' ">
+            <if test=" leaseVo.voEffective != null and leaseVo.voEffective != '' and leaseVo.voEffective != '-1'  ">
                 and l.effective = #{leaseVo.voEffective}
             </if>
             and m.isdelete = 0

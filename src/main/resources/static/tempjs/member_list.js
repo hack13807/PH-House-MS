@@ -201,7 +201,6 @@ function addOrUpdate() {
     // {# 如果project_id存在就是修改 #}
     else {
         var arr = [];
-        data.optType = 1;
         arr.push(data);
         $.ajax({
             type: "PUT",
@@ -383,6 +382,9 @@ dropdown.addEventListener("change", function () {
     if (selectedValue === '1') {    // 租住中
         $('#delete').hide();
         $('#terminate').show();
+    } else if (selectedValue === '-1') {
+        $('#delete').show();
+        $('#terminate').show();
     } else {
         $('#delete').show();
         $('#terminate').hide();
@@ -398,8 +400,22 @@ $(document).ready(function () {
     $('#delete').hide();
     initRoom();
     initValidate();
-    var rooms = $('#roomSearch').val()
-    if (rooms) {
+    // 如果带参数跳转，默认过滤条件为全部
+    if ($('#roomSearch').val()) {
         $('#memberStatus').val('-1')
     }
 });
+
+function gotoLease() {
+    let length = selectedRows.length;
+    if (length === 0) {
+        swal("请选择一个或多个租客")
+        return
+    }
+    let memberNos = []
+    $.each(selectedObjRows, function(index, row) {
+        memberNos.push(row.memberName)
+    });
+    let url = "/lease/page?memberSearch=" + encodeURIComponent(memberNos); // 构建带参数的 URL
+    window.location.href = url;
+}

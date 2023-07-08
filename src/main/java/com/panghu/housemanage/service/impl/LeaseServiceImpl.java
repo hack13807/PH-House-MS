@@ -11,12 +11,14 @@ import com.panghu.housemanage.dao.MemberMapper;
 import com.panghu.housemanage.pojo.po.LeasePo;
 import com.panghu.housemanage.pojo.po.MemberPo;
 import com.panghu.housemanage.pojo.vo.LeaseVo;
+import com.panghu.housemanage.pojo.vo.MemberVo;
 import com.panghu.housemanage.service.LeaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -37,9 +39,20 @@ public class LeaseServiceImpl implements LeaseService {
 
     @Override
     public IPage<LeaseVo> pageQueryLease(Page<LeaseVo> page, LeaseVo leaseVo) {
+        preprocess(leaseVo);
         Page<LeaseVo> leaseVoPage = leaseMapper.pageQueryLease(page, leaseVo);
         leaseVoPage.getRecords().forEach(vo -> vo.setVoUnit(vo.getUnit()+vo.getLeaseType().getUnit()));
         return leaseVoPage;
+    }
+
+    private void preprocess(LeaseVo vo) {
+        String memberName = vo.getMemberName();
+        if (memberName != null && (memberName.contains(",") || memberName.contains("，"))) {
+            memberName = memberName.replace("，", ",");
+            vo.setMemberNames(Arrays.asList(memberName.split(",")));
+            vo.setMemberName(null);
+            vo.setVoEffective("-1");
+        }
     }
 
     @Override
@@ -47,7 +60,7 @@ public class LeaseServiceImpl implements LeaseService {
     public void insertLease(LeaseVo leaseVo) {
         // 判断是否需要创建租客记录
         if (ObjectUtils.isEmpty(leaseVo.getMemberId())) {
-            MemberPo memberPo = MemberPo.builder().name(leaseVo.getMemberName()).tel(leaseVo.getTel()).sex(leaseVo.getSex()).idCard(leaseVo.getIdCard()).roomId(leaseVo.getRoomId()).build();
+            MemberPo memberPo = MemberPo.builder().name(leaseVo.getMemberName()).tel(leaseVo.getTel()).sex(leaseVo.getSex()).idCard(leaseVo.getIdCard()).status(1).build();
             memberMapper.insert(memberPo);
             leaseVo.setMemberId(memberPo.getId());
         }

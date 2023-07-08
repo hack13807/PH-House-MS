@@ -10,6 +10,7 @@ import lombok.experimental.Accessors;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -35,6 +36,7 @@ public class LeaseVo extends PHBaseVo {
     private String voLeaseType;
     private String voEffective;
     private String memberName;
+    private List<String> memberNames;
     private Long roomId;
     private String roomNo;
     private Long memberId;

@@ -105,7 +105,6 @@ public class RequestHandleUtils {
             Optional.ofNullable(memberVo.getSex()).ifPresent(sex -> memberPo.setSex(sex.getCode()));
             Optional.ofNullable(memberVo.getTel()).ifPresent(memberPo::setTel);
             Optional.ofNullable(memberVo.getIdCard()).ifPresent(memberPo::setIdCard);
-            Optional.ofNullable(memberVo.getRoomId()).ifPresent(memberPo::setRoomId);
             Optional.ofNullable(memberVo.getMemberStatus()).ifPresent(status -> memberPo.setStatus(status.getCode()));
             poList.add(memberPo);
         });

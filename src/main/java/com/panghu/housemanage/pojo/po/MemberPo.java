@@ -19,7 +19,6 @@ public class MemberPo extends PHBasePo{
     private String tel;
     @TableField("idcard")
     private String idCard;
-    private Long roomId;
     private Integer status;
     @TableField("isdelete")
     private Integer isDelete;

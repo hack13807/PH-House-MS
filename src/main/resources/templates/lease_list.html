@@ -21,7 +21,8 @@
     <!--工具栏-->
     <div id="toolbar" class="div-toolbar">
         <select name="select" id="effectiveSelect" class="form-condition">
-            <option value="1">生效中</option>
+            <option value="-1">全部</option>
+            <option value="1" selected>生效中</option>
             <option value="0">已失效</option>
         </select>
         <select name="select" id="voLeaseType" class="form-condition">
@@ -30,7 +31,7 @@
             <option value="2">月 租</option>
             <option value="3">年 租</option>
         </select>
-        <input name="memberSearch" id="memberSearch" class="form-condition" placeholder="租客姓名"/>
+        <input name="memberSearch" id="memberSearch" class="form-condition" placeholder="租客姓名" th:value="${memberSearch}"/>
         <input name="roomSearch" id="roomSearch" class="form-condition" placeholder="房间号"/>
         <!--操作按钮-->
         <button id="search" class="btn btn-primary" th:onclick="search()">搜 索</button>

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.panghu.housemanage.pojo.po.MemberPo;
 import com.panghu.housemanage.pojo.vo.MemberVo;
 import com.panghu.housemanage.pojo.vo.PHBaseVo;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -19,7 +20,8 @@ public interface MemberService {
     void updateMemberInfo(MemberPo memberPo);
 
 
-    void updateBatch(List<MemberPo> list, Integer optType);
+    @Transactional
+    void updateBatch(List<MemberPo> memberList);
 
     List<MemberPo> isTerminate(Long[] ids);
 

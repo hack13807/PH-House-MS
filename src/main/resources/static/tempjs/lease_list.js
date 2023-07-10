@@ -644,6 +644,8 @@ $(document).ready(function () {
     if ($('#memberSearch').val()) {
         $('#effectiveSelect').val('-1')
     }
+    $('#effective').hide();
+            $('#delete').hide();
 });
 
 /*初始化租客下拉框*/

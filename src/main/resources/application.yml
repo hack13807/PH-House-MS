@@ -24,8 +24,10 @@ spring:
     init:
       schema-locations:
         - classpath:script/create_table.sql
-        - classpath:script/ddl.sql
-      data-locations: classpath:script/insert_data.sql
+      data-locations:
+        - classpath:script/data/t_lease.sql
+        - classpath:script/data/t_member.sql
+        - classpath:script/data/t_room.sql
       mode: never
   mail:
     host: smtp.163.com

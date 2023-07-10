@@ -157,7 +157,11 @@ function getRoomNumber(roomId) {
     return null; // 如果未找到对应的房间号，返回 null 或其他适当的默认值
 }
 
-$(document).ready(function () {
+//$(document).ready(function () {
+//    tabSwitching();
+//});
+
+document.addEventListener("DOMContentLoaded", function() {
     tabSwitching();
 });
 

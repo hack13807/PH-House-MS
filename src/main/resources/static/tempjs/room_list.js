@@ -315,15 +315,17 @@ enableStatusSelector.addEventListener("change", function () {
     // 获取当前选中的值
     var selectedValue = enableStatusSelector.value;
     console.log(selectedValue);
-    if (selectedValue === '0') {
+    if (selectedValue === '0') {    // 禁用
         enableBtn.classList.remove("hidden")
         disableBtn.classList.add("hidden")
+        $('#gotoMember').hide();
         // 清除其余条件
         $('#roomStatus').val('-1')
         $('#roomSearch').val('')
     } else {
         enableBtn.classList.add("hidden")
         disableBtn.classList.remove("hidden")
+        $('#gotoMember').show();
     }
     cleanSelectRows();
     $("#table").bootstrapTable('refresh');
@@ -335,6 +337,11 @@ var dropdown = document.getElementById("roomStatus");
 dropdown.addEventListener("change", function () {
 var selectedValue = dropdown.value;
 console.log(selectedValue);
+    if (selectedValue === '0') {    // 待租
+        $('#gotoMember').hide();
+    } else if ($('#enableStatus').val() !== '0') {
+        $('#gotoMember').show();    // 非待租状态，且不是禁用过滤条件，才显示跳转按钮
+    }
     cleanSelectRows();
     $("#table").bootstrapTable('refresh');
 });
@@ -353,9 +360,16 @@ function gotoMember() {
         return
     }
     let roomNos = []
+    let inUseStatus = roomStatusMapping["出租中"];
+    let inUseFlag = 'N';
     $.each(selectedObjRows, function(index, row) {
+        if(row.roomStatus === inUseStatus) inUseFlag = 'Y';
         roomNos.push(row.roomNo)
     });
+    if (inUseFlag === 'N') {
+        swal("请选择出租中的房间查看租客")
+        return
+    }
     let url = "/member/page?roomSearch=" + encodeURIComponent(roomNos); // 构建带参数的 URL
     window.location.href = url;
 }

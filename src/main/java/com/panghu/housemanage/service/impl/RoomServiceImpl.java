@@ -14,6 +14,7 @@ import com.panghu.housemanage.pojo.po.RoomPo;
 import com.panghu.housemanage.pojo.vo.RoomVo;
 import com.panghu.housemanage.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,6 +30,7 @@ public class RoomServiceImpl implements RoomService {
     MemberMapper memberMapper;
 
     @Override
+    @CacheEvict
     public IPage<RoomVo> pageQueryRoom(Page<RoomVo> page, RoomVo roomVo) {
         return roomMapper.pageQueryRoom(page, roomVo);
     }

@@ -6,6 +6,10 @@ var tabMapping = {
     '租客总览': 'memberPage',
     '租约总览': 'leasePage'
 };
+var roomStatusMapping = {
+    '出租中': '出租中',
+    '待租': '待租'
+};
 /**
  * 勾选记录
  */

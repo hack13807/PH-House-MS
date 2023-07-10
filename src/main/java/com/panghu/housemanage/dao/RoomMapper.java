@@ -6,10 +6,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.panghu.housemanage.pojo.po.RoomPo;
 import com.panghu.housemanage.pojo.vo.RoomVo;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
-import java.util.Map;
 
 @Mapper
 public interface RoomMapper extends BaseMapper<RoomPo> {

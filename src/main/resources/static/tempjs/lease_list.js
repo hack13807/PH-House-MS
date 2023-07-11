@@ -121,6 +121,14 @@ function unlockMemberInfo() {
     $('#idCard').val('').prop('disabled', false);
     $('#memberId').val('').prop('disabled', false);
     $('#sex').val('1').prop('disabled', false);
+
+    $("#roomId").prop('disabled', false);
+    $("#leaseType").prop('disabled', false);
+    $("#unit").prop('disabled', false);
+    $("#rentAmount").prop('disabled', false);
+    $("#startDate").prop('disabled', false);
+    $("#endDate").prop('disabled', false);
+
     $('#refreshMemberInfo').show();
 }
 

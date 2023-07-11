@@ -35,8 +35,8 @@
         <input name="roomSearch" id="roomSearch" class="form-condition" placeholder="房间号"/>
         <!--操作按钮-->
         <button id="search" class="btn btn-primary" th:onclick="search()">搜 索</button>
-        <button class="btn btn-success" th:onclick="addLease()">新 增</button>
-        <button class="btn btn-info" th:onclick="|edit()|">编 辑</button>
+        <button id="new" class="btn btn-success" th:onclick="addLease()">新 增</button>
+        <button id="edit" class="btn btn-info" th:onclick="|edit()|">编 辑</button>
         <button id="terminate" class="btn btn-warning" th:onclick="terminate()">手动失效</button>
         <button id="effective" class="btn btn-primary" th:onclick="enableRows()">手动生效</button>
         <button id="delete" class="btn btn-danger" th:onclick="|deleteRows();|">删 除</button>

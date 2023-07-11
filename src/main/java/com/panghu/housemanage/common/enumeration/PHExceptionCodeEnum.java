@@ -10,7 +10,8 @@ public enum PHExceptionCodeEnum {
     ROOM_INUSE(10002,"租客未退租，请确定以下租客退租后重新禁用"),
     MEMBER_RENTING(10002,"租客未退租，请确定以下租客退租后重新删除"),
     OPT_TYPE_NOT_FOUNG(10003,"该操作未定义，请联系管理员查看后台日志"),
-    EFFECTIVE_STATUS_NOT_FOUNG(10004,"生效状态未定义，请联系管理员查看后台日志");
+    EFFECTIVE_STATUS_NOT_FOUNG(10004,"生效状态未定义，请联系管理员查看后台日志"),
+    UNIQUE_MEMBER(10005,"系统已存在该身份证号的租客");
 
     private final int code;
 

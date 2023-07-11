@@ -59,6 +59,12 @@ public class MemberController {
         List<MemberPo> memberPos = memberService.queryMember(Map.of("id", id));
         return PHResp.success(memberPos);
     }
+    @GetMapping("/getByRoomId")
+    @ResponseBody
+    public PHResp<List<MemberVo>> getByRoomId(@RequestParam("roomId") Long roomId)  {
+        List<MemberVo> memberVos = memberService.getByRoomId(Map.of("roomId", roomId));
+        return PHResp.success(memberVos);
+    }
     @GetMapping("/isTerminate")
     @ResponseBody
     public PHResp<String> isTerminate(Long[] ids)  {
@@ -97,6 +103,11 @@ public class MemberController {
     @Transactional
     public PHResp<String> insert(@RequestBody MemberVo memberVo) {
         MemberPo memberPo = RequestHandleUtils.memberDTOTrans(Collections.singletonList(memberVo)).get(0);
+        // 验重
+        MemberPo member = memberService.checkUnique(memberPo);
+        if (member != null) {
+            throw new PHServiceException(PHExceptionCodeEnum.UNIQUE_MEMBER, null);
+        }
         // 新增租客记录
         memberService.insertMember(memberPo);
         return PHResp.success();

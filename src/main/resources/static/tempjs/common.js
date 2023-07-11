@@ -10,6 +10,10 @@ var roomStatusMapping = {
     '出租中': '出租中',
     '待租': '待租'
 };
+var effectiveMapping = {
+    '生效中': '生效中',
+    '已失效': '已失效'
+};
 /**
  * 勾选记录
  */

@@ -4,25 +4,22 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.panghu.housemanage.common.enumeration.RoomStatusEnum;
+import com.panghu.housemanage.common.enumeration.PHExceptionCodeEnum;
+import com.panghu.housemanage.common.exception.PHServiceException;
 import com.panghu.housemanage.dao.MemberMapper;
 import com.panghu.housemanage.pojo.po.MemberPo;
 import com.panghu.housemanage.pojo.vo.MemberVo;
 import com.panghu.housemanage.service.MemberService;
-import com.panghu.housemanage.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class MemberServiceImpl implements MemberService {
     @Autowired
     MemberMapper memberMapper;
-    @Autowired
-    RoomService roomService;
 
     @Override
     public IPage<MemberVo> pageQueryMember(Page<MemberVo> page, MemberVo vo) {
@@ -62,7 +59,15 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public void updateBatch(List<MemberPo> memberList) {
         // 更新租客信息
-        memberList.forEach(memberPo -> memberMapper.updateById(memberPo));
+
+        memberList.forEach(memberPo -> {
+            // 验重
+            MemberPo member = checkUnique(memberPo);
+            if (member != null) {
+                throw new PHServiceException(PHExceptionCodeEnum.UNIQUE_MEMBER, null);
+            }
+            memberMapper.updateById(memberPo);
+        });
     }
 
     @Override
@@ -74,7 +79,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public List<MemberPo> getAllMember() {
         QueryWrapper<MemberPo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("id", "idcard", "name", "tel", "sex").ne("isdelete", 1).ne("status", 2);
+        queryWrapper.select("id", "idcard", "name", "tel", "sex").ne("isdelete", 1);
         return memberMapper.selectList(queryWrapper);
     }
 
@@ -100,6 +105,19 @@ public class MemberServiceImpl implements MemberService {
             queryWrapper.eq("tel", tel);
         }
         return memberMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public List<MemberVo> getByRoomId(Map<String, Object> params) {
+        return memberMapper.getByRoomId(params);
+    }
+
+    @Override
+    public MemberPo checkUnique(MemberPo memberPo) {
+        QueryWrapper<MemberPo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("idcard", memberPo.getIdCard()).eq("isdelete", 0);
+        List<MemberPo> memberPos = memberMapper.selectList(queryWrapper);
+        return memberPos.isEmpty() ? null : memberPos.get(0);
     }
 
 

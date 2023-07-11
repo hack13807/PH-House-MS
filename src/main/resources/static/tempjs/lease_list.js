@@ -94,6 +94,12 @@ $('#table').bootstrapTable({
     cellStyle: function (value, row, index) {
         return {css: {'background-color': '#F3F3F4'}};
     },
+    onDblClickRow: function(row, $element) {
+      // 点击行触发的操作
+      openMadel(row, '查看租约');
+      lockAllInfo();
+      // 其他操作逻辑...
+    },
     onLoadError: function (status, res) {
         var resJson = res.hasOwnProperty('responseJSON') ? res.responseJSON : null;
         var errMsg = resJson && resJson.msg ? resJson.msg : null;
@@ -125,7 +131,16 @@ function lockMemberInfo() {
     $('#memberId').prop('disabled', true);
     $('#sex').prop('disabled', true);
 }
-
+function lockAllInfo() {
+    lockMemberInfo();
+    $('#sex').prop('disabled', true);
+    $("#roomId").prop('disabled', true);
+    $("#leaseType").prop('disabled', true);
+    $("#unit").prop('disabled', true);
+    $("#rentAmount").prop('disabled', true);
+    $("#startDate").prop('disabled', true);
+    $("#endDate").prop('disabled', true);
+}
 
 // 监听输入框的oninput事件
 $('#memberName').on('input', function () {
@@ -186,60 +201,67 @@ $('#memberName').focus(function () {
 
 function edit() {
     let selecton = $("#table").bootstrapTable('getSelections'); //获取该行数据
-    if (selecton.length == 0) {
-        swal("请选择需要修改的数据")
-        return;
-    } else if (selecton.length > 1) {
-        swal("请选择单条数据修改")
-        return;
-    } else {
-        // 编辑租约时不允许修改租客信息
-        $('#refreshMemberInfo').hide();
-        let row = $("#table").bootstrapTable('getSelections')[0]; //获取该行数据
-        $.ajax({
-            type: "get",
-            url: "/member/queryMember?id=" + row.memberId,
-            dataType: "json",
-            success: function (res) {
-                if (res.code == 200) {
-                    let member = res.data[0];
-                    $('#addOrUpdateModal').modal('show')
-                    // 回填数据，记得回填隐藏的input框的value值为要修改的数据的id主键值
-                    $("#memberName").val(member.name);
-                    $("#memberId").val(member.id);
-                    $("#tel").val(member.tel);
-                    $("#sex").val(member.sex);
-                    $("#idCard").val(member.idCard);
-                } else {
-                    swal("删除失败", res.msg + "\n" + res.data, "error")
-                }
-            },
-            error: function (res) {
-                swal("添加失败", res.responseJSON.msg, "error")
-            }
-        })
-        if (row.rowId !== null) {
-            // {# 修改modal框的标题 #}
-            $('.modal-title').text('修改租约-' + row.leaseNumber)
-        }
-        let type;
-        if (row.leaseType === '按日租') type = 1;
-        if (row.leaseType === '按月租') type = 2;
-        if (row.leaseType === '按年租') type = 3;
-        $("#id").val(row.rowId);
-        $("#roomId").val(row.roomId);
-        $("#leaseType").val(type);
-        $("#unit").val(row.unit);
-        $("#rentAmount").val(row.rentAmount);
-        var startDate = new Date(row.startDate);
-        var endDate = new Date(row.endDate);
-        var formattedStartDate = startDate.toISOString().substring(0, 10);
-        var formattedEndDate = endDate.toISOString().substring(0, 10);
-        $("#startDate").val(formattedStartDate);
-        $("#endDate").val(formattedEndDate);
-        lockMemberInfo();
+        if (selecton.length == 0) {
+            swal("请选择需要修改的数据")
+            return;
+        } else if (selecton.length > 1) {
+            swal("请选择单条数据修改")
+            return;
+        } else if ($("#table").bootstrapTable('getSelections')[0].effective === effectiveMapping['已失效']) {
+              swal("失效租约不能修改")
+              return;
+          }else {
+            let row = $("#table").bootstrapTable('getSelections')[0]; //获取该行数据
+            openMadel(row,'修改租约');
+            lockMemberInfo();
     }
 };
+
+function openMadel(row, title){
+        // 编辑租约时不允许修改租客信息
+                $('#refreshMemberInfo').hide();
+                $.ajax({
+                    type: "get",
+                    url: "/member/queryMember?id=" + row.memberId,
+                    dataType: "json",
+                    success: function (res) {
+                        if (res.code == 200) {
+                            let member = res.data[0];
+                            $('#addOrUpdateModal').modal('show')
+                            // 回填数据，记得回填隐藏的input框的value值为要修改的数据的id主键值
+                            $("#memberName").val(member.name);
+                            $("#memberId").val(member.id);
+                            $("#tel").val(member.tel);
+                            $("#sex").val(member.sex);
+                            $("#idCard").val(member.idCard);
+                        } else {
+                            swal("查找租客失败", res.msg + "\n" + res.data, "error")
+                        }
+                    },
+                    error: function (res) {
+                        swal("查找租客失败", res.responseJSON.msg, "error")
+                    }
+                })
+                if (row.rowId !== null) {
+                    // {# 修改modal框的标题 #}
+                    $('.modal-title').text(title + '<' + row.leaseNumber + '>')
+                }
+                let type;
+                if (row.leaseType === '按日租') type = 1;
+                if (row.leaseType === '按月租') type = 2;
+                if (row.leaseType === '按年租') type = 3;
+                $("#id").val(row.rowId);
+                $("#roomId").val(row.roomId);
+                $("#leaseType").val(type);
+                $("#unit").val(row.unit);
+                $("#rentAmount").val(row.rentAmount);
+                var startDate = new Date(row.startDate);
+                var endDate = new Date(row.endDate);
+                var formattedStartDate = startDate.toISOString().substring(0, 10);
+                var formattedEndDate = endDate.toISOString().substring(0, 10);
+                $("#startDate").val(formattedStartDate);
+                $("#endDate").val(formattedEndDate);
+}
 
 function addOrUpdate() {
     let leaseId = $('#id').val();
@@ -248,11 +270,11 @@ function addOrUpdate() {
     var text = '';
     if (!leaseId) {
         if (!memberId) {
-            title = '新增租客';
-            text = '租客信息为手工录入，系统将自动创建该租客信息';
+            title = '手工录入';
+            text = '租客信息为手工录入，系统内若无该租客信息，将会自动创建';
         } else {
-            title = '现有租客';
-            text = '系统存在该租客信息，将为该租客创建新租约';
+            title = '自动填充';
+            text = '租客信息为自动填充，系统将为该租客创建新租约';
         }
         swal({
                 title: title,
@@ -671,6 +693,8 @@ effectiveSelect.addEventListener("change", function () {
         $('#effective').show();
         $('#delete').show();
         $('#terminate').hide();
+        $('#edit').hide();
+        $('#new').hide();
         // 清除其余条件
         $('#voLeaseType').val('-1')
         $('#memberSearch').val('')
@@ -679,11 +703,65 @@ effectiveSelect.addEventListener("change", function () {
         $('#effective').show();
         $('#delete').show();
         $('#terminate').show();
+        $('#edit').show();
+        $('#new').show();
     } else {
         $('#effective').hide();
         $('#delete').hide();
         $('#terminate').show();
+        $('#edit').show();
+        $('#new').show();
     }
     cleanSelectRows();
     $("#table").bootstrapTable('refresh');
 });
+
+function enableRows() {
+    let length = selectedRows.length;
+    if (length === 0) {
+        swal("请选择要生效的租约")
+        return
+    }
+    swal({
+        title: "确定生效吗？",
+        text: "是否生效选中的" + length + "条租约",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#2e6da4",
+        confirmButtonText: "确定生效",
+        cancelButtonText: "取消生效",
+        closeOnConfirm: false,
+        // closeOnCancel: false //取消时不自动关闭弹框
+    },
+    function (isConfirm) {
+        if (isConfirm) {
+            let arr = [];
+            for (var index = 0; index < selectedObjRows.length; index++) {
+                var obj = selectedObjRows[index];
+                if(obj.effective !== effectiveMapping["生效中"]) {
+                 obj.voEffective = 1;
+                 arr.push(obj);
+                }
+            }
+            $.ajax("/lease", {
+                type: "put",
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(arr),
+                success: function (data) {
+                    if (data.code == 200) {
+                        swal("生 效", "所选租约已生效",
+                            "success");
+                            cleanSelectRows();
+                    } else {
+                        swal("生效失败", data.msg, "error")
+                    }
+                    $("#table").bootstrapTable('refresh');
+                },
+                error: function (data) {
+                    swal("生效失败", data.responseJSON.msg, "error")
+                }
+            })
+        }
+    });
+}

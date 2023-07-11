@@ -2,14 +2,10 @@ package com.panghu.housemanage.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.panghu.housemanage.common.util.CommonUtils;
 import com.panghu.housemanage.common.util.PHResp;
 import com.panghu.housemanage.common.util.RequestHandleUtils;
-import com.panghu.housemanage.common.util.DateTimeUtils;
 import com.panghu.housemanage.pojo.po.LeasePo;
-import com.panghu.housemanage.pojo.po.MemberPo;
 import com.panghu.housemanage.pojo.vo.LeaseVo;
-import com.panghu.housemanage.pojo.vo.MemberVo;
 import com.panghu.housemanage.service.LeaseService;
 import com.panghu.housemanage.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,10 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -69,7 +63,7 @@ public class LeaseController {
     public PHResp<String> insert(@RequestBody LeaseVo leaseVo) {
         // 重复业务校验
         // TODO
-        // 新增租客记录
+        // 新增租约
         leaseService.insertLease(leaseVo);
         return PHResp.success();
     }

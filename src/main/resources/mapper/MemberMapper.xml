@@ -10,13 +10,13 @@
         <result column="tel" property="tel"/>
         <result column="idcard" property="idCard"/>
         <result column="roomId" property="roomId"/>
+        <result column="memberId" property="memberId"/>
         <result column="roomNo" property="roomNo"/>
     </resultMap>
 
 
     <select id="pageQueryMember" parameterType="java.util.HashMap" resultMap="memberVoMap">
-        Select m.id as rowId,m.name as memberName, m.sex, m.tel,m.idcard,m.status as memberStatus,r.id as
-        roomId,r.number as roomNo
+        Select m.id as rowId,m.name as memberName, m.sex, m.tel,m.idcard,m.status as memberStatus, GROUP_CONCAT(r.number SEPARATOR ',') as roomNo
         from t_member m
         left join t_lease l on l.member_id = m.id
         left join t_room r on l.room_id = r.id
@@ -38,6 +38,7 @@
                 and m.status = #{memberVo.voStatus}
             </if>
             and m.isdelete = 0
+            group by m.id, m.name, m.sex, m.tel,m.idcard,m.status
         </where>
     </select>
 
@@ -51,5 +52,13 @@
             #{id}
         </foreach>
         GROUP BY l.room_id FOR UPDATE
+    </select>
+
+    <select id="getByRoomId" resultMap="memberVoMap">
+        SELECT m.id as rowId, m.name as memberName, m.tel, m.sex, m.idcard as idCard, m.status as memberStatus
+        FROM t_member m
+        left join t_lease l on l.member_id = m.id and l.effective = 1 and l.isdelete = 0
+        LEFT JOIN t_room r ON l.room_id = r.id
+        WHERE r.id = #{roomId}
     </select>
 </mapper>

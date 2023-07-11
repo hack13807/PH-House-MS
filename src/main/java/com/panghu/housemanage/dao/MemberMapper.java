@@ -18,4 +18,6 @@ public interface MemberMapper extends BaseMapper<MemberPo> {
     Page<MemberVo> pageQueryMember(Page<MemberVo> page, @Param("memberVo") PHBaseVo vo);
 
     List<Map<Object, Object>> countMemberByRoomId(@Param("ids") List<Long> ids);
+
+    List<MemberVo> getByRoomId(Map<String, Object> params);
 }

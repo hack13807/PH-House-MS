@@ -17,12 +17,25 @@
 
 
     <select id="queryLeaseByMemberId" parameterType="java.util.Map" resultMap="leaseVoMap">
-        Select l.id as rowId,l.lease_type as leaseType,l.unit,l.rent_amount,l.start_date,l.end_date,l.number
+        Select l.id as rowId,l.lease_type as leaseType,l.unit,l.rent_amount,l.start_date,l.end_date,l.number, l.effective
         from t_lease l
         left join t_member m on m.id = l.member_id
         left join t_room r on r.id = l.room_id
         <where>
             m.id = #{memberId}
+            and l.isdelete = 0
+        </where>
+    </select>
+
+    <select id="queryLeaseByRoomId" parameterType="java.util.Map" resultMap="leaseVoMap">
+        Select l.id as rowId,l.lease_type as leaseType,l.unit,l.rent_amount,l.start_date,l.end_date,l.number
+        from t_lease l
+        left join t_member m on m.id = l.member_id
+        left join t_room r on r.id = l.room_id
+        <where>
+            r.id = #{roomId}
+            and l.effective = 1
+            and l.isdelete = 0
         </where>
     </select>
 

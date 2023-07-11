@@ -83,3 +83,7 @@
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s, -webkit-box-shadow ease-in-out .15s
 }
+
+.subtable tbody tr {
+  cursor: pointer;
+}

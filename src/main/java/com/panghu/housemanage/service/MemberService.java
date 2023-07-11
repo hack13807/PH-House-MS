@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.panghu.housemanage.pojo.po.MemberPo;
 import com.panghu.housemanage.pojo.vo.MemberVo;
-import com.panghu.housemanage.pojo.vo.PHBaseVo;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -28,4 +27,8 @@ public interface MemberService {
     List<MemberPo> getAllMember();
 
     List<MemberPo> queryMember(Map<String, Object> params);
+
+    List<MemberVo> getByRoomId(Map<String, Object> params);
+
+    MemberPo checkUnique(MemberPo memberPo);
 }

@@ -61,6 +61,55 @@ $('#table').bootstrapTable({
     cellStyle: function (value, row, index) {
         return {css: {'background-color': '#F3F3F4'}};
     },
+    <!--展开子表-->
+    onExpandRow: function (index, row, $detail) {
+        $detail.html('<table class="subtable"></table>').find('table').bootstrapTable({
+            url: '/member/getByRoomId',
+            method: 'get',
+            queryParams: {roomId: row.rowId},
+            clickToSelect: true,
+            responseHandler: function (res) {
+                return {rows: res.data}
+            },
+            columns: [{
+                field: 'rowId',
+                title: '租客ID',
+                visible: false,
+            }, {
+                field: 'memberName',
+                title: '租客姓名',
+                align: "center",
+            }, {
+                field: 'tel',
+                title: '手机号',
+                align: "center",
+            }, {
+                field: 'sex',
+                title: '性别',
+                align: "center",
+            }, {
+                field: 'idCard',
+                title: '身份证号',
+                align: "center",
+            },{
+                  field: 'memberStatus',
+                  title: '状态',
+                  align: "center",
+              }],
+            onLoadError: function (status, res) {
+                swal("获取租客列表失败", res.responseJSON.msg, "error")
+            },
+            onClickRow: function(row, $element) {
+                  // 点击行触发的操作
+                  console.log("点击了子表的行", row);
+                  // 其他操作逻辑...
+                },
+            onDblClickRow: function (row, $element, field) {
+                                // 处理双击事件
+                                alert('111')
+                              },
+        });
+    },
     onLoadError: function (status, res) {
         swal("获取房间列表失败", res.responseJSON.msg, "error")
     }

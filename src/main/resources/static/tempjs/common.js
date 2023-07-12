@@ -4,7 +4,8 @@ var roomList = [];
 var tabMapping = {
     '房间总览': 'roomPage',
     '租客总览': 'memberPage',
-    '租约总览': 'leasePage'
+    '租约总览': 'leasePage',
+    '收款总览': 'receiptPage'
 };
 var roomStatusMapping = {
     '出租中': '出租中',
@@ -184,7 +185,7 @@ function tabSwitching() {
         if (tabName) {
             let tab = document.getElementById(tabName);
             tab.classList.add("highlight");
-            tab.innerText = '·'+titleText+'·';
+            tab.innerText = '·'+tab.innerText+'·';
         }
     });
 }

@@ -18,7 +18,7 @@
     <select id="pageQueryMember" parameterType="java.util.HashMap" resultMap="memberVoMap">
         Select m.id as rowId,m.name as memberName, m.sex, m.tel,m.idcard,m.status as memberStatus, GROUP_CONCAT(r.number SEPARATOR ',') as roomNo
         from t_member m
-        left join t_lease l on l.member_id = m.id
+        left join t_lease l on l.member_id = m.id  and l.effective = 1 and l.isdelete = 0
         left join t_room r on l.room_id = r.id
         <where>
             1 = 1

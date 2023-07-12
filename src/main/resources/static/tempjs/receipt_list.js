@@ -356,70 +356,54 @@ function doAddOrUpdate() {
     }
     // {# 如果project_id存在就是修改 #}
     else {
-        swal({
-                    title: "修改租约",
-                    text: "此操作会将原租约失效，并创建新租约，是否继续？",
-                    type: "info",
-                    showCancelButton: true,
-                    confirmButtonColor: "#2e6da4",
-                    confirmButtonText: "确定",
-                    cancelButtonText: "取消",
-                    closeOnConfirm: false,
-                    // closeOnCancel: false //取消时不自动关闭弹框
-                },
-                function (isConfirm) {
-                    if (isConfirm) {
-                        let data = {
-                                    id: leaseId,
-                                    rowId: leaseId,
-                                    leaseNumber: $('#number').val(),
-                                    // 租客信息
-                                    memberId: $('#memberId').val(),
-                                    memberName: $('#memberName').val(),
-                                    tel: $('#tel').val(),
-                                    sex: $('#sex').val(),
-                                    idCard: $('#idCard').val(),
-                                    // 租赁信息
-                                    roomId: roomId,
-                                    roomNo: getRoomNumber(roomId),
-                                    rentAmount: $('#rentAmount').val(),
-                                    leaseType: $('#leaseType').val(),
-                                    unit: $('#unit').val(),
-                                    startDate: $('#startDate').val(),
-                                    endDate: $('#endDate').val(),
-                                };
-                                var arr = [];
-                                data.optType = 'edit';
-                                arr.push(data);
-                                $.ajax({
-                                    type: "PUT",
-                                    url: "/lease", // 待后端提供PUT修改接口
-                                    dataType: 'json',
-                                    contentType: 'application/json; charset=utf-8',
-                                    data: JSON.stringify(arr),  // 设置请求体
-                                    success: function (res) {
-                                        console.log(res);
-                                        if (res.code == 200) {
-                                            swal("修 改", "租约信息已修改",
-                                                "success");
-                                            cleanSelectRows();
-                                        } else {
-                                            swal("修改失败", res.msg, "error")
-                                        }
-                                        // {#关闭模态框并清除框内数据，否则下次打开还是上次的数据#}
-                                        $("#table").bootstrapTable('refresh');
-                                        $("#addOrUpdateform")[0].reset();
-                                        $('#id').val('');   // 租客id作为隐藏字段无法通过reset()清除，需要单独处理
-                                        $('#addOrUpdateModal').modal('hide');
-                                        $("#table").bootstrapTable('refresh');
-                                    },
-                                    error: function (res) {
-                                        swal("修改失败", res.responseJSON.msg, "error")
-                                    }
-                                })
-                    }
-                });
-
+        let data = {
+            id: leaseId,
+            rowId: leaseId,
+            leaseNumber: $('#number').val(),
+            // 租客信息
+            memberId: $('#memberId').val(),
+            memberName: $('#memberName').val(),
+            tel: $('#tel').val(),
+            sex: $('#sex').val(),
+            idCard: $('#idCard').val(),
+            // 租赁信息
+            roomId: roomId,
+            roomNo: getRoomNumber(roomId),
+            rentAmount: $('#rentAmount').val(),
+            leaseType: $('#leaseType').val(),
+            unit: $('#unit').val(),
+            startDate: $('#startDate').val(),
+            endDate: $('#endDate').val(),
+        };
+        var arr = [];
+        data.optType = 1;
+        arr.push(data);
+        $.ajax({
+            type: "PUT",
+            url: "/lease", // 待后端提供PUT修改接口
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(arr),  // 设置请求体
+            success: function (res) {
+                console.log(res);
+                if (res.code == 200) {
+                    swal("修 改", "租约信息已修改",
+                        "success");
+                    cleanSelectRows();
+                } else {
+                    swal("修改失败", res.msg, "error")
+                }
+                // {#关闭模态框并清除框内数据，否则下次打开还是上次的数据#}
+                $("#table").bootstrapTable('refresh');
+                $("#addOrUpdateform")[0].reset();
+                $('#id').val('');   // 租客id作为隐藏字段无法通过reset()清除，需要单独处理
+                $('#addOrUpdateModal').modal('hide');
+                $("#table").bootstrapTable('refresh');
+            },
+            error: function (res) {
+                swal("修改失败", res.responseJSON.msg, "error")
+            }
+        })
     }
 }
 
@@ -750,11 +734,11 @@ effectiveSelect.addEventListener("change", function () {
 
 
 // 获取下拉框元素
-var leaseTypeSelect = document.getElementById("leaseType");
+var effectiveSelect = document.getElementById("leaseType");
 // 绑定 change 事件
-leaseTypeSelect.addEventListener("change", function () {
+effectiveSelect.addEventListener("change", function () {
     // 获取当前选中的值
-    var selectedValue = leaseTypeSelect.value;
+    var selectedValue = effectiveSelect.value;
     if (selectedValue === '1') {
         $('#unitTitle').text('租住时长(天)')
     } else if (selectedValue === '2') {

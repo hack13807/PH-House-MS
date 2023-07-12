@@ -3,11 +3,13 @@ package com.panghu.housemanage.pojo.po;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @TableName("t_room")
 public class RoomPo extends PHBasePo {
     @TableId(value = "id", type = IdType.AUTO)
@@ -15,6 +17,5 @@ public class RoomPo extends PHBasePo {
     private String number;
     private String description;
     private Integer status;
-    private String memberId;
     private Integer enable;
 }

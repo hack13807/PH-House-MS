@@ -137,7 +137,7 @@ function disableRows() {
         }
     });
     if(msg){
-        swal("禁用失败", '所选数据存在出租中的房间，请退租后再操作' + '\n' + msg.slice(0, -1), "error")
+        swal("禁用失败", '有房间出租中，请退租后再操作' + '\n' + msg.slice(0, -1), "error")
     } else {
         doDisable(length);
     }
@@ -167,7 +167,6 @@ function addOrUpdate() {
                     swal("添加失败", res.msg, "error")
                 }
                 // {#关闭模态框并清除框内数据，否则下次打开还是上次的数据#}
-                $("#table").bootstrapTable('refresh');
                 $("#addOrUpdateform")[0].reset();
                 $('#id').val('');   // id作为隐藏字段无法通过reset()清除，需要单独处理
                 $('#addOrUpdateModal').modal('hide');
@@ -203,7 +202,7 @@ function addOrUpdate() {
                 $('#id').val('');   // id作为隐藏字段无法通过reset()清除，需要单独处理
                 $('#addOrUpdateModal').modal('hide');
             },
-            error: function () {
+            error: function (res) {
                 swal("修改失败", res.responseJSON.msg, "error")
             }
         })

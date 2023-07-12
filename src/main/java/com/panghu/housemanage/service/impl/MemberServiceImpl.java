@@ -8,6 +8,7 @@ import com.panghu.housemanage.common.enumeration.PHExceptionCodeEnum;
 import com.panghu.housemanage.common.exception.PHServiceException;
 import com.panghu.housemanage.dao.MemberMapper;
 import com.panghu.housemanage.pojo.po.MemberPo;
+import com.panghu.housemanage.pojo.po.RoomPo;
 import com.panghu.housemanage.pojo.vo.MemberVo;
 import com.panghu.housemanage.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +60,6 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public void updateBatch(List<MemberPo> memberList) {
         // 更新租客信息
-
         memberList.forEach(memberPo -> {
             // 验重
             MemberPo member = checkUnique(memberPo);
@@ -114,43 +114,14 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberPo checkUnique(MemberPo memberPo) {
-        QueryWrapper<MemberPo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("idcard", memberPo.getIdCard()).eq("isdelete", 0);
-        List<MemberPo> memberPos = memberMapper.selectList(queryWrapper);
-        return memberPos.isEmpty() ? null : memberPos.get(0);
-    }
-
-
-    /**
-     * 更新房间状态-退租
-     *
-     * @param memberList 成员列表
-     */
-    private void updateRoomStatusForTerminate(List<MemberPo> memberList) {
-        // 1.当前改动涉及的房间ids
-//        Set<Long> roomSet = memberList.stream().map(MemberPo::getRoomId).collect(Collectors.toSet());
-//
-//        // 2.查询改动的房间ids
-//        List<Map<Object, Object>> memberCountsMap = memberMapper.countMemberByRoomId(roomSet.stream().toList());
-//        Map<Long, Integer> allCountMap = memberCountsMap.stream()
-//                .collect(Collectors.toMap(
-//                        entry -> Long.valueOf(entry.get("roomId").toString()), // 转换为Long类型的roomId
-//                        entry -> Integer.parseInt(entry.get("count").toString()) // count保持不变，假设已经是Long类型
-//                ));
-//
-//        // 3.遍历退房租客，判断memberCount为0则需要更改房间状态为待租
-//        Map<Long, Long> countMap = memberList.stream().collect(Collectors.groupingBy(MemberPo::getRoomId, Collectors.counting()));
-//        allCountMap.forEach((roomId, count) -> {
-//            if (countMap.containsKey(roomId)) {
-//                int updatedCount = count - countMap.get(roomId).intValue();
-//                allCountMap.compute(roomId, (key, value) -> updatedCount);
-//            }
-//        });
-//
-//        // 4.更新租客数量为0的房间
-//        List<Long> updateList = allCountMap.entrySet().stream().filter(entry -> entry.getValue() == 0).map(Map.Entry::getKey).toList();
-//        if (!updateList.isEmpty()) {
-//            roomService.updateRoomStatus(updateList, RoomStatusEnum.UNUSED);
-//        }
+        MemberPo currentMember = memberMapper.selectById(memberPo.getId()); // 根据房间ID获取原始数据
+        // 判断是否与原始数据中的房间号一致
+        if (!currentMember.getIdCard().equals(memberPo.getIdCard())) {
+            QueryWrapper<MemberPo> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("idcard", memberPo.getIdCard()).eq("isdelete", 0);
+            List<MemberPo> memberPos = memberMapper.selectList(queryWrapper);
+            return memberPos.isEmpty() ? null : memberPos.get(0);
+        }
+        return null;
     }
 }

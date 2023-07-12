@@ -17,7 +17,7 @@
 
 
     <select id="queryLeaseByMemberId" parameterType="java.util.Map" resultMap="leaseVoMap">
-        Select l.id as rowId,l.lease_type as leaseType,l.unit,l.rent_amount,l.start_date,l.end_date,l.number, l.effective
+        Select l.id as rowId,l.lease_type as leaseType,l.unit,l.rent_amount,l.start_date,l.end_date,l.number, l.effective, l.effective
         from t_lease l
         left join t_member m on m.id = l.member_id
         left join t_room r on r.id = l.room_id
@@ -25,6 +25,7 @@
             m.id = #{memberId}
             and l.isdelete = 0
         </where>
+        order by l.effective desc, l.start_date desc
     </select>
 
     <select id="queryLeaseByRoomId" parameterType="java.util.Map" resultMap="leaseVoMap">
@@ -51,7 +52,7 @@
             <if test=" leaseVo.memberName != null and leaseVo.memberName != '' ">
                 and m.name = #{leaseVo.memberName}
             </if>
-            <if test=" leaseVo.memberNames != null and leaseVo.memberNames != '' ">
+            <if test=" leaseVo.memberNames != null and leaseVo.memberNames.size > 0 ">
                 and m.name IN
                 <foreach item="memberName" collection="leaseVo.memberNames" open="(" separator="," close=")">
                     #{memberName}

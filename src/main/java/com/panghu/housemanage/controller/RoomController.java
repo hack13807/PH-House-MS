@@ -2,8 +2,11 @@ package com.panghu.housemanage.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.panghu.housemanage.common.enumeration.PHExceptionCodeEnum;
+import com.panghu.housemanage.common.exception.PHServiceException;
 import com.panghu.housemanage.common.util.PHResp;
 import com.panghu.housemanage.common.util.RequestHandleUtils;
+import com.panghu.housemanage.pojo.po.LeasePo;
 import com.panghu.housemanage.pojo.po.RoomPo;
 import com.panghu.housemanage.pojo.vo.RoomVo;
 import com.panghu.housemanage.service.MemberService;
@@ -63,6 +66,13 @@ public class RoomController {
     @PutMapping
     @ResponseBody
     public PHResp<String> update(@RequestBody List<RoomVo> volist) {
+        // 验重
+        volist.forEach(roomVo -> {
+            RoomPo po = roomService.checkUnique(roomVo);
+            if (po != null) {
+                throw new PHServiceException(PHExceptionCodeEnum.UNIQUE_ROOM, null);
+            }
+        });
         List<RoomPo> roomList = RequestHandleUtils.roomDTOTrans(volist);
         // 更新信息
         roomService.updateBatch(roomList);
@@ -71,6 +81,11 @@ public class RoomController {
     @PostMapping
     @ResponseBody
     public PHResp<String> insert(@RequestBody RoomVo roomVo) {
+        // 验重
+        RoomPo po = roomService.checkUnique(roomVo);
+        if (po != null) {
+            throw new PHServiceException(PHExceptionCodeEnum.UNIQUE_ROOM, null);
+        }
         List<RoomPo> roomList = RequestHandleUtils.roomDTOTrans(Collections.singletonList(roomVo));
         roomService.insertRoom(roomList.get(0));
         return PHResp.success();

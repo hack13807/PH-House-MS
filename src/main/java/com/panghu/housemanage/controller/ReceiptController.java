@@ -2,13 +2,11 @@ package com.panghu.housemanage.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.panghu.housemanage.common.enumeration.EffectiveEnum;
 import com.panghu.housemanage.common.enumeration.PHExceptionCodeEnum;
 import com.panghu.housemanage.common.exception.PHServiceException;
 import com.panghu.housemanage.common.util.PHResp;
 import com.panghu.housemanage.common.util.RequestHandleUtils;
 import com.panghu.housemanage.pojo.po.LeasePo;
-import com.panghu.housemanage.pojo.po.MemberPo;
 import com.panghu.housemanage.pojo.vo.LeaseVo;
 import com.panghu.housemanage.service.LeaseService;
 import com.panghu.housemanage.service.MemberService;
@@ -19,19 +17,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-/**
- * 租赁控制器
- *
- * @author PangHu
- * @date 2023/06/25
- */
+
 @Controller
-@RequestMapping("/lease")
-public class LeaseController {
+@RequestMapping("/receipt")
+public class ReceiptController {
     @Autowired
     LeaseService leaseService;
     @Autowired
@@ -40,14 +32,7 @@ public class LeaseController {
     @GetMapping("/page")
     public String getPage(@RequestParam(required = false, value = "memberSearch") String memberSearch, Model model){
         model.addAttribute("memberSearch", memberSearch);
-        return "lease_list";
-    }
-
-    @GetMapping("getByMemberId")
-    @ResponseBody
-    public PHResp<List<LeaseVo>> getOne(@RequestParam("memberId") Long memberId) {
-        List<LeaseVo> leaseVos = leaseService.queryLeaseByMemberId(memberId);
-        return PHResp.success(leaseVos);
+        return "receipt_list";
     }
 
     @GetMapping
@@ -61,33 +46,5 @@ public class LeaseController {
         IPage<LeaseVo> pageResult = leaseService.pageQueryLease(page, leaseVo);
         // 获取查询总数和记录，构建返回前端的Map对象
         return RequestHandleUtils.successPageResult(pageResult);
-    }
-
-    @PostMapping
-    @ResponseBody
-    public PHResp<String> insert(@RequestBody LeaseVo leaseVo) {
-        // 验重
-        LeasePo po = leaseService.checkUnique(leaseVo);
-        if (po != null) {
-            throw new PHServiceException(PHExceptionCodeEnum.UNIQUE_MEMBER, null);
-        }
-        // 新增租约
-        leaseService.insertLease(leaseVo);
-        return PHResp.success();
-    }
-
-    @PutMapping
-    @ResponseBody
-    @Transactional
-    public PHResp<String> update(@RequestBody List<LeaseVo> voList) {
-        leaseService.updateBatch(voList);
-        return PHResp.success();
-    }
-
-    @DeleteMapping
-    @ResponseBody
-    public PHResp<String> deleteData(@RequestBody Long[] ids) {
-        leaseService.batchDelete(ids);
-        return PHResp.success();
     }
 }

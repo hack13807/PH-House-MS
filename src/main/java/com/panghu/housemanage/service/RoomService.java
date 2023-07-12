@@ -3,6 +3,7 @@ package com.panghu.housemanage.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.panghu.housemanage.common.enumeration.RoomStatusEnum;
+import com.panghu.housemanage.pojo.po.LeasePo;
 import com.panghu.housemanage.pojo.po.MemberPo;
 import com.panghu.housemanage.pojo.po.RoomPo;
 import com.panghu.housemanage.pojo.vo.RoomVo;
@@ -23,4 +24,6 @@ public interface RoomService {
     void updateRoomStatus(List<Long> roomIdList, RoomStatusEnum status);
 
     void updateBatch(List<RoomPo> roomList);
+
+    RoomPo checkUnique(RoomVo roomVo);
 }

@@ -113,7 +113,11 @@ $('#table').bootstrapTable({
                 title: '结束日期',
                 formatter: dateFormatter,
                 align: "center",
-            }],
+            }, {
+               field: 'effective',
+               title: '租约状态',
+               align: "center",
+           }],
             onLoadError: function (status, res) {
                 swal("获取租客列表失败", res.responseJSON.msg, "error")
             }
@@ -313,7 +317,18 @@ function initValidate() {
                             message: '请输入正确的身份证号码'
                         }
                     }
-                }
+                },
+                tel: {
+                    validators: {
+                        notEmpty: {
+                            message: '手机号不能为空'
+                        },
+                        regexp: {
+                            regexp: /^1[3456789]\d{9}$/,
+                            message: '手机号码格式错误'
+                        }
+                    }
+                },
             }
         });
     });

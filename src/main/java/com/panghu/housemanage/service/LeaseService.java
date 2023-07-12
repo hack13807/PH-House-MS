@@ -15,7 +15,9 @@ public interface LeaseService {
 
     void insertLease(LeaseVo leaseVo);
 
-    void updateBatch(List<LeasePo> poList);
+    void updateBatch(List<LeaseVo> voList);
 
     void batchDelete(Long[] ids);
+
+    LeasePo checkUnique(LeaseVo leaseVo);
 }

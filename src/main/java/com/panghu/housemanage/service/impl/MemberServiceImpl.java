@@ -114,10 +114,18 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberPo checkUnique(MemberPo memberPo) {
-        MemberPo currentMember = memberMapper.selectById(memberPo.getId()); // 根据房间ID获取原始数据
-        // 判断是否与原始数据中的房间号一致
-        if (!currentMember.getIdCard().equals(memberPo.getIdCard())) {
-            QueryWrapper<MemberPo> queryWrapper = new QueryWrapper<>();
+        boolean flag = false;
+        QueryWrapper<MemberPo> queryWrapper = new QueryWrapper<>();
+        if (memberPo.getId() == null) {
+            flag = true;
+        }else {
+            MemberPo currentMember = memberMapper.selectById(memberPo.getId()); // 根据房间ID获取原始数据
+            // 判断是否与原始数据中的房间号一致
+            if (!currentMember.getIdCard().equals(memberPo.getIdCard())) {
+                flag = true;
+            }
+        }
+        if (flag) {
             queryWrapper.eq("idcard", memberPo.getIdCard()).eq("isdelete", 0);
             List<MemberPo> memberPos = memberMapper.selectList(queryWrapper);
             return memberPos.isEmpty() ? null : memberPos.get(0);

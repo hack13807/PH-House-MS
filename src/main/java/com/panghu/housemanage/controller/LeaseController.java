@@ -2,13 +2,8 @@ package com.panghu.housemanage.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.panghu.housemanage.common.enumeration.EffectiveEnum;
-import com.panghu.housemanage.common.enumeration.PHExceptionCodeEnum;
-import com.panghu.housemanage.common.exception.PHServiceException;
 import com.panghu.housemanage.common.util.PHResp;
 import com.panghu.housemanage.common.util.RequestHandleUtils;
-import com.panghu.housemanage.pojo.po.LeasePo;
-import com.panghu.housemanage.pojo.po.MemberPo;
 import com.panghu.housemanage.pojo.vo.LeaseVo;
 import com.panghu.housemanage.service.LeaseService;
 import com.panghu.housemanage.service.MemberService;
@@ -19,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -66,11 +60,6 @@ public class LeaseController {
     @PostMapping
     @ResponseBody
     public PHResp<String> insert(@RequestBody LeaseVo leaseVo) {
-        // 验重
-        LeasePo po = leaseService.checkUnique(leaseVo);
-        if (po != null) {
-            throw new PHServiceException(PHExceptionCodeEnum.UNIQUE_MEMBER, null);
-        }
         // 新增租约
         leaseService.insertLease(leaseVo);
         return PHResp.success();

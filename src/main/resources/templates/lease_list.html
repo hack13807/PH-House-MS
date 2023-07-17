@@ -20,9 +20,9 @@
     </div>
     <!--工具栏-->
     <div id="toolbar" class="div-toolbar">
-        <select name="select" id="effectiveSelect" class="form-condition">
+        <select name="select" id="effectiveSelect" class="form-condition" data-toggle="tooltip" title="点此切换需要查询的租约状态">
             <option value="-1">全部</option>
-            <option value="1" selected>生效中</option>
+            <option value="1">生效中</option>
             <option value="0">已失效</option>
         </select>
         <select name="select" id="voLeaseType" class="form-condition">
@@ -200,5 +200,7 @@
 <script src="/static/lib/js/bootstrapValidator.min.js"></script>
 <script src="/static/tempjs/common.js"></script>
 <script src="/static/tempjs/lease_list.js"></script>
+<script src="https://unpkg.com/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://unpkg.com/tooltip.js@1.3.0/dist/umd/tooltip.min.js"></script>
 </body>
 </html>

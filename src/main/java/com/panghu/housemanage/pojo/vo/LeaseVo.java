@@ -37,6 +37,7 @@ public class LeaseVo extends PHBaseVo {
     private String voEffective;
     private String memberName;
     private List<String> memberNames;
+    private List<String> roomNos;
     private Long roomId;
     private String roomNo;
     private Long memberId;

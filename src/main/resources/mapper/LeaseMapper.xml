@@ -50,7 +50,12 @@
         <where>
             1 = 1
             <if test=" leaseVo.memberName != null and leaseVo.memberName != '' ">
-                and m.name = #{leaseVo.memberName}
+                and (
+                    m.name LIKE CONCAT('%', #{leaseVo.memberName}, '%')
+                    or m.tel LIKE CONCAT('%', #{leaseVo.memberName}, '%')
+                    or m.idcard LIKE CONCAT('%', #{leaseVo.memberName}, '%')
+                    or l.number LIKE CONCAT('%', #{leaseVo.memberName}, '%')
+                )
             </if>
             <if test=" leaseVo.memberNames != null and leaseVo.memberNames.size > 0 ">
                 and m.name IN
@@ -61,6 +66,12 @@
             <if test=" leaseVo.roomNo != null and leaseVo.roomNo != '' ">
                 and r.number = #{leaseVo.roomNo}
             </if>
+            <if test=" leaseVo.roomNos != null and leaseVo.roomNos.size > 0 ">
+                and r.number IN
+                <foreach item="roomNo" collection="leaseVo.roomNos" open="(" separator="," close=")">
+                    #{roomNo}
+                </foreach>
+            </if>
             <if test=" leaseVo.voLeaseType != null and leaseVo.voLeaseType != '' and leaseVo.voLeaseType != '-1' ">
                 and l.lease_type = #{leaseVo.voLeaseType}
             </if>
@@ -69,6 +80,7 @@
             </if>
             and m.isdelete = 0
             and l.isdelete = 0
+            order by l.effective desc
         </where>
     </select>
 </mapper>

@@ -87,3 +87,7 @@
 .subtable tbody tr {
   cursor: pointer;
 }
+
+.tooltip-inner {
+    font-size: 16px;
+  }

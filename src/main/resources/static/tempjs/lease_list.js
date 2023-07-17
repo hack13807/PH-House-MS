@@ -698,8 +698,6 @@ $(document).ready(function () {
     if ($('#memberSearch').val()) {
         $('#effectiveSelect').val('-1')
     }
-//    $('#effective').hide();
-            $('#delete').hide();
 });
 
 /*初始化租客下拉框*/
@@ -728,9 +726,9 @@ effectiveSelect.addEventListener("change", function () {
         $('#edit').hide();
         $('#new').hide();
         // 清除其余条件
-        $('#voLeaseType').val('-1')
-        $('#memberSearch').val('')
-        $('#roomSearch').val('')
+//        $('#voLeaseType').val('-1')
+//        $('#memberSearch').val('')
+//        $('#roomSearch').val('')
     } else if (selectedValue === '-1') {
 //        $('#effective').show();
         $('#delete').show();
@@ -756,11 +754,11 @@ leaseTypeSelect.addEventListener("change", function () {
     // 获取当前选中的值
     var selectedValue = leaseTypeSelect.value;
     if (selectedValue === '1') {
-        $('#unitTitle').text('租住时长(天)')
+        $('#unitTitle').text('租期(天)')
     } else if (selectedValue === '2') {
-        $('#unitTitle').text('租住时长(月)')
+        $('#unitTitle').text('租期(月)')
     } else {
-        $('#unitTitle').text('租住时长(年)')
+        $('#unitTitle').text('租期(年)')
     }
 });
 

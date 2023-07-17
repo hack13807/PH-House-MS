@@ -62,7 +62,12 @@ public class LeaseServiceImpl implements LeaseService {
             memberName = memberName.replace("，", ",");
             vo.setMemberNames(Arrays.asList(memberName.split(",")));
             vo.setMemberName(null);
-            vo.setVoEffective("-1");
+        }
+        String roomNo = vo.getRoomNo();
+        if (roomNo != null && (roomNo.contains(",") || roomNo.contains("，"))) {
+            roomNo = roomNo.replace("，", ",");
+            vo.setRoomNos(Arrays.asList(roomNo.split(",")));
+            vo.setRoomNo(null);
         }
     }
 

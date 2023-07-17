@@ -174,6 +174,16 @@ document.addEventListener("DOMContentLoaded", function() {
     tabSwitching();
 });
 
+$(function() {
+  $('[data-toggle="tooltip"]').tooltip({
+    trigger: 'hover',
+    delay: {
+          show: 1000, // 延迟显示，单位为毫秒
+          hide: 0
+        }
+  });
+});
+
 /*页签切换加粗效果*/
 function tabSwitching() {
     var titleElement = document.getElementById("title");

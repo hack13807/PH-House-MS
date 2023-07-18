@@ -3,7 +3,7 @@ var valueCache = [];
 var hideSelectBoxTask = null;  // 延迟隐藏选择框的任务
 /*表格初始化*/
 $('#table').bootstrapTable({
-    url: '/lease',
+    url: '/receipt',
     method: 'GET',
     pageNumber: 1,                  //初始化加载第一页，默认第一页
     uniqueId: "rowId",           // 表格唯一键
@@ -27,31 +27,47 @@ $('#table').bootstrapTable({
         return {
             offset: params.offset,
             limit: params.limit,
-            voLeaseType: document.getElementById("voLeaseType").value,
-            memberName: $("#memberSearch").val(),
-            roomNo: $("#roomSearch").val(),
-            voEffective: $("#effectiveSelect").val()
+//            voLeaseType: document.getElementById("voLeaseType").value,
+//            memberName: $("#memberSearch").val(),
+//            roomNo: $("#roomSearch").val(),
+//            voEffective: $("#effectiveSelect").val()
         }
     },
     responseHandler: function (res) {
         return {total: res.data.total, rows: res.data.rows}
     },
-    columns: [{
-        checkbox: true,
-        visible: true
-    }, {
+    columns: [
+//    {
+//        checkbox: true,
+//        visible: true
+//    },
+    {
         field: 'rowId',
-        title: '租约ID',
+        title: '收款单ID',
         visible: false,
     }, {
-        field: 'roomId',
-        title: '房间ID',
-        visible: false,
+       field: 'receiptNumber',
+       title: '收款单编号',
+       align: "center",
+   }, {
+     field: 'receiptType',
+     title: '款项类型',
+     align: "center",
     }, {
-        field: 'memberId',
-        title: '租客ID',
-        visible: false,
-    }, {
+    field: 'payType',
+    title: '支付方式',
+    align: "center",
+   }, {
+     field: 'amount',
+     title: '收款金额',
+     formatter: amountFormatter,
+     align: "center",
+ },{
+      field: 'bizDate',
+      title: '收款日期',
+      formatter: dateFormatter,
+      align: "center",
+  },{
         field: 'leaseNumber',
         title: '租约编号',
         align: "center",
@@ -64,31 +80,24 @@ $('#table').bootstrapTable({
         title: '租客',
         align: "center",
     }, {
-        field: 'leaseType',
-        title: '租约类型',
+        field: 'memberIdcard',
+        title: '租客身份证号',
         align: "center",
-    }, {
-        field: 'voUnit',
-        title: '租约时长',
+        visible: false,
+    },{
+        field: 'memberTel',
+        title: '租客手机号',
         align: "center",
+        visible: false,
     }, {
-        field: 'rentAmount',
-        title: '租金额',
-        formatter: amountFormatter,
-        align: "center",
-    }, {
-        field: 'startDate',
-        title: '开始日期',
+        field: 'createTime',
+        title: '创建时间',
         formatter: dateFormatter,
         align: "center",
     }, {
-        field: 'endDate',
-        title: '结束日期',
+        field: 'lastUpdateTime',
+        title: '最后修改时间',
         formatter: dateFormatter,
-        align: "center",
-    }, {
-        field: 'effective',
-        title: '生效状态',
         align: "center",
     }],
     cellStyle: function (value, row, index) {
@@ -110,7 +119,7 @@ $('td[data-rowcolor]').attr("style", "background-color:yellow;");
 
 /*添加租约*/
 function addLease() {
-    $('.modal-title').text("新增租约")
+    $('.modal-title').text("新增收款")
     $('#addOrUpdateModal').modal('show')
     $('#addOrUpdateform')[0].reset()  //重置表单
 }

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panghu.housemanage.dao.ReceiptMapper">
+    <resultMap id="receiptVoMap" type="com.panghu.housemanage.pojo.vo.ReceiptVo" >
+        <id column="rowId" property="rowId"/>
+        <result column="receiptType" property="receiptType" typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
+        <result column="pay_type" property="payType" typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
+        <result column="receiptNumber" property="receiptNumber"/>
+        <result column="leaseNumber" property="leaseNumber"/>
+        <result column="roomNo" property="roomNo"/>
+        <result column="memberName" property="memberName"/>
+        <result column="memberIdcard" property="memberIdcard"/>
+        <result column="amount" property="amount"/>
+        <result column="biz_date" property="bizDate"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_user" property="createUser"/>
+        <result column="last_update_time" property="lastUpdateTime"/>
+        <result column="last_update_user" property="lastUpdateUser"/>
+    </resultMap>
+
+    <select id="pageQueryReceipt" parameterType="com.panghu.housemanage.pojo.vo.ReceiptVo" resultMap="receiptVoMap">
+        Select rr.number as receiptNumber, rr.lease_number as leaseNumber, rr.room_no as roomNo,rr.receipt_type as receiptType, rr.pay_type,
+        rr.member_name as memberName, rr.member_idcard as memberIdcard, rr.member_tel as memberTel, rr.amount, rr.biz_date,
+        rr.create_time, rr.create_user, rr.last_update_time, rr.last_update_user
+        from t_receipt rr
+        <where>
+            1 = 1
+<!--            <if test=" leaseVo.memberName != null and leaseVo.memberName != '' ">-->
+<!--                and (-->
+<!--                    m.name LIKE CONCAT('%', #{leaseVo.memberName}, '%')-->
+<!--                    or m.tel LIKE CONCAT('%', #{leaseVo.memberName}, '%')-->
+<!--                    or m.idcard LIKE CONCAT('%', #{leaseVo.memberName}, '%')-->
+<!--                    or l.number LIKE CONCAT('%', #{leaseVo.memberName}, '%')-->
+<!--                )-->
+<!--            </if>-->
+<!--            <if test=" leaseVo.memberNames != null and leaseVo.memberNames.size > 0 ">-->
+<!--                and m.name IN-->
+<!--                <foreach item="memberName" collection="leaseVo.memberNames" open="(" separator="," close=")">-->
+<!--                    #{memberName}-->
+<!--                </foreach>-->
+<!--            </if>-->
+<!--            <if test=" leaseVo.roomNo != null and leaseVo.roomNo != '' ">-->
+<!--                and r.number = #{leaseVo.roomNo}-->
+<!--            </if>-->
+<!--            <if test=" leaseVo.roomNos != null and leaseVo.roomNos.size > 0 ">-->
+<!--                and r.number IN-->
+<!--                <foreach item="roomNo" collection="leaseVo.roomNos" open="(" separator="," close=")">-->
+<!--                    #{roomNo}-->
+<!--                </foreach>-->
+<!--            </if>-->
+<!--            <if test=" leaseVo.voLeaseType != null and leaseVo.voLeaseType != '' and leaseVo.voLeaseType != '-1' ">-->
+<!--                and l.lease_type = #{leaseVo.voLeaseType}-->
+<!--            </if>-->
+<!--            <if test=" leaseVo.voEffective != null and leaseVo.voEffective != '' and leaseVo.voEffective != '-1'  ">-->
+<!--                and l.effective = #{leaseVo.voEffective}-->
+<!--            </if>-->
+<!--            and m.isdelete = 0-->
+<!--            and l.isdelete = 0-->
+<!--            order by l.effective desc-->
+        </where>
+    </select>
+</mapper>

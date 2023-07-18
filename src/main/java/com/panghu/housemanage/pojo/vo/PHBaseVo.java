@@ -1,7 +1,8 @@
 package com.panghu.housemanage.pojo.vo;
 
 import lombok.Data;
-import lombok.Getter;
+
+import java.util.Date;
 
 /**
  * VO基类，所有ResponseBody对象继承此类
@@ -12,4 +13,9 @@ public abstract class PHBaseVo {
     public Long rowId;
 
     private String optType;
+
+    private Date createTime;
+    private Date lastUpdateTime;
+    private String createUser;
+    private String lastUpdateUser;
 }

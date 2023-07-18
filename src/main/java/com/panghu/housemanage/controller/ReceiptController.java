@@ -8,8 +8,10 @@ import com.panghu.housemanage.common.util.PHResp;
 import com.panghu.housemanage.common.util.RequestHandleUtils;
 import com.panghu.housemanage.pojo.po.LeasePo;
 import com.panghu.housemanage.pojo.vo.LeaseVo;
+import com.panghu.housemanage.pojo.vo.ReceiptVo;
 import com.panghu.housemanage.service.LeaseService;
 import com.panghu.housemanage.service.MemberService;
+import com.panghu.housemanage.service.ReceiptService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,9 +27,7 @@ import java.util.Map;
 @RequestMapping("/receipt")
 public class ReceiptController {
     @Autowired
-    LeaseService leaseService;
-    @Autowired
-    MemberService memberService;
+    ReceiptService receiptService;
 
     @GetMapping("/page")
     public String getPage(@RequestParam(required = false, value = "memberSearch") String memberSearch, Model model){
@@ -39,11 +39,11 @@ public class ReceiptController {
     @ResponseBody
     public PHResp<Map<String, Object>> getData(HttpServletRequest request) throws Exception {
         // 通过前端参数构建分页对象page
-        Page<LeaseVo> page = RequestHandleUtils.getPage(request);
+        Page<ReceiptVo> page = RequestHandleUtils.getPage(request);
         // 通过前端参数构建查询实体po
-        LeaseVo leaseVo = RequestHandleUtils.buildPoEntity(request, LeaseVo.class);
+        ReceiptVo receiptVo = RequestHandleUtils.buildPoEntity(request, ReceiptVo.class);
         // 把分页对象page和查询实体po传到service层，查询结果返回封装成Page对象
-        IPage<LeaseVo> pageResult = leaseService.pageQueryLease(page, leaseVo);
+        IPage<ReceiptVo> pageResult = receiptService.pageQueryReceipt(page, receiptVo);
         // 获取查询总数和记录，构建返回前端的Map对象
         return RequestHandleUtils.successPageResult(pageResult);
     }

@@ -20,26 +20,25 @@
     </div>
     <!--工具栏-->
     <div id="toolbar" class="div-toolbar">
-        <select name="select" id="effectiveSelect" class="form-condition" data-toggle="tooltip" title="点此切换需要查询的租约状态">
-            <option value="-1">全部</option>
+        <select name="select" id="effectiveSelect" class="toolbar-selector" data-toggle="tooltip" title="点此切换需要查询的租约状态">
+            <option value="-1">全部状态</option>
             <option value="1">生效中</option>
             <option value="0">已失效</option>
         </select>
-        <select name="select" id="voLeaseType" class="form-condition">
+        <select name="select" id="voLeaseType" class="toolbar-selector">
             <option value="-1">全部类型</option>
             <option value="1">日 租</option>
             <option value="2">月 租</option>
             <option value="3">年 租</option>
         </select>
-        <input name="memberSearch" id="memberSearch" class="form-condition" placeholder="租客姓名" th:value="${memberSearch}"/>
-        <input name="roomSearch" id="roomSearch" class="form-condition" placeholder="房间号"/>
+        <input name="memberSearch" id="memberSearch" class="form-control" placeholder="租客姓名" th:value="${memberSearch}"/>
+        <input name="roomSearch" id="roomSearch" class="form-control" placeholder="房间号"/>
         <!--操作按钮-->
-        <button id="search" class="btn btn-primary" th:onclick="search()">搜 索</button>
-        <button id="new" class="btn btn-success" th:onclick="addLease()">新 增</button>
-        <button id="edit" class="btn btn-info" th:onclick="|edit()|">编 辑</button>
-        <button id="terminate" class="btn btn-warning" th:onclick="terminate()">手动失效</button>
-<!--        <button id="effective" class="btn btn-primary" th:onclick="enableRows()">手动生效</button>-->
-        <button id="delete" class="btn btn-danger" th:onclick="|deleteRows();|">删 除</button>
+        <button id="search" class="btn btn-primary toolbar-btn" th:onclick="search()">搜 索</button>
+        <button id="new" class="btn btn-success toolbar-btn" th:onclick="addLease()">新 增</button>
+        <button id="edit" class="btn btn-info toolbar-btn" th:onclick="|edit()|">编 辑</button>
+        <button id="terminate" class="btn btn-warning toolbar-btn" th:onclick="terminate()">手动失效</button>
+        <button id="delete" class="btn btn-danger toolbar-btn" th:onclick="|deleteRows();|">删 除</button>
     </div>
     <!--表格-->
     <div class="panel-body">

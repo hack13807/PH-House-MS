@@ -20,17 +20,24 @@
     </div>
     <!--工具栏-->
     <div id="toolbar" class="div-toolbar">
-        <select name="select" id="effectiveSelect" class="form-condition">
-            <option value="-1">全部</option>
-            <option value="1" selected>生效中</option>
-            <option value="0">已失效</option>
+        <select name="select" id="effectiveSelect" class="toolbar-selector" data-toggle="tooltip" title="点此切换需要查询的收款单状态">
+            <option value="-1">全部状态</option>
+            <option value="1">生 效</option>
+            <option value="0">作 废</option>
         </select>
-        <select name="select" id="voLeaseType" class="form-condition">
-            <option value="-1">全部类型</option>
-            <option value="1">日 租</option>
-            <option value="2">月 租</option>
-            <option value="3">年 租</option>
-        </select>
+        <div class="checkbox"> <label> <input type="checkbox" value=""> Option one is this and that—be sure to include why it's great </label></div><div class="checkbox disabled"> <label> <input type="checkbox" value="" disabled> Option two is disabled </label></div><div class="radio"> <label> <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked> Option one is this and that—be sure to include why it's great </label></div><div class="radio"> <label> <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2"> Option two can be something else and selecting it will deselect option one </label></div><div class="radio disabled"> <label> <input type="radio" name="optionsRadios" id="optionsRadios3" value="option3" disabled> Option three is disabled </label></div>
+        <div class="checkbox-row">
+            <label class="checkbox-inline">
+                <input type="checkbox" value="option1"> 选项1
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox" value="option2"> 选项2
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox" value="option3"> 选项3
+            </label>
+        </div>
+
         <input name="memberSearch" id="memberSearch" class="form-condition" placeholder="租客姓名" th:value="${memberSearch}"/>
         <input name="roomSearch" id="roomSearch" class="form-condition" placeholder="房间号"/>
         <!--操作按钮-->

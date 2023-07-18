@@ -2,110 +2,117 @@ var memberCache = [];
 var valueCache = [];
 var hideSelectBoxTask = null;  // 延迟隐藏选择框的任务
 /*表格初始化*/
-$('#table').bootstrapTable({
-    url: '/lease',
-    method: 'GET',
-    pageNumber: 1,                  //初始化加载第一页，默认第一页
-    uniqueId: "rowId",           // 表格唯一键
-    pagination: true,               //是否显示分页（*）
-    sidePagination: "server",       //分页方式：client客户端分页，server服务端分页（*）
-    pageSize: 10,                       //每页的记录行数（*）
-    pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
-    contentType: 'application/json',
-    toolbar: '#toolbar',
-    showRefresh: true,   //是否显示刷新按钮
-    showToggle: true,    //是否显示详细视图和列表视图的切换按钮
-    showColumns: true,   //选择要显示的列
-    striped: true,      //是否显示行间隔色
-    toolbarAlign: 'left',//工具栏的位置
-    clickToSelect: true,    //是否启用点击选中行
-    cardView: false,     //是否显示详细视图
-    detailView: true,   //是否显示父子表
-    locale: 'zh-CN',    //配置中文汉化包
-    maintainSelected: true, //翻页时保留已选中的行的状态
-    queryParams: function (params) {    //传递参数（*）
-        return {
-            offset: params.offset,
-            limit: params.limit,
-            voLeaseType: document.getElementById("voLeaseType").value,
-            memberName: $("#memberSearch").val(),
-            roomNo: $("#roomSearch").val(),
-            voEffective: $("#effectiveSelect").val()
-        }
-    },
-    responseHandler: function (res) {
-        return {total: res.data.total, rows: res.data.rows}
-    },
-    columns: [{
-        checkbox: true,
-        visible: true
-    }, {
-        field: 'rowId',
-        title: '租约ID',
-        visible: false,
-    }, {
-        field: 'roomId',
-        title: '房间ID',
-        visible: false,
-    }, {
-        field: 'memberId',
-        title: '租客ID',
-        visible: false,
-    }, {
-        field: 'leaseNumber',
-        title: '租约编号',
-        align: "center",
-    }, {
-        field: 'roomNo',
-        title: '房间号',
-        align: "center",
-    }, {
-        field: 'memberName',
-        title: '租客',
-        align: "center",
-    }, {
-        field: 'leaseType',
-        title: '租约类型',
-        align: "center",
-    }, {
-        field: 'voUnit',
-        title: '租约时长',
-        align: "center",
-    }, {
-        field: 'rentAmount',
-        title: '租金额',
-        formatter: amountFormatter,
-        align: "center",
-    }, {
-        field: 'startDate',
-        title: '开始日期',
-        formatter: dateFormatter,
-        align: "center",
-    }, {
-        field: 'endDate',
-        title: '结束日期',
-        formatter: dateFormatter,
-        align: "center",
-    }, {
-        field: 'effective',
-        title: '生效状态',
-        align: "center",
-    }],
-    cellStyle: function (value, row, index) {
-        return {css: {'background-color': '#F3F3F4'}};
-    },
-    onDblClickRow: function(row, $element) {
-      // 点击行触发的操作
-      openMadel(row, '查看租约');
-      lockAllInfo();
-      // 其他操作逻辑...
-    },
-    onLoadError: function (status, res) {
-        var resJson = res.hasOwnProperty('responseJSON') ? res.responseJSON : null;
-        var errMsg = resJson && resJson.msg ? resJson.msg : null;
-        if (errMsg) swal("获取租约列表失败", errMsg, "error");
+$(function(){
+// 如果带参数跳转，默认过滤条件为全部
+    if ($('#memberSearch').val()) {
+        $('#effectiveSelect').val('1')
     }
+    $('#table').bootstrapTable({
+        url: '/lease',
+        method: 'GET',
+        pageNumber: 1,                  //初始化加载第一页，默认第一页
+        uniqueId: "rowId",           // 表格唯一键
+        pagination: true,               //是否显示分页（*）
+        sidePagination: "server",       //分页方式：client客户端分页，server服务端分页（*）
+        pageSize: 10,                       //每页的记录行数（*）
+        pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+        contentType: 'application/json',
+        toolbar: '#toolbar',
+        showRefresh: true,   //是否显示刷新按钮
+        showToggle: true,    //是否显示详细视图和列表视图的切换按钮
+        showColumns: true,   //选择要显示的列
+        striped: true,      //是否显示行间隔色
+        toolbarAlign: 'left',//工具栏的位置
+        clickToSelect: true,    //是否启用点击选中行
+        cardView: false,     //是否显示详细视图
+        detailView: true,   //是否显示父子表
+        locale: 'zh-CN',    //配置中文汉化包
+        maintainSelected: true, //翻页时保留已选中的行的状态
+        queryParams: function (params) {    //传递参数（*）
+            return {
+                offset: params.offset,
+                limit: params.limit,
+                voLeaseType: document.getElementById("voLeaseType").value,
+                memberName: $("#memberSearch").val(),
+                roomNo: $("#roomSearch").val(),
+                voEffective: $("#effectiveSelect").val()
+            }
+        },
+        responseHandler: function (res) {
+            return {total: res.data.total, rows: res.data.rows}
+        },
+        columns: [{
+            checkbox: true,
+            visible: true
+        }, {
+            field: 'rowId',
+            title: '租约ID',
+            visible: false,
+        }, {
+            field: 'roomId',
+            title: '房间ID',
+            visible: false,
+        }, {
+            field: 'memberId',
+            title: '租客ID',
+            visible: false,
+        }, {
+            field: 'leaseNumber',
+            title: '租约编号',
+            align: "center",
+        }, {
+            field: 'roomNo',
+            title: '房间号',
+            align: "center",
+        }, {
+            field: 'memberName',
+            title: '租客',
+            align: "center",
+        }, {
+            field: 'leaseType',
+            title: '租约类型',
+            align: "center",
+        }, {
+            field: 'voUnit',
+            title: '租约时长',
+            align: "center",
+        }, {
+            field: 'rentAmount',
+            title: '租金额',
+            formatter: amountFormatter,
+            align: "center",
+        }, {
+            field: 'startDate',
+            title: '开始日期',
+            formatter: dateFormatter,
+            align: "center",
+        }, {
+            field: 'endDate',
+            title: '结束日期',
+            formatter: dateFormatter,
+            align: "center",
+        }, {
+            field: 'effective',
+            title: '生效状态',
+            align: "center",
+        }],
+        cellStyle: function (value, row, index) {
+            return {css: {'background-color': '#F3F3F4'}};
+        },
+        onDblClickRow: function(row, $element) {
+          // 点击行触发的操作
+          openMadel(row, '查看租约');
+          lockAllInfo();
+          // 其他操作逻辑...
+        },
+        onLoadError: function (status, res) {
+            var resJson = res.hasOwnProperty('responseJSON') ? res.responseJSON : null;
+            var errMsg = resJson && resJson.msg ? resJson.msg : null;
+            if (errMsg) swal("获取租约列表失败", errMsg, "error");
+        }
+    });
 });
+
 $('td[data-rowcolor]').attr("style", "background-color:yellow;");
 
 /*添加租约*/
@@ -694,10 +701,6 @@ $(document).ready(function () {
     initRoom();
     initMemberCache();
     initValidate();
-    // 如果带参数跳转，默认过滤条件为全部
-    if ($('#memberSearch').val()) {
-        $('#effectiveSelect').val('-1')
-    }
 });
 
 /*初始化租客下拉框*/

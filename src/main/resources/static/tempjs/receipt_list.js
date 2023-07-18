@@ -20,7 +20,7 @@ $('#table').bootstrapTable({
     toolbarAlign: 'left',//工具栏的位置
     clickToSelect: true,    //是否启用点击选中行
     cardView: false,     //是否显示详细视图
-    detailView: true,   //是否显示父子表
+    detailView: false,   //是否显示父子表
     locale: 'zh-CN',    //配置中文汉化包
     maintainSelected: true, //翻页时保留已选中的行的状态
     queryParams: function (params) {    //传递参数（*）
@@ -30,17 +30,17 @@ $('#table').bootstrapTable({
 //            voLeaseType: document.getElementById("voLeaseType").value,
 //            memberName: $("#memberSearch").val(),
 //            roomNo: $("#roomSearch").val(),
-//            voEffective: $("#effectiveSelect").val()
+            voEffective: document.getElementById("effectiveSelect").getAttribute("value")
         }
     },
     responseHandler: function (res) {
         return {total: res.data.total, rows: res.data.rows}
     },
     columns: [
-//    {
-//        checkbox: true,
-//        visible: true
-//    },
+    {
+        checkbox: true,
+        visible: true
+    },
     {
         field: 'rowId',
         title: '收款单ID',
@@ -676,11 +676,11 @@ function effectiveRows() {
 }
 
 // 获取下拉框元素
-var dropdown = document.getElementById("voLeaseType");
-// 绑定 change 事件
-dropdown.addEventListener("change", function () {
-    $("#table").bootstrapTable('refresh');
-});
+//var dropdown = document.getElementById("voLeaseType");
+//// 绑定 change 事件
+//dropdown.addEventListener("change", function () {
+//    $("#table").bootstrapTable('refresh');
+//});
 
 $(document).ready(function () {
     // 在页面加载完成后执行的脚本
@@ -741,21 +741,21 @@ effectiveSelect.addEventListener("change", function () {
     $("#table").bootstrapTable('refresh');
 });
 
-
-// 获取下拉框元素
-var effectiveSelect = document.getElementById("leaseType");
-// 绑定 change 事件
-effectiveSelect.addEventListener("change", function () {
-    // 获取当前选中的值
-    var selectedValue = effectiveSelect.value;
-    if (selectedValue === '1') {
-        $('#unitTitle').text('租住时长(天)')
-    } else if (selectedValue === '2') {
-        $('#unitTitle').text('租住时长(月)')
-    } else {
-        $('#unitTitle').text('租住时长(年)')
-    }
-});
+//
+//// 获取下拉框元素
+//var effectiveSelect = document.getElementById("leaseType");
+//// 绑定 change 事件
+//effectiveSelect.addEventListener("change", function () {
+//    // 获取当前选中的值
+//    var selectedValue = effectiveSelect.value;
+//    if (selectedValue === '1') {
+//        $('#unitTitle').text('租住时长(天)')
+//    } else if (selectedValue === '2') {
+//        $('#unitTitle').text('租住时长(月)')
+//    } else {
+//        $('#unitTitle').text('租住时长(年)')
+//    }
+//});
 
 function enableRows() {
     let length = selectedRows.length;

@@ -52,12 +52,12 @@
 <!--            <if test=" leaseVo.voLeaseType != null and leaseVo.voLeaseType != '' and leaseVo.voLeaseType != '-1' ">-->
 <!--                and l.lease_type = #{leaseVo.voLeaseType}-->
 <!--            </if>-->
-<!--            <if test=" leaseVo.voEffective != null and leaseVo.voEffective != '' and leaseVo.voEffective != '-1'  ">-->
-<!--                and l.effective = #{leaseVo.voEffective}-->
-<!--            </if>-->
+            <if test=" receiptVo.voEffective != null and receiptVo.voEffective != '' and receiptVo.voEffective != '-1'  ">
+                and rr.effective = #{receiptVo.voEffective}
+            </if>
 <!--            and m.isdelete = 0-->
-<!--            and l.isdelete = 0-->
-<!--            order by l.effective desc-->
+            and rr.isdelete = 0
+            order by rr.effective desc, rr.create_time desc
         </where>
     </select>
 </mapper>

@@ -123,38 +123,38 @@ function addLease() {
 }
 
 function unlockMemberInfo() {
-    $('#memberName').val('').prop('disabled', false);
-    $('#tel').val('').prop('disabled', false);
-    $('#idCard').val('').prop('disabled', false);
-    $('#memberId').val('').prop('disabled', false);
-    $('#sex').val('1').prop('disabled', false);
+    $('#memberName').val('').prop('readonly', false);
+    $('#tel').val('').prop('readonly', false);
+    $('#idCard').val('').prop('readonly', false);
+    $('#memberId').val('').prop('readonly', false);
+    $('#sex').val('1').prop('readonly', false);
 
-    $("#roomId").prop('disabled', false);
-    $("#leaseType").prop('disabled', false);
-    $("#unit").prop('disabled', false);
-    $("#rentAmount").prop('disabled', false);
-    $("#startDate").prop('disabled', false);
-    $("#endDate").prop('disabled', false);
+    $("#roomId").prop('readonly', false);
+    $("#leaseType").prop('readonly', false);
+    $("#unit").prop('readonly', false);
+    $("#rentAmount").prop('readonly', false);
+    $("#startDate").prop('readonly', false);
+    $("#endDate").prop('readonly', false);
 
     $('#refreshMemberInfo').show();
 }
 
 function lockMemberInfo() {
-    $('#memberName').prop('disabled', true);
-    $('#tel').prop('disabled', true);
-    $('#idCard').prop('disabled', true);
-    $('#memberId').prop('disabled', true);
-    $('#sex').prop('disabled', true);
+    $('#memberName').prop('readonly', true);
+    $('#tel').prop('readonly', true);
+    $('#idCard').prop('readonly', true);
+    $('#memberId').prop('readonly', true);
+    $('#sex').prop('readonly', true);
 }
 function lockAllInfo() {
     lockMemberInfo();
-    $('#sex').prop('disabled', true);
-    $("#roomId").prop('disabled', true);
-    $("#leaseType").prop('disabled', true);
-    $("#unit").prop('disabled', true);
-    $("#rentAmount").prop('disabled', true);
-    $("#startDate").prop('disabled', true);
-    $("#endDate").prop('disabled', true);
+    $('#sex').prop('readonly', true);
+    $("#roomId").prop('readonly', true);
+    $("#leaseType").prop('readonly', true);
+    $("#unit").prop('readonly', true);
+    $("#rentAmount").prop('readonly', true);
+    $("#startDate").prop('readonly', true);
+    $("#endDate").prop('readonly', true);
 }
 
 // 监听输入框的oninput事件
@@ -184,11 +184,11 @@ $(document).on('click', '#selectBox li', function () {
     $.each(valueCache, function (index, item) {
         if (item.indexOf(selectedValue) !== -1) {
             var values = item.split(' / ');
-            $('#memberName').val(values[0]).prop('disabled', true);
-            $('#tel').val(values[1]).prop('disabled', true);
-            $('#idCard').val(values[2]).prop('disabled', true);
-            $('#memberId').val(values[3]).prop('disabled', true);
-            $('#sex').val(values[4]).prop('disabled', true);
+            $('#memberName').val(values[0]).prop('readonly', true);
+            $('#tel').val(values[1]).prop('readonly', true);
+            $('#idCard').val(values[2]).prop('readonly', true);
+            $('#memberId').val(values[3]).prop('readonly', true);
+            $('#sex').val(values[4]).prop('readonly', true);
             // 回填租客信息后重置校验器
             resetValidate();
         }

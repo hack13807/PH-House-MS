@@ -145,4 +145,34 @@
 .checkbox-row .checkbox-inline {
   display: inline-block;
   margin-right: 10px; /* 调整复选框之间的间距 */
+  font-size: 20px;
+}
+
+.div-inline {
+    display: inline;
+}
+		.checks input[type="checkbox"]{
+			width: 15px;
+			height: 15px;
+		}
+		#id_div{
+			width: 150px;
+		}
+
+#id_select_options {
+    overflow: auto; /* 处理内部内容溢出问题 */
+    height: 70px;
+    width: auto;
+}
+
+.checks {
+ border: 1.5px solid #555; /* 边框样式，可根据需要调整颜色和宽度 */
+    border-radius: 5px; /* 圆角半径，可根据需要调整大小 */
+    overflow: auto; /* 处理内部内容溢出问题 */
+    padding: 7px 7px 7px 10px;
+    margin-top: -12px;
+    width: 480px;
+}
+#type_select::placeholder {
+  color: #555555;
 }

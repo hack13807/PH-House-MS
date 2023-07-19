@@ -37,4 +37,7 @@ public class ReceiptVo extends PHBaseVo {
      * 页面参数
      */
     private String voEffective;
+    private String voReceiptType;
+    private String searchKey;
+    private List<String> receiptTypes;
 }

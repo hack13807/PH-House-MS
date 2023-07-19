@@ -9,8 +9,12 @@ import com.panghu.housemanage.pojo.vo.ReceiptVo;
 import com.panghu.housemanage.service.ReceiptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ReceiptServiceImpl implements ReceiptService {
@@ -20,11 +24,17 @@ public class ReceiptServiceImpl implements ReceiptService {
     @Override
     public IPage<ReceiptVo> pageQueryReceipt(Page<ReceiptVo> page, ReceiptVo receiptVo) {
         preprocess(receiptVo);
-        Page<ReceiptVo> receiptVoPage = receiptMapper.pageQueryReceipt(page, receiptVo);
-        return receiptVoPage;
+        return receiptMapper.pageQueryReceipt(page, receiptVo);
     }
 
     private void preprocess(ReceiptVo vo) {
+        // 处理多选复选框款项类型的值
+        String voReceiptType = vo.getVoReceiptType();
+        if (!ObjectUtils.isEmpty(voReceiptType)) {
+            String[] split = voReceiptType.split(",");
+            List<String> receiptTypeList = Arrays.stream(split).toList();
+            vo.setReceiptTypes(receiptTypeList);
+        }
     }
 
     @Override

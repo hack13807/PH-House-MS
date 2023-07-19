@@ -8,10 +8,10 @@ import lombok.Getter;
 @Getter
 public enum ReceiptTypeEnum implements IEnum<Integer> {
     DEFAULT(0,"默认"),
-    RENT(1,"租金"),
+    RENT(1,"房租"),
     UTILITY(2,"水电"),
     DEPOSIT(3,"押金"),
-    MAINTAIN(4,"维修/更换"),
+    MAINTAIN(4,"维修更换"),
     OTHER(5,"其它");
 
     @EnumValue

@@ -26,29 +26,22 @@
         from t_receipt rr
         <where>
             1 = 1
-<!--            <if test=" leaseVo.memberName != null and leaseVo.memberName != '' ">-->
-<!--                and (-->
-<!--                    m.name LIKE CONCAT('%', #{leaseVo.memberName}, '%')-->
-<!--                    or m.tel LIKE CONCAT('%', #{leaseVo.memberName}, '%')-->
-<!--                    or m.idcard LIKE CONCAT('%', #{leaseVo.memberName}, '%')-->
-<!--                    or l.number LIKE CONCAT('%', #{leaseVo.memberName}, '%')-->
-<!--                )-->
-<!--            </if>-->
-<!--            <if test=" leaseVo.memberNames != null and leaseVo.memberNames.size > 0 ">-->
-<!--                and m.name IN-->
-<!--                <foreach item="memberName" collection="leaseVo.memberNames" open="(" separator="," close=")">-->
-<!--                    #{memberName}-->
-<!--                </foreach>-->
-<!--            </if>-->
-<!--            <if test=" leaseVo.roomNo != null and leaseVo.roomNo != '' ">-->
-<!--                and r.number = #{leaseVo.roomNo}-->
-<!--            </if>-->
-<!--            <if test=" leaseVo.roomNos != null and leaseVo.roomNos.size > 0 ">-->
-<!--                and r.number IN-->
-<!--                <foreach item="roomNo" collection="leaseVo.roomNos" open="(" separator="," close=")">-->
-<!--                    #{roomNo}-->
-<!--                </foreach>-->
-<!--            </if>-->
+            <if test=" receiptVo.searchKey != null and receiptVo.searchKey != '' ">
+                and (
+                    rr.member_name LIKE CONCAT('%', #{receiptVo.searchKey}, '%')
+                    or rr.lease_number LIKE CONCAT('%', #{receiptVo.searchKey}, '%')
+                    or rr.number LIKE CONCAT('%', #{receiptVo.searchKey}, '%')
+                )
+            </if>
+            <if test=" receiptVo.roomNo != null and receiptVo.roomNo != '' ">
+                and rr.room_no = #{receiptVo.roomNo}
+            </if>
+            <if test=" receiptVo.receiptTypes != null and receiptVo.receiptTypes.size > 0 ">
+                and rr.receipt_type IN
+                <foreach item="type" collection="receiptVo.receiptTypes" open="(" separator="," close=")">
+                    #{type}
+                </foreach>
+            </if>
 <!--            <if test=" leaseVo.voLeaseType != null and leaseVo.voLeaseType != '' and leaseVo.voLeaseType != '-1' ">-->
 <!--                and l.lease_type = #{leaseVo.voLeaseType}-->
 <!--            </if>-->

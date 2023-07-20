@@ -236,6 +236,12 @@ public class LeaseServiceImpl implements LeaseService {
         return leasePo.isEmpty() ? null : leasePo.get(0);
     }
 
+    @Override
+    public List<LeaseVo> queryLeaseByRoomId(Long roomId) {
+        List<LeaseVo> leaseVos = leaseMapper.queryLeaseByRooomId(roomId);
+        return leaseVos;
+    }
+
     private String genLeaseNumber(LeaseVo leaseVo) {
         char firstLetter = leaseVo.getLeaseType().name().charAt(0);
         String roomNo = leaseVo.getRoomNo();

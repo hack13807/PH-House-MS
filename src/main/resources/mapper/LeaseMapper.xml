@@ -10,6 +10,7 @@
         <result column="start_date" property="startDate"/>
         <result column="end_date" property="endDate"/>
         <result column="roomNo" property="roomNo"/>
+        <result column="memberId" property="memberId"/>
         <result column="memberName" property="memberName"/>
         <result column="number" property="leaseNumber"/>
         <result column="effective" property="effective" typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
@@ -26,6 +27,19 @@
             and l.isdelete = 0
         </where>
         order by l.effective desc, l.start_date desc
+    </select>
+
+    <select id="queryLeaseByRooomId" parameterType="java.util.Map" resultMap="leaseVoMap">
+        Select l.id as rowId,l.lease_type as leaseType,l.unit,l.rent_amount, m.id as memberId, l.number, m.name as memberName
+        from t_lease l
+        left join t_member m on m.id = l.member_id
+        left join t_room r on r.id = l.room_id
+        <where>
+            r.id = #{roomId}
+            and l.isdelete = 0
+            and l.effective = 1
+        </where>
+        order by l.start_date desc
     </select>
 
     <select id="queryLeaseByRoomId" parameterType="java.util.Map" resultMap="leaseVoMap">

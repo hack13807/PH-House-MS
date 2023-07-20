@@ -20,4 +20,6 @@ public interface LeaseService {
     void batchDelete(Long[] ids);
 
     LeasePo checkUnique(LeaseVo leaseVo);
+
+    List<LeaseVo> queryLeaseByRoomId(Long roomId);
 }

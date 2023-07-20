@@ -136,7 +136,7 @@ function validate() {
     }
 }
 
-/*初始化房间下拉框*/
+/*初始化所有房间下拉框*/
 function initRoom() {
     $.ajax("/room/roomList", {
         type: 'get',

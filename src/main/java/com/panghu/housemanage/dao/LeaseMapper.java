@@ -19,4 +19,6 @@ public interface LeaseMapper extends BaseMapper<LeasePo> {
     Page<LeaseVo> pageQueryLease(Page<LeaseVo> page, @Param("leaseVo") PHBaseVo vo);
 
     List<LeaseVo> queryLeaseByRoomId(@Param("roomId") Long roomId);
+
+    List<LeaseVo> queryLeaseByRooomId(@Param("roomId") Long roomId);
 }

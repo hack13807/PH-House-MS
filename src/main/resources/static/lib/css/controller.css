@@ -23,7 +23,7 @@
        font-size: 14px; /* 调整字体大小 */
             text-align: left; /* 文字靠左对齐 */
             line-height: 1.5; /* 设置行间距为1.5倍字体大小 */
-            padding: 5px 5px 5px 10px; /* 上边框和下边框的距离为5px */
+            padding: 5px 5px 5px 5px; /* 上边框和下边框的距离为5px */
             margin-right: 10px;
             margin-top: -2px;
                color: #333;
@@ -75,6 +75,7 @@
 }
 
 .field-group-title {
+    font-size: 22px;
     color: gray;
 }
 
@@ -176,3 +177,36 @@
 #type_select::placeholder {
   color: #555555;
 }
+
+.circle-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: #f0f0f0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+    }
+
+    .circle-button:hover {
+        background-color: #e0e0e0;
+    }
+
+    .circle-button::before,
+    .circle-button::after {
+        content: '';
+        position: absolute;
+        height: 20px;
+        width: 2px;
+        background-color: #333;
+    }
+
+    .circle-button::before {
+        transform: rotate(90deg);
+    }
+
+    .circle-button::after {
+        transform: rotate(180deg);
+    }

@@ -51,8 +51,8 @@ public class RoomController {
 
     @GetMapping("/roomList")
     @ResponseBody
-    public PHResp<List<RoomPo>> queryAllRooms(){
-        List<RoomPo> rooms = roomService.getRoomNoSelector(null);
+    public PHResp<List<RoomPo>> queryAllRooms(@RequestParam(required = false, value = "status") String status){
+        List<RoomPo> rooms = roomService.getRoomNoSelector(status == null ? null :  Map.of("status", status));
         return PHResp.success(rooms);
     }
 

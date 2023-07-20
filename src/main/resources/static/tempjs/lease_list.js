@@ -122,13 +122,26 @@ function addLease() {
     $('#addOrUpdateform')[0].reset()  //重置表单
 }
 
-function unlockMemberInfo() {
-    $('#memberName').val('').prop('readonly', false);
-    $('#tel').val('').prop('readonly', false);
-    $('#idCard').val('').prop('readonly', false);
-    $('#memberId').val('').prop('readonly', false);
-    $('#sex').val('1').prop('readonly', false);
+function refreshMemberInfo(key) {
+    $('#memberName' + key).val('').prop('readonly', false);
+    $('#tel' + key).val('').prop('readonly', false);
+    $('#idCard' + key).val('').prop('readonly', false);
+    $('#memberId' + key).val('').prop('readonly', false);
+    $('#sex' + key).val('1').prop('disabled', false);
+}
+function unlockMemberInfo(key) {
+    for(var i = 1; i<=5; i++){
+        $('#memberName' + i).val('').prop('readonly', false);
+        $('#tel' + i).val('').prop('readonly', false);
+        $('#idCard' + i).val('').prop('readonly', false);
+        $('#memberId' + i).val('').prop('readonly', false);
+        $('#sex' + i).val('1').prop('disabled', false);
 
+        if(i > 1){
+            let row = document.getElementById("memberRow"+ i);
+            row.style.display = "none";
+        }
+    }
     $("#roomId").prop('readonly', false);
     $("#leaseType").prop('readonly', false);
     $("#unit").prop('readonly', false);
@@ -140,15 +153,16 @@ function unlockMemberInfo() {
 }
 
 function lockMemberInfo() {
-    $('#memberName').prop('readonly', true);
-    $('#tel').prop('readonly', true);
-    $('#idCard').prop('readonly', true);
-    $('#memberId').prop('readonly', true);
-    $('#sex').prop('readonly', true);
+    for(var i = 1; i<=5; i++){
+        $('#memberName' + i).val('').prop('readonly', true);
+        $('#tel' + i).val('').prop('readonly', true);
+        $('#idCard' + i).val('').prop('readonly', true);
+        $('#memberId' + i).val('').prop('readonly', true);
+        $('#sex' + i).val('1').prop('disabled', true);
+    }
 }
 function lockAllInfo() {
     lockMemberInfo();
-    $('#sex').prop('readonly', true);
     $("#roomId").prop('readonly', true);
     $("#leaseType").prop('readonly', true);
     $("#unit").prop('readonly', true);
@@ -157,14 +171,40 @@ function lockAllInfo() {
     $("#endDate").prop('readonly', true);
 }
 
+function deleteMemberInfoRow (key) {
+    var memberRow = document.getElementById("memberRow" + key);
+    $('#memberName' + key).val('').prop('readonly', false);
+    $('#tel' + key).val('').prop('readonly', false);
+    $('#idCard' + key).val('').prop('readonly', false);
+    $('#memberId' + key).val('').prop('readonly', false);
+    $('#sex' + key).val('1').prop('disabled', false);
+    memberRow.style.display = "none";
+}
+
 // 监听输入框的oninput事件
-$('#memberName').on('input', function () {
-    var inputValue = $(this).val();
+$('#memberName1').on('input', function () {
+    doInputMatch('#memberName1', '#selectBox1');
+});
+$('#memberName2').on('input', function () {
+    doInputMatch('#memberName2', '#selectBox2');
+});
+$('#memberName3').on('input', function () {
+    doInputMatch('#memberName3', '#selectBox3');
+});
+$('#memberName4').on('input', function () {
+    doInputMatch('#memberName4', '#selectBox4');
+});
+$('#memberName5').on('input', function () {
+    doInputMatch('#memberName5', '#selectBox5');
+});
+
+function doInputMatch(memberName, selectBox) {
+    var inputValue = $(memberName).val();
     // 发送Ajax请求获取匹配数据并渲染选择框
     // 获取输入框的值
-    var inputValue = $('#memberName').val();
+    var inputValue = $(memberName).val();
     // 获取选择框元素
-    var selectBox = $('#selectBox');
+    var selectBox = $(selectBox);
     selectBox.empty();
     $.each(memberCache, function (index, item) {
         if (item.name.indexOf(inputValue) !== -1) {
@@ -175,44 +215,92 @@ $('#memberName').on('input', function () {
     });
     // 显示选择框
     selectBox.show();
-});
+}
 
 // 监听选择框的点击事件
-$(document).on('click', '#selectBox li', function () {
+$(document).on('click', '#selectBox1 li', function () {
     var selectedValue = $(this).text();
-//        $('#memberName').val(selectedValue);
+    selectBoxClick(selectedValue, '1');
+});
+$(document).on('click', '#selectBox2 li', function () {
+    var selectedValue = $(this).text();
+    selectBoxClick(selectedValue, '2');
+});
+$(document).on('click', '#selectBox3 li', function () {
+    var selectedValue = $(this).text();
+    selectBoxClick(selectedValue, '3');
+});
+$(document).on('click', '#selectBox4 li', function () {
+    var selectedValue = $(this).text();
+    selectBoxClick(selectedValue, '4');
+});
+$(document).on('click', '#selectBox5 li', function () {
+    var selectedValue = $(this).text();
+    selectBoxClick(selectedValue, '5');
+});
+function selectBoxClick(selectedValue, no) {
     $.each(valueCache, function (index, item) {
         if (item.indexOf(selectedValue) !== -1) {
             var values = item.split(' / ');
-            $('#memberName').val(values[0]).prop('readonly', true);
-            $('#tel').val(values[1]).prop('readonly', true);
-            $('#idCard').val(values[2]).prop('readonly', true);
-            $('#memberId').val(values[3]).prop('readonly', true);
-            $('#sex').val(values[4]).prop('readonly', true);
+            $('#memberName'+no).val(values[0]).prop('readonly', true);
+            $('#tel'+no).val(values[1]).prop('readonly', true);
+            $('#idCard'+no).val(values[2]).prop('readonly', true);
+            $('#memberId'+no).val(values[3]).prop('readonly', true);
+            $('#sex'+no).val(values[4]).prop('disabled', true);
             // 回填租客信息后重置校验器
             resetValidate();
         }
     });
     valueCache = [];
     $('#selectBox').hide();
-});
+}
 
 // 监听输入框的失去焦点事件
-$('#memberName').blur(function () {
-    // 延迟隐藏选择框
-    hideSelectBoxTask = setTimeout(function () {
-        $('#selectBox').hide();
-    }, 200);  // 延迟时间可以根据实际情况进行调整
+$('#memberName1').blur(function () {
+    inputBlur('#selectBox1');
 });
+$('#memberName2').blur(function () {
+    inputBlur('#selectBox2');
+});
+$('#memberName3').blur(function () {
+    inputBlur('#selectBox3');
+});
+$('#memberName4').blur(function () {
+    inputBlur('#selectBox4');
+});
+$('#memberName5').blur(function () {
+    inputBlur('#selectBox5');
+});
+function inputBlur(selectBox) {
+     // 延迟隐藏选择框
+    hideSelectBoxTask = setTimeout(function () {
+        $(selectBox).hide();
+    }, 200);  // 延迟时间可以根据实际情况进行调整
+}
 
 // 监听输入框的获得焦点事件
-$('#memberName').focus(function () {
+$('#memberName1').focus(function () {
+    inputFocus();
+});
+$('#memberName2').focus(function () {
+    inputFocus();
+});
+$('#memberName3').focus(function () {
+    inputFocus();
+});
+$('#memberName4').focus(function () {
+    inputFocus();
+});
+$('#memberName5').focus(function () {
+    inputFocus();
+});
+function inputFocus() {
     // 取消延迟隐藏选择框的任务
     if (hideSelectBoxTask) {
         clearTimeout(hideSelectBoxTask);
         hideSelectBoxTask = null;
     }
-});
+}
 
 function edit() {
     let selecton = $("#table").bootstrapTable('getSelections'); //获取该行数据
@@ -817,4 +905,25 @@ function enableRows() {
             })
         }
     });
+}
+
+function addMemberInfoRow() {
+    // 获取要判断的div元素
+    var memberRow2 = document.getElementById("memberRow2");
+    var memberRow3 = document.getElementById("memberRow3");
+    var memberRow4 = document.getElementById("memberRow4");
+    var memberRow5 = document.getElementById("memberRow5");
+    // 判断div是否隐藏
+        if (memberRow2.style.display === "none") {
+            // 显示div
+            memberRow2.style.display = "block";
+        } else if (memberRow2.style.display === "block" && memberRow3.style.display === "none") {
+            memberRow3.style.display = "block";
+        } else if (memberRow2.style.display === "block" && memberRow3.style.display === "block" && memberRow4.style.display === "none") {
+            memberRow4.style.display = "block";
+        } else if (memberRow2.style.display === "block" && memberRow3.style.display === "block" && memberRow4.style.display === "block" && memberRow5.style.display === "none") {
+            memberRow5.style.display = "block";
+        } else {
+            swal('租约最多关联五位租客')
+        }
 }

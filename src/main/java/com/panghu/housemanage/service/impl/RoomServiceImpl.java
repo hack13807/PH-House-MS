@@ -16,7 +16,10 @@ import com.panghu.housemanage.pojo.vo.RoomVo;
 import com.panghu.housemanage.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +40,9 @@ public class RoomServiceImpl implements RoomService {
         LambdaQueryWrapper<RoomPo> wrapper = new LambdaQueryWrapper<>();
         wrapper.select(RoomPo::getId, RoomPo::getNumber);
         wrapper.eq(RoomPo::getEnable, 1);
+        if (!CollectionUtils.isEmpty(params) && !ObjectUtils.isEmpty(params.get("status"))) {
+            wrapper.eq(RoomPo::getStatus, params.get("status"));
+        }
         return roomMapper.selectList(wrapper);
     }
 

@@ -67,10 +67,16 @@
                 <div class="modal-body" style="height: 100%;">
                     <form id="addOrUpdateform" class="form-horizontal" role="form">
                         <!-- 租客信息部分 -->
-                        <h4 class="field-group-title">
+                        <h4 class="field-group-title div-inline">
                             <span class="bullet"></span>
                             租客信息
                         </h4>
+                        <div style="display: inline-block;" onclick="addMemberInfoRow()">
+    <span style="display: inline-flex; justify-content: center; align-items: center; width: 25px; height: 25px; border-radius: 50%; border: 2px solid gray; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); cursor: pointer; position: relative;top: 5px;">
+        <span style="color: gray;content: ''; position: absolute; height: 12px; width: 2px; background-color: gray; transform: rotate(90deg);"></span>
+        <span style="color: gray;content: ''; position: absolute; height: 12px; width: 2px; background-color: gray; transform: rotate(180deg);"></span>
+    </span>
+                        </div>
                         <hr class="field-group-divider">
                         <div class="row">
                             <div class="col-sm-6">
@@ -79,42 +85,234 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">租客姓名</label>
                                     <div class="col-sm-7">
-                                        <input type="text" class="form-control" id="memberName" name="memberName" data-bv-field="name"
+                                        <input type="text" class="form-control" id="memberName1" name="memberName" data-bv-field="name"
                                                placeholder="请输入租客姓名" autocomplete="off">
-                                        <div id="selectBox" class="dropdown-menu selectBox"
+                                        <div id="selectBox1" class="dropdown-menu selectBox"
                                              style="display: none;"></div>
-                                        <input type="hidden" class="form-control" id="memberId" name="memberId">
+                                        <input type="hidden" class="form-control" id="memberId1" name="memberId">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">身份证号</label>
                                     <div class="col-sm-7">
-                                        <input type="text" class="form-control" id="idCard" name="idCard"
+                                        <input type="text" class="form-control" id="idCard1" name="idCard"
                                                data-bv-field="idCard"
                                                placeholder="请输入租客身份证号">
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">
-                                        <div class="col-sm-7">
-                                            <input type="button" th:onclick="unlockMemberInfo()" class="btn btn-primary" id="refreshMemberInfo"
-                                                value="重置租客信息"/>
-                                        </div>
-                                    </label>
+                                <div style="margin-left: 15px; margin-top: -5px; margin-bottom: 20px;">
+                                    <input type="button" th:onclick="refreshMemberInfo(1)" class="btn btn-primary btn-sm" id="refreshMemberInfo1"
+                                           value="重置信息"/>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">手机号</label>
                                     <div class="col-sm-7">
-                                        <input type="text" class="form-control" id="tel" name="tel"
+                                        <input type="text" class="form-control" id="tel1" name="tel"
                                                placeholder="请输入租客手机号">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">性别</label>
                                     <div class="col-sm-7">
-                                        <select name="sex" id="sex" class="form-condition form-selector">
+                                        <select name="sex" id="sex1" class="form-condition form-selector">
+                                            <option value="1">男</option>
+                                            <option value="2">女</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="memberRow2" style="display: none" class="row">
+                            <div class="col-sm-6">
+                                <input type="hidden" class="form-control" id="id2" name="id">
+                                <input type="hidden" class="form-control" id="number2" name="number">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">租客2姓名</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" id="memberName2" name="memberName" data-bv-field="name"
+                                               placeholder="请输入租客姓名" autocomplete="off">
+                                        <div id="selectBox2" class="dropdown-menu selectBox"
+                                             style="display: none;"></div>
+                                        <input type="hidden" class="form-control" id="memberId2" name="memberId">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">身份证号</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" id="idCard2" name="idCard"
+                                               data-bv-field="idCard"
+                                               placeholder="请输入租客身份证号">
+                                    </div>
+                                </div>
+                                <div style="margin-left: 15px; margin-top: -5px; margin-bottom: 20px;">
+                                    <input type="button" th:onclick="refreshMemberInfo(2)" class="btn btn-primary btn-sm" id="refreshMemberInfo2"
+                                           value="重置信息"/>
+                                    <input type="button" th:onclick="deleteMemberInfoRow(2)" class="btn btn-warning btn-sm" id="deleteInfoRow2"
+                                           value="删除"/>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">手机号</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" id="tel2" name="tel"
+                                               placeholder="请输入租客手机号">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">性别</label>
+                                    <div class="col-sm-7">
+                                        <select name="sex" id="sex2" class="form-condition form-selector">
+                                            <option value="1">男</option>
+                                            <option value="2">女</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="memberRow3" style="display: none" class="row">
+                            <div class="col-sm-6">
+                                <input type="hidden" class="form-control" id="id3" name="id">
+                                <input type="hidden" class="form-control" id="number3" name="number">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">租客3姓名</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" id="memberName3" name="memberName" data-bv-field="name"
+                                               placeholder="请输入租客姓名" autocomplete="off">
+                                        <div id="selectBox3" class="dropdown-menu selectBox"
+                                             style="display: none;"></div>
+                                        <input type="hidden" class="form-control" id="memberId3">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">身份证号</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" id="idCard3" name="idCard"
+                                               data-bv-field="idCard"
+                                               placeholder="请输入租客身份证号">
+                                    </div>
+                                </div>
+                                <div style="margin-left: 15px; margin-top: -5px; margin-bottom: 20px;">
+                                    <input type="button" th:onclick="refreshMemberInfo(3)" class="btn btn-primary btn-sm" id="refreshMemberInfo3"
+                                           value="重置信息"/>
+                                    <input type="button" th:onclick="deleteMemberInfoRow(3)" class="btn btn-warning btn-sm" id="deleteInfoRow3"
+                                           value="删除"/>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">手机号</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" id="tel3" name="tel"
+                                               placeholder="请输入租客手机号">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">性别</label>
+                                    <div class="col-sm-7">
+                                        <select name="sex" id="sex3" class="form-condition form-selector">
+                                            <option value="1">男</option>
+                                            <option value="2">女</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="memberRow4" style="display: none" class="row">
+                            <div class="col-sm-6">
+                                <input type="hidden" class="form-control" id="id4" name="id">
+                                <input type="hidden" class="form-control" id="number4" name="number">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">租客4姓名</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" id="memberName4" name="memberName" data-bv-field="name"
+                                               placeholder="请输入租客姓名" autocomplete="off">
+                                        <div id="selectBox4" class="dropdown-menu selectBox"
+                                             style="display: none;"></div>
+                                        <input type="hidden" class="form-control" id="memberId4">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">身份证号</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" id="idCard4" name="idCard"
+                                               data-bv-field="idCard"
+                                               placeholder="请输入租客身份证号">
+                                    </div>
+                                </div>
+                                <div style="margin-left: 15px; margin-top: -5px; margin-bottom: 20px;">
+                                    <input type="button" th:onclick="refreshMemberInfo(4)" class="btn btn-primary btn-sm" id="refreshMemberInfo4"
+                                           value="重置信息"/>
+                                    <input type="button" th:onclick="deleteMemberInfoRow(4)" class="btn btn-warning btn-sm" id="deleteInfoRow4"
+                                           value="删除"/>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">手机号</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" id="tel4" name="tel"
+                                               placeholder="请输入租客手机号">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">性别</label>
+                                    <div class="col-sm-7">
+                                        <select name="sex" id="sex4" class="form-condition form-selector">
+                                            <option value="1">男</option>
+                                            <option value="2">女</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="memberRow5" style="display: none" class="row">
+                            <div class="col-sm-6">
+                                <input type="hidden" class="form-control" id="id5" name="id">
+                                <input type="hidden" class="form-control" id="number5" name="number">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">租客5姓名</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" id="memberName5" name="memberName" data-bv-field="name"
+                                               placeholder="请输入租客姓名" autocomplete="off">
+                                        <div id="selectBox5" class="dropdown-menu selectBox"
+                                             style="display: none;"></div>
+                                        <input type="hidden" class="form-control" id="memberId5">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">身份证号</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" id="idCard5" name="idCard"
+                                               data-bv-field="idCard"
+                                               placeholder="请输入租客身份证号">
+                                    </div>
+                                </div>
+                                <div style="margin-left: 15px; margin-top: -5px; margin-bottom: 20px;">
+                                    <input type="button" th:onclick="refreshMemberInfo(5)" class="btn btn-primary btn-sm" id="refreshMemberInfo5"
+                                           value="重置信息"/>
+                                    <input type="button" th:onclick="deleteMemberInfoRow(5)" class="btn btn-warning btn-sm" id="deleteInfoRow5"
+                                           value="删除"/>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">手机号</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" id="tel5" name="tel"
+                                               placeholder="请输入租客手机号">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">性别</label>
+                                    <div class="col-sm-7">
+                                        <select name="sex" id="sex5" class="form-condition form-selector">
                                             <option value="1">男</option>
                                             <option value="2">女</option>
                                         </select>

@@ -19,6 +19,7 @@ import com.panghu.housemanage.pojo.po.LeasePo;
 import com.panghu.housemanage.pojo.po.MemberPo;
 import com.panghu.housemanage.pojo.po.RoomPo;
 import com.panghu.housemanage.pojo.vo.LeaseVo;
+import com.panghu.housemanage.pojo.vo.MemberVo;
 import com.panghu.housemanage.service.LeaseService;
 import com.panghu.housemanage.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ import org.springframework.util.ObjectUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class LeaseServiceImpl implements LeaseService {
@@ -75,9 +77,10 @@ public class LeaseServiceImpl implements LeaseService {
     @Transactional
     public void insertLease(LeaseVo leaseVo) {
         // 验重
-        LeasePo po = checkUnique(leaseVo);
-        if (po != null) {
-            throw new PHServiceException(PHExceptionCodeEnum.UNIQUE_MEMBER, null);
+        List<LeaseVo> voList = checkUnique(leaseVo);
+        if (!CollectionUtils.isEmpty(voList)) {
+            String detail = generateFormattedString(voList);
+            throw new PHServiceException(PHExceptionCodeEnum.UNIQUE_LEASE, detail);
         }
         // 判断是否需要创建租客记录
         if (ObjectUtils.isEmpty(leaseVo.getMemberId())) {
@@ -100,6 +103,16 @@ public class LeaseServiceImpl implements LeaseService {
         updateStatusForInsert(leasePo);
         // 新增租约记录
         leaseMapper.insert(leasePo);
+    }
+
+
+    public String generateFormattedString(List<LeaseVo> voList) {
+        StringBuilder result = new StringBuilder();
+        for (LeaseVo leaseVo : voList) {
+            String line = leaseVo.getLeaseNumber() + "：" + leaseVo.getRoomNo() + "房 - " + leaseVo.getMemberName() + "\n";
+            result.append(line);
+        }
+        return result.toString();
     }
 
 
@@ -229,17 +242,17 @@ public class LeaseServiceImpl implements LeaseService {
     }
 
     @Override
-    public LeasePo checkUnique(LeaseVo leaseVo) {
-        QueryWrapper<LeasePo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("member_id", leaseVo.getMemberId()).eq("room_id", leaseVo.getRoomId()).eq("effective", 1).eq("isdelete", 0);
-        List<LeasePo> leasePo = leaseMapper.selectList(queryWrapper);
-        return leasePo.isEmpty() ? null : leasePo.get(0);
+    public List<LeaseVo> checkUnique(LeaseVo leaseVo) {
+        List<Long> ids = leaseVo.getMembers().stream().map(MemberVo::getRowId).toList();
+        Map<String, Object> params = new HashMap<>();
+        params.put("memberIds", ids);
+        params.put("roomId", leaseVo.getRoomId());
+        return leaseMapper.checkUnique(params);
     }
 
     @Override
     public List<LeaseVo> queryLeaseByRoomId(Long roomId) {
-        List<LeaseVo> leaseVos = leaseMapper.queryLeaseByRooomId(roomId);
-        return leaseVos;
+        return leaseMapper.queryLeaseByRooomId(roomId);
     }
 
     private String genLeaseNumber(LeaseVo leaseVo) {

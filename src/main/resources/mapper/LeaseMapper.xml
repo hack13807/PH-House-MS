@@ -54,6 +54,23 @@
         </where>
     </select>
 
+    <select id="checkUnique" parameterType="java.util.Map" resultMap="leaseVoMap">
+        Select l.number, m.name as memberName, r.number as roomNo
+        from t_lease_member_rel rel
+        left join t_lease l on l.id = rel.lease_id
+        left join t_member m on m.id = rel.member_id
+        left join t_room r on r.id = l.room_id
+        <where>
+            m.id in
+            <foreach item="memberId" collection="memberIds" open="(" separator="," close=")">
+                #{memberId}
+            </foreach>
+            and r.id = #{roomId}
+            and l.isdelete = 0
+            and l.effective = 1
+        </where>
+    </select>
+
     <select id="pageQueryLease" parameterType="com.panghu.housemanage.pojo.vo.LeaseVo" resultMap="leaseVoMap">
         Select r.number as roomNo, m.name as memberName, l.id as rowId,l.lease_type as
         leaseType,l.unit,l.rent_amount,l.start_date,l.end_date,l.number,

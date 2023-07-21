@@ -12,7 +12,7 @@ public enum PHExceptionCodeEnum {
     OPT_TYPE_NOT_FOUNG(10003,"该操作未定义，请联系管理员查看后台日志"),
     EFFECTIVE_STATUS_NOT_FOUNG(10004,"生效状态未定义，请联系管理员查看后台日志"),
     UNIQUE_MEMBER(10005,"系统已存在该身份证号的租客"),
-    UNIQUE_LEASE(10006,"系统已存在相同房间租客的租约"),
+    UNIQUE_LEASE(10006,"系统已存在相同房间相同租客的租约"),
     UNIQUE_ROOM(10007,"系统已存在该房号，如被禁用，请启用");
 
     private final int code;

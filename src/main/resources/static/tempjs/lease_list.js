@@ -368,16 +368,28 @@ function openMadel(row, title){
 
 function addOrUpdate() {
     let leaseId = $('#id').val();
-    let memberId = $('#memberId').val();
     var title = '';
     var text = '';
     if (!leaseId) {
-        if (!memberId) {
+        let memberId1 = $('#memberId1').val();
+        var memberRow2 = document.getElementById("memberRow2");
+        var memberRow3 = document.getElementById("memberRow3");
+        var memberRow4 = document.getElementById("memberRow4");
+        var memberRow5 = document.getElementById("memberRow5");
+        let memberId2 = $('#memberId2').val();
+        let memberId3 = $('#memberId3').val();
+        let memberId4 = $('#memberId4').val();
+        let memberId5 = $('#memberId5').val();
+        if (!memberId1
+            || (memberRow2.style.display === "block" && !memberId2)
+            || (memberRow3.style.display === "block" && !memberId3)
+            || (memberRow4.style.display === "block" && !memberId4)
+            || (memberRow5.style.display === "block" && !memberId5)) {
             title = '手工录入';
-            text = '租客信息为手工录入，系统内若无该租客信息，将会自动创建';
+            text = '部分租客信息为手工录入，系统内若无该租客信息，将会自动创建';
         } else {
             title = '自动填充';
-            text = '租客信息为自动填充，系统将为该租客创建新租约';
+            text = '租客信息全部为自动填充，系统将为这些租客创建新租约';
         }
         swal({
                 title: title,
@@ -405,12 +417,14 @@ function addOrUpdate() {
 function doAddOrUpdate() {
     let leaseId = $('#id').val();
     let roomId = $('#roomId').val();
+    // 打包租客信息
+    let members = packageMemberArrays();
+
     let data = {
         rowId: leaseId,
         leaseNumber: $('#number').val(),
         // 租客信息
-        memberId: $('#memberId').val(),
-        memberName: $('#memberName').val(),
+        members: members,
         tel: $('#tel').val(),
         sex: $('#sex').val(),
         idCard: $('#idCard').val(),
@@ -435,14 +449,14 @@ function doAddOrUpdate() {
                 if (res.code == 200) {
                     swal("新 增", "已建立新租约",
                         "success");
+                        // {#关闭模态框并清除框内数据，否则下次打开还是上次的数据#}
+                                        $("#table").bootstrapTable('refresh');
+                                        $("#addOrUpdateform")[0].reset();
+                                        $('#id').val('');   // 租客id作为隐藏字段无法通过reset()清除，需要单独处理
+                                        $('#addOrUpdateModal').modal('hide');
                 } else {
-                    swal("新增失败", res.msg, "error")
+                    swal("新增失败", res.msg + '\n' + res.data, "error")
                 }
-                // {#关闭模态框并清除框内数据，否则下次打开还是上次的数据#}
-                $("#table").bootstrapTable('refresh');
-                $("#addOrUpdateform")[0].reset();
-                $('#id').val('');   // 租客id作为隐藏字段无法通过reset()清除，需要单独处理
-                $('#addOrUpdateModal').modal('hide');
             },
             error: function (res) {
                 swal("新增失败", res.responseJSON.msg, "error")
@@ -471,6 +485,7 @@ function doAddOrUpdate() {
                                     // 租客信息
                                     memberId: $('#memberId').val(),
                                     memberName: $('#memberName').val(),
+                                    members: members,
                                     tel: $('#tel').val(),
                                     sex: $('#sex').val(),
                                     idCard: $('#idCard').val(),
@@ -516,6 +531,72 @@ function doAddOrUpdate() {
                 });
 
     }
+}
+
+function packageMemberArrays(){
+    var memberRow2 = document.getElementById("memberRow2");
+    var memberRow3 = document.getElementById("memberRow3");
+    var memberRow4 = document.getElementById("memberRow4");
+    var memberRow5 = document.getElementById("memberRow5");
+    let memberId2 = $('#memberId2').val();
+    let memberId3 = $('#memberId3').val();
+    let memberId4 = $('#memberId4').val();
+    let memberId5 = $('#memberId5').val();
+
+    let members = [];
+    // 获取第一组租客信息
+    var member1 = {
+        rowId: $('#memberId1').val(),
+        memberName: document.getElementById('memberName1').value,
+        idCard: document.getElementById('idCard1').value,
+        tel: document.getElementById('tel1').value,
+        sex: document.getElementById('sex1').value
+    };
+    // 将第一组租客信息添加到数组中
+    members.push(member1);
+
+    if(memberRow2.style.display === "block") {
+        var member2 = {
+            rowId: $('#memberId2').val(),
+            memberName: document.getElementById('memberName2').value,
+            idCard: document.getElementById('idCard2').value,
+            tel: document.getElementById('tel2').value,
+            sex: document.getElementById('sex2').value
+        };
+        members.push(member2);
+    }
+    if(memberRow3.style.display === "block") {
+            var member3 = {
+                rowId: $('#memberId3').val(),
+                memberName: document.getElementById('memberName3').value,
+                idCard: document.getElementById('idCard3').value,
+                tel: document.getElementById('tel3').value,
+                sex: document.getElementById('sex3').value
+            };
+            members.push(member3);
+        }
+    if(memberRow4.style.display === "block") {
+        var member4 = {
+            rowId: $('#memberId4').val(),
+            memberName: document.getElementById('memberName4').value,
+            idCard: document.getElementById('idCard4').value,
+            tel: document.getElementById('tel4').value,
+            sex: document.getElementById('sex4').value
+        };
+        members.push(member4);
+    }
+    if(memberRow5.style.display === "block") {
+        var member5 = {
+            rowId: $('#memberId5').val(),
+            memberName: document.getElementById('memberName5').value,
+            idCard: document.getElementById('idCard5').value,
+            tel: document.getElementById('tel5').value,
+            sex: document.getElementById('sex5').value
+        };
+        members.push(member5);
+    }
+
+    return members;
 }
 
 $('#addOrUpdateModal').on('hidden.bs.modal', function () {
@@ -853,6 +934,7 @@ leaseTypeSelect.addEventListener("change", function () {
     }
 });
 
+
 function enableRows() {
     let length = selectedRows.length;
     if (length === 0) {
@@ -876,8 +958,8 @@ function enableRows() {
             for (var index = 0; index < selectedObjRows.length; index++) {
                 var obj = selectedObjRows[index];
                 if(obj.effective !== effectiveMapping["生效中"]) {
-                 obj.voEffective = 1;
-                 arr.push(obj);
+                    obj.voEffective = 1;
+                    arr.push(obj);
                 }
             }
             if(arr.length === 0) {
@@ -914,16 +996,16 @@ function addMemberInfoRow() {
     var memberRow4 = document.getElementById("memberRow4");
     var memberRow5 = document.getElementById("memberRow5");
     // 判断div是否隐藏
-        if (memberRow2.style.display === "none") {
-            // 显示div
-            memberRow2.style.display = "block";
-        } else if (memberRow2.style.display === "block" && memberRow3.style.display === "none") {
-            memberRow3.style.display = "block";
-        } else if (memberRow2.style.display === "block" && memberRow3.style.display === "block" && memberRow4.style.display === "none") {
-            memberRow4.style.display = "block";
-        } else if (memberRow2.style.display === "block" && memberRow3.style.display === "block" && memberRow4.style.display === "block" && memberRow5.style.display === "none") {
-            memberRow5.style.display = "block";
-        } else {
-            swal('租约最多关联五位租客')
-        }
+    if (memberRow2.style.display === "none") {
+        // 显示div
+        memberRow2.style.display = "block";
+    } else if (memberRow2.style.display === "block" && memberRow3.style.display === "none") {
+        memberRow3.style.display = "block";
+    } else if (memberRow2.style.display === "block" && memberRow3.style.display === "block" && memberRow4.style.display === "none") {
+        memberRow4.style.display = "block";
+    } else if (memberRow2.style.display === "block" && memberRow3.style.display === "block" && memberRow4.style.display === "block" && memberRow5.style.display === "none") {
+        memberRow5.style.display = "block";
+    } else {
+        swal('一个房间最多登记五位租客')
+    }
 }

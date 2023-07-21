@@ -1,5 +1,6 @@
 package com.panghu.housemanage.dao;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.panghu.housemanage.pojo.po.LeasePo;
@@ -21,4 +22,6 @@ public interface LeaseMapper extends BaseMapper<LeasePo> {
     List<LeaseVo> queryLeaseByRoomId(@Param("roomId") Long roomId);
 
     List<LeaseVo> queryLeaseByRooomId(@Param("roomId") Long roomId);
+
+    List<LeaseVo> checkUnique(Map<String, Object> params);
 }

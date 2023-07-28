@@ -7,11 +7,9 @@ import com.panghu.housemanage.pojo.vo.MemberVo;
 import com.panghu.housemanage.pojo.vo.PHBaseVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Mapper
 public interface MemberMapper extends BaseMapper<MemberPo> {
@@ -20,4 +18,8 @@ public interface MemberMapper extends BaseMapper<MemberPo> {
     List<Map<Object, Object>> countMemberByRoomId(@Param("ids") List<Long> ids);
 
     List<MemberVo> getByRoomId(Map<String, Object> params);
+
+    List<MemberPo> selectByLeaseId(@Param("leaseId") Long leaseId);
+
+    List<MemberVo> getRentMemberByLeaseId(@Param("leaseId") Long leaseId);
 }

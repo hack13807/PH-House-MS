@@ -131,8 +131,7 @@ public class RequestHandleUtils {
             LeasePo leasePo = new LeasePo();
             Optional.ofNullable(leaseVo.getRowId()).ifPresent(leasePo::setId);
             Optional.ofNullable(leaseVo.getRoomId()).ifPresent(leasePo::setRoomId);
-            Optional.ofNullable(leaseVo.getMemberId()).ifPresent(leasePo::setMemberId);
-            Optional.ofNullable(leaseVo.getStartDate()).ifPresent(leasePo::setStartDate);
+            Optional.ofNullable(leaseVo.getMembers()).ifPresent(leasePo::setMembers);
             Optional.ofNullable(leaseVo.getStartDate()).ifPresent(leasePo::setStartDate);
             Optional.ofNullable(leaseVo.getEndDate()).ifPresent(leasePo::setEndDate);
             Optional.ofNullable(leaseVo.getUnit()).ifPresent(leasePo::setUnit);

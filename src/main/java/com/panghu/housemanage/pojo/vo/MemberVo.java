@@ -31,4 +31,5 @@ public class MemberVo extends PHBaseVo {
 
     /*页面参数*/
     private String voStatus;
+    private Integer leaseEffective;
 }

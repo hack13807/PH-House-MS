@@ -4,17 +4,16 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.panghu.housemanage.common.enumeration.EffectiveEnum;
-import com.panghu.housemanage.common.enumeration.MemberStatusEnum;
-import com.panghu.housemanage.common.enumeration.PHExceptionCodeEnum;
-import com.panghu.housemanage.common.enumeration.RoomStatusEnum;
+import com.panghu.housemanage.common.enumeration.*;
 import com.panghu.housemanage.common.exception.PHServiceException;
 import com.panghu.housemanage.common.util.CommonUtils;
 import com.panghu.housemanage.common.util.DateTimeUtils;
 import com.panghu.housemanage.common.util.RequestHandleUtils;
 import com.panghu.housemanage.dao.LeaseMapper;
+import com.panghu.housemanage.dao.LeaseMemberRelMapper;
 import com.panghu.housemanage.dao.MemberMapper;
 import com.panghu.housemanage.dao.RoomMapper;
+import com.panghu.housemanage.pojo.po.LeaseMemberRelPo;
 import com.panghu.housemanage.pojo.po.LeasePo;
 import com.panghu.housemanage.pojo.po.MemberPo;
 import com.panghu.housemanage.pojo.po.RoomPo;
@@ -30,7 +29,6 @@ import org.springframework.util.ObjectUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class LeaseServiceImpl implements LeaseService {
@@ -42,6 +40,8 @@ public class LeaseServiceImpl implements LeaseService {
     MemberService memberService;
     @Autowired
     RoomMapper roomMapper;
+    @Autowired
+    LeaseMemberRelMapper leaseMemberRelMapper;
 
     @Override
     public List<LeaseVo> queryLeaseByMemberId(Long memberId) {
@@ -83,26 +83,40 @@ public class LeaseServiceImpl implements LeaseService {
             throw new PHServiceException(PHExceptionCodeEnum.UNIQUE_LEASE, detail);
         }
         // 判断是否需要创建租客记录
-        if (ObjectUtils.isEmpty(leaseVo.getMemberId())) {
-            MemberPo memberPo = MemberPo.builder().name(leaseVo.getMemberName()).tel(leaseVo.getTel()).sex(leaseVo.getSex()).idCard(leaseVo.getIdCard()).status(1).build();
-            // 验重
-            MemberPo member = memberService.checkUnique(memberPo);
-            if (member == null) {
-                memberMapper.insert(memberPo);
-                leaseVo.setMemberId(memberPo.getId());
-            }else {
-                leaseVo.setMemberId(member.getId());
+        List<MemberVo> members = leaseVo.getMembers();
+        for (MemberVo member: members
+             ) {
+            if (ObjectUtils.isEmpty(member.getRowId())) {
+                MemberPo memberPo = MemberPo.builder().name(member.getMemberName()).tel(member.getTel()).sex(member.getSex().getCode()).idCard(member.getIdCard()).status(1).build();
+                // 验重
+                MemberPo exist = memberService.checkUnique(memberPo);
+                if (exist == null) {
+                    memberMapper.insert(memberPo);
+                    member.setRowId(memberPo.getId());
+                }else {
+                    if (exist.getSex() == member.getSex().getCode() && exist.getTel().equals(member.getTel()) || exist.getName().equals(member.getMemberName())) {
+                        member.setRowId(exist.getId());
+                    }else {
+                        // 和系统内数据对不上
+                        throw new PHServiceException(PHExceptionCodeEnum.ERROR_MEMBER_INFO, exist.getName()+"-"+ MemberSexEnum.getValueByCode(exist.getSex())+"-"+exist.getIdCard()+"-"+exist.getTel());
+                    }
+                }
             }
         }
+
         // 数据模型转换
         LeasePo leasePo = RequestHandleUtils.<LeaseVo, LeasePo> modelDTOTrans(Collections.singletonList(leaseVo)).get(0);
         // 生成业务单号
         String leaseNumber = genLeaseNumber(leaseVo);
         leasePo.setNumber(leaseNumber);
         // 检查是否需要更新租客和房间状态
-        updateStatusForInsert(leasePo);
+        updateStatusForInsert(members, leasePo.getRoomId());
         // 新增租约记录
         leaseMapper.insert(leasePo);
+        members.forEach(member -> {
+            LeaseMemberRelPo po = LeaseMemberRelPo.builder().leaseId(leasePo.getId()).memberId(member.getRowId()).build();
+            leaseMemberRelMapper.insert(po);
+        });
     }
 
 
@@ -117,19 +131,21 @@ public class LeaseServiceImpl implements LeaseService {
 
 
 
-    private void updateStatusForInsert(LeasePo leasePo) {
-        Long memberId = leasePo.getMemberId();
-        List<LeaseVo> voList = leaseMapper.queryLeaseByMemberId(memberId);
-        List<LeaseVo> list = voList.stream().filter(leaseVo -> leaseVo.getEffective() == EffectiveEnum.EFFECTIVE).toList();
-        if (CollectionUtils.isEmpty(list)) {
-            // 不存在活跃租约，需要更改状态
-            MemberPo memberPo = MemberPo.builder().id(memberId).status(MemberStatusEnum.RENTING.getCode()).build();
-            memberMapper.updateById(memberPo);
+    private void updateStatusForInsert(List<MemberVo> members, Long roomId) {
+        for (MemberVo vo: members
+             ) {
+            Long memberId = vo.getRowId();
+            List<LeaseVo> voList = leaseMapper.queryLeaseByMemberId(memberId);
+            List<LeaseVo> list = voList.stream().filter(leaseVo -> leaseVo.getEffective() == EffectiveEnum.EFFECTIVE).toList();
+            if (CollectionUtils.isEmpty(list)) {
+                // 不存在活跃租约，需要更改状态
+                MemberPo memberPo = MemberPo.builder().id(memberId).status(MemberStatusEnum.RENTING.getCode()).build();
+                memberMapper.updateById(memberPo);
+            }
         }
 
-        Long roomId = leasePo.getRoomId();
-        voList = leaseMapper.queryLeaseByRoomId(roomId);
-        list = voList.stream().filter(leaseVo -> leaseVo.getEffective() == EffectiveEnum.EFFECTIVE).toList();
+        List<LeaseVo> voList = leaseMapper.queryLeaseByRoomId(roomId);
+        List<LeaseVo> list = voList.stream().filter(leaseVo -> leaseVo.getEffective() == EffectiveEnum.EFFECTIVE).toList();
         if (CollectionUtils.isEmpty(list)) {
             // 不存在活跃租约，需要更改状态
             RoomPo roomPo = RoomPo.builder().id(roomId).status(RoomStatusEnum.INUSE.getCode()).build();
@@ -175,9 +191,9 @@ public class LeaseServiceImpl implements LeaseService {
 
     private void terminate(List<LeasePo> poList){
         if (poList.get(0).getEffective() != null && poList.get(0).getEffective() == 0) {
+            poList.forEach(leasePo -> leaseMapper.updateById(leasePo));
             // 只有失效场景才会使effective为0发起put请求
             updateStatusForTerminate(poList);
-            poList.forEach(leasePo -> leaseMapper.updateById(leasePo));
         }
     }
 
@@ -187,50 +203,27 @@ public class LeaseServiceImpl implements LeaseService {
      * @param poList 订单列表
      */
     private void updateStatusForTerminate(List<LeasePo> poList) {
-        // 租客分组
-        Map<Long, Long> collect = poList.stream().collect(Collectors.groupingBy(LeasePo::getMemberId, Collectors.counting()));
-        // 获取当前租客生效的租约
-        Map<Long, Integer> memberLeaseMap = poList.stream()
-                .map(LeasePo::getMemberId)
-                .distinct()
-                .collect(Collectors.toMap(
-                        memberId -> memberId,
-                        memberId -> leaseMapper.selectList(new QueryWrapper<LeasePo>().eq("member_id", memberId).eq("effective", 1).ne("isdelete", 1)).size()
-                ));
-        // 当前生效租约，失效掉本次数量，如果清零了，就需要更新租客状态
-        List<Long> updateList = collect.entrySet().stream()
-                .filter(entry -> memberLeaseMap.containsKey(entry.getKey()))
-                .filter(entry -> memberLeaseMap.get(entry.getKey()) - entry.getValue() <= 0)
-                .map(Map.Entry::getKey)
-                .toList();
+        for (LeasePo po: poList
+             ) {
+            List<MemberVo> rentMemberByLeaseId = memberMapper.getRentMemberByLeaseId(po.getId());
+            Map<Long, List<MemberVo>> collect = rentMemberByLeaseId.stream().collect(Collectors.groupingBy(MemberVo::getRowId));
+            Map<Long, List<MemberVo>> filteredMap = collect.entrySet().stream()
+                    .filter(entry -> entry.getValue().stream().noneMatch(vo -> vo.getLeaseEffective() == 1))
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-        if (!CollectionUtils.isEmpty(updateList)) {
-            LambdaUpdateWrapper<MemberPo> updateWrapper = new LambdaUpdateWrapper<>();
-            updateWrapper.set(MemberPo::getStatus, 2).in(MemberPo::getId, updateList);
-            memberMapper.update(null, updateWrapper);
-        }
+            for (Long memberId: filteredMap.keySet()
+            ) {
+                MemberPo memberPo = MemberPo.builder().id(memberId).status(MemberStatusEnum.SURRENDER.getCode()).build();
+                memberMapper.updateById(memberPo);
+            }
 
-        // 房间分组
-        Map<Long, Long> roomCollect = poList.stream().collect(Collectors.groupingBy(LeasePo::getRoomId, Collectors.counting()));
-        // 获取当前房间生效的租约
-        Map<Long, Integer> roomLeaseMap = poList.stream()
-                .map(LeasePo::getRoomId)
-                .distinct()
-                .collect(Collectors.toMap(
-                        roomId -> roomId,
-                        roomId -> leaseMapper.queryLeaseByRoomId(roomId).size()
-                ));
-        // 当前生效租约，失效掉本次数量，如果清零了，就需要更新房间状态
-        List<Long> roomUpdateList = roomCollect.entrySet().stream()
-                .filter(entry -> roomLeaseMap.containsKey(entry.getKey()))
-                .filter(entry -> roomLeaseMap.get(entry.getKey()) - entry.getValue() <= 0)
-                .map(Map.Entry::getKey)
-                .toList();
-
-        if (!CollectionUtils.isEmpty(roomUpdateList)) {
-            LambdaUpdateWrapper<RoomPo> updateWrapper = new LambdaUpdateWrapper<>();
-            updateWrapper.set(RoomPo::getStatus, 0).in(RoomPo::getId, roomUpdateList);
-            roomMapper.update(null, updateWrapper);
+            List<LeaseVo> voList = leaseMapper.queryLeaseByRoomId(po.getRoomId());
+            List<LeaseVo> list = voList.stream().filter(leaseVo -> leaseVo.getEffective() == EffectiveEnum.EFFECTIVE).toList();
+            if (CollectionUtils.isEmpty(list)) {
+                // 不存在活跃租约，需要更改状态
+                RoomPo roomPo = RoomPo.builder().id(po.getRoomId()).status(RoomStatusEnum.UNUSED.getCode()).build();
+                roomMapper.updateById(roomPo);
+            }
         }
     }
 
@@ -258,7 +251,7 @@ public class LeaseServiceImpl implements LeaseService {
     private String genLeaseNumber(LeaseVo leaseVo) {
         char firstLetter = leaseVo.getLeaseType().name().charAt(0);
         String roomNo = leaseVo.getRoomNo();
-        String initials = CommonUtils.getInitials(leaseVo.getMemberName());
+        String initials = CommonUtils.getInitials(leaseVo.getMembers().get(0).getMemberName());
         String yyyyMMdd = DateTimeUtils.formatDate(leaseVo.getStartDate(), "yyyyMMdd");
         return String.join("-", String.valueOf(firstLetter)+roomNo, initials+yyyyMMdd);
     }

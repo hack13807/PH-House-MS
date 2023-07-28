@@ -22,7 +22,8 @@
         select r.id as rowId, r.number as roomNo, r.status as roomStatus, r.description as roomDesc, GROUP_CONCAT(m.name SEPARATOR ',') as memberName
         from t_room r
         left join t_lease l on l.room_id = r.id and l.effective = 1 and l.isdelete = 0
-        left join t_member m on l.member_id = m.id
+        left join t_lease_member_rel rel on l.id = rel.lease_id
+        left join t_member m on rel.member_id = m.id
         <where>
             1 = 1
             <if test=" roomVo.roomNo != null and roomVo.roomNo != '' ">

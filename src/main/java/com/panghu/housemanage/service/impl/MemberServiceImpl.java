@@ -88,23 +88,27 @@ public class MemberServiceImpl implements MemberService {
         QueryWrapper<MemberPo> queryWrapper = new QueryWrapper<>();
 
         // 根据不同属性值拼接查询条件
-        if (params.containsKey("id")) {
-            Long id = Long.parseLong(params.get("id").toString());
-            queryWrapper.eq("id", id);
+        if (params.containsKey("leaseId")) {
+            return memberMapper.selectByLeaseId(Long.parseLong(params.get("leaseId").toString()));
+        }else{
+            if (params.containsKey("id")) {
+                Long id = Long.parseLong(params.get("id").toString());
+                queryWrapper.eq("id", id);
+            }
+            if (params.containsKey("name")) {
+                String name = (String) params.get("name");
+                queryWrapper.eq("name", name);
+            }
+            if (params.containsKey("sex")) {
+                Integer sex = (Integer) params.get("sex");
+                queryWrapper.eq("sex", sex);
+            }
+            if (params.containsKey("tel")) {
+                String tel = (String) params.get("tel");
+                queryWrapper.eq("tel", tel);
+            }
+            return memberMapper.selectList(queryWrapper);
         }
-        if (params.containsKey("name")) {
-            String name = (String) params.get("name");
-            queryWrapper.eq("name", name);
-        }
-        if (params.containsKey("sex")) {
-            Integer sex = (Integer) params.get("sex");
-            queryWrapper.eq("sex", sex);
-        }
-        if (params.containsKey("tel")) {
-            String tel = (String) params.get("tel");
-            queryWrapper.eq("tel", tel);
-        }
-        return memberMapper.selectList(queryWrapper);
     }
 
     @Override

@@ -53,10 +53,10 @@ public class MemberController {
         return RequestHandleUtils.successPageResult(pageResult);
     }
 
-    @GetMapping("/queryMember")
+    @GetMapping("/queryMemberByLeaseId")
     @ResponseBody
-    public PHResp<List<MemberPo>> queryMember(String id)  {
-        List<MemberPo> memberPos = memberService.queryMember(Map.of("id", id));
+    public PHResp<List<MemberPo>> queryMemberByLeaseId(String id)  {
+        List<MemberPo> memberPos = memberService.queryMember(Map.of("leaseId", id));
         return PHResp.success(memberPos);
     }
     @GetMapping("/getByRoomId")

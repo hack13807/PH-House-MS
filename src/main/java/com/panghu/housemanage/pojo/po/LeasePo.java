@@ -4,10 +4,12 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.panghu.housemanage.pojo.vo.MemberVo;
 import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 租赁po
@@ -30,7 +32,7 @@ public class LeasePo extends PHBasePo{
     private Date startDate;
     private Date endDate;
     private Long roomId;
-    private Long memberId;
+//    private Long memberId;
     private String number;
     private Integer effective;
     @TableField("isdelete")
@@ -46,7 +48,7 @@ public class LeasePo extends PHBasePo{
     @TableField(exist = false)
     private String roomNo;
     @TableField(exist = false)
-    private String memberStatus;
+    private List<MemberVo> members;
     @TableField(exist = false)
     private String roomDesc;
     @TableField(exist = false)

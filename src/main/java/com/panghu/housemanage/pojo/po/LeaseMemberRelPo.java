@@ -10,7 +10,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("t_lease_member_ral")
+@TableName("t_lease_member_rel")
 public class LeaseMemberRelPo extends PHBasePo {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;

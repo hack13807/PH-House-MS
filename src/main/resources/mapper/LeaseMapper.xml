@@ -20,7 +20,8 @@
     <select id="queryLeaseByMemberId" parameterType="java.util.Map" resultMap="leaseVoMap">
         Select l.id as rowId,l.lease_type as leaseType,l.unit,l.rent_amount,l.start_date,l.end_date,l.number, l.effective
         from t_lease l
-        left join t_member m on m.id = l.member_id
+        left join t_lease_member_rel rel on rel.lease_id = l.id
+        left join t_member m on m.id = rel.member_id
         left join t_room r on r.id = l.room_id
         <where>
             m.id = #{memberId}
@@ -72,28 +73,29 @@
     </select>
 
     <select id="pageQueryLease" parameterType="com.panghu.housemanage.pojo.vo.LeaseVo" resultMap="leaseVoMap">
-        Select r.number as roomNo, m.name as memberName, l.id as rowId,l.lease_type as
+        Select r.number as roomNo, l.id as rowId,l.lease_type as
         leaseType,l.unit,l.rent_amount,l.start_date,l.end_date,l.number,
-        r.id as roomId, m.id as memberId, l.effective
+        r.id as roomId, l.effective,GROUP_CONCAT(m.name SEPARATOR ',') as memberName
         from t_lease l
-        left join t_member m on m.id = l.member_id
+        left join t_lease_member_rel rel on rel.lease_id = l.id
+        left join t_member m on m.id = rel.member_id
         left join t_room r on r.id = l.room_id
         <where>
             1 = 1
             <if test=" leaseVo.memberName != null and leaseVo.memberName != '' ">
-                and (
-                    m.name LIKE CONCAT('%', #{leaseVo.memberName}, '%')
-                    or m.tel LIKE CONCAT('%', #{leaseVo.memberName}, '%')
-                    or m.idcard LIKE CONCAT('%', #{leaseVo.memberName}, '%')
-                    or l.number LIKE CONCAT('%', #{leaseVo.memberName}, '%')
-                )
+                and
+                (l.id in (select aa.lease_id from t_lease_member_rel aa left join t_member bb on aa.member_id = bb.id
+                where bb.name LIKE CONCAT('%', #{leaseVo.memberName}, '%')
+                or bb.tel LIKE CONCAT('%', #{leaseVo.memberName}, '%')
+                or bb.idcard LIKE CONCAT('%', #{leaseVo.memberName}, '%'))
+                or l.number LIKE CONCAT('%', #{leaseVo.memberName}, '%'))
             </if>
-            <if test=" leaseVo.memberNames != null and leaseVo.memberNames.size > 0 ">
-                and m.name IN
-                <foreach item="memberName" collection="leaseVo.memberNames" open="(" separator="," close=")">
-                    #{memberName}
-                </foreach>
-            </if>
+<!--            <if test=" leaseVo.memberNames != null and leaseVo.memberNames.size > 0 ">-->
+<!--                and m.name IN-->
+<!--                <foreach item="memberName" collection="leaseVo.memberNames" open="(" separator="," close=")">-->
+<!--                    #{memberName}-->
+<!--                </foreach>-->
+<!--            </if>-->
             <if test=" leaseVo.roomNo != null and leaseVo.roomNo != '' ">
                 and r.number = #{leaseVo.roomNo}
             </if>
@@ -111,6 +113,7 @@
             </if>
             and m.isdelete = 0
             and l.isdelete = 0
+            group by l.id
             order by l.effective desc
         </where>
     </select>

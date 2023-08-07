@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/static/lib/css/controller.css">
     <link rel="stylesheet" href="/static/lib/css/bootstrap-table.min.css">
     <link rel="stylesheet" type="text/css" href="/static/lib/css/sweetalert.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
 <div th:insert="~{./common/headbar::headbar}"></div>
@@ -58,10 +59,11 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-                            th:onclick="cleanValidate()">
+                            th:onclick="resetValidate()">
                         ×
                     </button>
                     <h4 class="modal-title text-center font-weight-bold" id="addOrUpdateModalLabel"/>
+
                 </div>
                 <!--                    {# 模态框body #}-->
                 <div class="modal-body" style="height: 100%;">
@@ -71,14 +73,20 @@
                             <span class="bullet"></span>
                             租客信息
                         </h4>
-                        <div id="addRowBtn" style="display: inline-block;" onclick="addMemberInfoRow()">
-    <span style="display: inline-flex; justify-content: center; align-items: center; width: 25px; height: 25px; border-radius: 50%; border: 2px solid gray; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); cursor: pointer; position: relative;top: 5px;">
-        <span style="color: gray;content: ''; position: absolute; height: 12px; width: 2px; background-color: gray; transform: rotate(90deg);"></span>
-        <span style="color: gray;content: ''; position: absolute; height: 12px; width: 2px; background-color: gray; transform: rotate(180deg);"></span>
-    </span>
-                        </div>
+                <div id="addRowBtn" style="display: inline-block;" onclick="addMemberInfoRow()">
+                    <span style="display: inline-flex; justify-content: center; align-items: center; width: 25px; height: 25px; border-radius: 50%; border: 2px solid #5cb85c; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); cursor: pointer; position: relative;top: 5px;">
+                        <span style="color: gray;content: ''; position: absolute; height: 12px; width: 2px; background-color: #5cb85c; transform: rotate(90deg);"></span>
+                        <span style="color: gray;content: ''; position: absolute; height: 12px; width: 2px; background-color: #5cb85c; transform: rotate(180deg);"></span>
+                    </span>
+                </div>
+                <div id="updateRowInfoBtn" style="display: inline-block;">
+                    <div style="display: inline-block;" onclick="updateMember()">
+                        <i class="fas fa-check-circle" style=" font-size: 25px; color: #5cb85c; display: inline-flex; justify-content: center; align-items: center; width: 25px; height: 25px; border-radius: 50%; border: 2px solid #5cb85c; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); cursor: pointer; position: relative;top: 2px;"></i>
+                    </div>
+                    <span style="font-size: 20px; color: red;">(如果只更新租客信息，请通过该绿色按钮提交修改即可)</span>
+                </div>
                         <hr class="field-group-divider">
-                        <div class="row">
+                        <div id="memberRow1" style="display: none" class="row">
                             <div class="col-sm-6">
                                 <input type="hidden" class="form-control" id="id" name="id">
                                 <input type="hidden" class="form-control" id="number" name="number">
@@ -103,6 +111,8 @@
                                 <div style="margin-left: 15px; margin-top: -5px; margin-bottom: 20px;">
                                     <input type="button" th:onclick="refreshMemberInfo(1)" class="btn btn-primary btn-sm" id="refreshMemberInfo1"
                                            value="重置信息"/>
+                                    <input type="button" th:onclick="deleteMemberInfoRow(1)" class="btn btn-warning btn-sm" id="deleteInfoRow1"
+                                           value="删除"/>
                                 </div>
                             </div>
                             <div class="col-sm-6">
@@ -370,7 +380,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">结束日期:</label>
                                     <div class="col-sm-7">
-                                        <input type="date" id="endDate" name="endDate" class="form-control" min="2023-01-01" max="2099-12-31"/>
+                                        <input type="date" id="endDate" name="endDate" class="form-control" min="2023-01-01" max="2099-12-31" readonly="true"/>
                                     </div>
                                 </div>
                             </div>

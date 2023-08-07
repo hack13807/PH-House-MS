@@ -34,7 +34,7 @@
         <input name="roomSearch" id="roomSearch" class="form-control" placeholder="房间号"/>
         <!--操作按钮-->
         <button id="search" class="btn btn-primary" th:onclick="search()">搜 索</button>
-        <button id="new" class="btn btn-success" th:onclick="addLease()">新 增</button>
+        <button id="new" class="btn btn-success" th:onclick="addReceipt()">新 增</button>
         <button id="edit" class="btn btn-info" th:onclick="|edit()|">编 辑</button>
         <button id="terminate" class="btn btn-warning" th:onclick="terminate()">手动失效</button>
 <!--        <button id="effective" class="btn btn-primary" th:onclick="enableRows()">手动生效</button>-->
@@ -161,34 +161,27 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label id="unitTitle" class="col-sm-3 control-label">租 客</label>
+                                    <label id="unitTitle" class="col-sm-3 control-label">缴费人</label>
                                     <div class="col-sm-7">
-                                        <select id="memberId" class="toolbar-selector" disabled>
+                                        <select id="memberId" class="toolbar-selector">
                                         </select>
                                     </div>
                                 </div>
-
                             </div>
-<!--                            <div class="col-sm-6">-->
-<!--                                <div class="form-group">-->
-<!--                                    <label class="col-sm-3 control-label">租金额(元)</label>-->
-<!--                                    <div class="col-sm-7">-->
-<!--                                        <input type="text" class="form-control" id="rentAmount" name="rentAmount" step="10">-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                <div class="form-group">-->
-<!--                                    <label class="col-sm-3 control-label">开始日期:</label>-->
-<!--                                    <div class="col-sm-7">-->
-<!--                                        <input type="date" id="startDate" name="startDate" class="form-control" min="2023-01-01" max="2099-12-31"/>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                <div class="form-group">-->
-<!--                                    <label class="col-sm-3 control-label">结束日期:</label>-->
-<!--                                    <div class="col-sm-7">-->
-<!--                                        <input type="date" id="endDate" name="endDate" class="form-control" min="2023-01-01" max="2099-12-31"/>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">身份证号</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" id="memberIdcard" name="memberIdcard" readonly>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">手机号</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" id="memberTel" name="memberTel" readonly>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <!--                    {# 模态框底部 #}-->
                         <div class="modal-footer">

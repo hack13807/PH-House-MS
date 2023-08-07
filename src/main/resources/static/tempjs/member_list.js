@@ -74,7 +74,7 @@ $('#table').bootstrapTable({
     },
     <!--展开子表-->
     onExpandRow: function (index, row, $detail) {
-        $detail.html('<table></table>').find('table').bootstrapTable({
+        $detail.html('<table class="subtable"></table>').find('table').bootstrapTable({
             url: '/lease/getByMemberId',
             method: 'get',
             queryParams: {memberId: row.rowId},
@@ -120,7 +120,11 @@ $('#table').bootstrapTable({
            }],
             onLoadError: function (status, res) {
                 swal("获取租客列表失败", res.responseJSON.msg, "error")
-            }
+            },
+            onDblClickRow: function (row, $element, field) {
+                // 处理双击事件
+                gotoLease2(row.leaseNumber)
+              },
         });
     },
     onLoadError: function (status, res) {
@@ -432,5 +436,10 @@ function gotoLease() {
         memberNos.push(row.memberName)
     });
     let url = "/lease/page?memberSearch=" + encodeURIComponent(memberNos); // 构建带参数的 URL
+    window.location.href = url;
+}
+
+function gotoLease2(leaseNumber) {
+    let url = "/lease/page?memberSearch=" + leaseNumber; // 构建带参数的 URL
     window.location.href = url;
 }

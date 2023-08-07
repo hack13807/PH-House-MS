@@ -6,6 +6,7 @@ import com.panghu.housemanage.common.enumeration.PHExceptionCodeEnum;
 import com.panghu.housemanage.common.exception.PHServiceException;
 import com.panghu.housemanage.common.util.PHResp;
 import com.panghu.housemanage.common.util.RequestHandleUtils;
+import com.panghu.housemanage.dao.MemberMapper;
 import com.panghu.housemanage.pojo.po.MemberPo;
 import com.panghu.housemanage.pojo.vo.MemberVo;
 import com.panghu.housemanage.service.MemberService;
@@ -18,7 +19,9 @@ import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 租客控制器
@@ -32,11 +35,14 @@ public class MemberController {
     @Autowired
     MemberService memberService;
     @Autowired
+    MemberMapper memberMapper;
+    @Autowired
     RoomService roomService;
 
     @GetMapping("/page")
-    public String getPage(@RequestParam(required = false, value = "roomSearch") String roomSearch, Model model){
+    public String getPage(@RequestParam(required = false, value = "roomSearch") String roomSearch, @RequestParam(required = false, value = "memberSearch") String memberSearch, Model model){
         model.addAttribute("roomSearch", roomSearch);
+        model.addAttribute("memberSearch", memberSearch);
         return "member_list";
     }
 
@@ -58,6 +64,13 @@ public class MemberController {
     public PHResp<List<MemberPo>> queryMemberByLeaseId(String id)  {
         List<MemberPo> memberPos = memberService.queryMember(Map.of("leaseId", id));
         return PHResp.success(memberPos);
+    }
+
+    @GetMapping("/getById")
+    @ResponseBody
+    public PHResp<MemberPo> getById(String id)  {
+        MemberPo memberPo = memberMapper.selectById(id);
+        return PHResp.success(memberPo);
     }
     @GetMapping("/getByRoomId")
     @ResponseBody

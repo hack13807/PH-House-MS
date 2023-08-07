@@ -116,6 +116,13 @@ function addLease() {
     $('.modal-title').text("新增租约")
     $('#addOrUpdateModal').modal('show')
     $('#addOrUpdateform')[0].reset()  //重置表单
+
+    var memberRow1 = document.getElementById("memberRow1");
+    memberRow1.style.display = "block";
+    // 初始化开始时间
+    var startDate = new Date();
+    var formattedStartDate = startDate.toISOString().substring(0, 10);
+    $("#startDate").val(formattedStartDate);
 }
 
 function refreshMemberInfo(key) {
@@ -134,7 +141,7 @@ function unlockMemberInfo(key) {
         $('#memberId' + i).val('').prop('readonly', false);
         $('#sex' + i).val('1').prop('disabled', false);
 
-        if(i > 1){
+        if(i > 0){
             let row = document.getElementById("memberRow"+ i);
             row.style.display = "none";
         }
@@ -147,7 +154,6 @@ function unlockMemberInfo(key) {
     $("#unit").prop('readonly', false);
     $("#rentAmount").prop('readonly', false);
     $("#startDate").prop('readonly', false);
-    $("#endDate").prop('readonly', false);
 
     $('#refreshMemberInfo').show();
     $('#submitBtn').show();
@@ -169,7 +175,6 @@ function lockAllInfo() {
     $("#unit").prop('readonly', true);
     $("#rentAmount").prop('readonly', true);
     $("#startDate").prop('readonly', true);
-    $("#endDate").prop('readonly', true);
     $('#submitBtn').hide();
 }
 
@@ -318,7 +323,7 @@ function edit() {
           }else {
             let row = $("#table").bootstrapTable('getSelections')[0]; //获取该行数据
             openMadel(row,'修改租约');
-            lockMemberInfo();
+//            lockMemberInfo();
     }
 };
 
@@ -331,20 +336,23 @@ function openMadel(row, title){
                         if (res.code == 200) {
                             $('#addOrUpdateModal').modal('show')
                             $.each(res.data, function (index, item) {
-                                // 编辑租约时不允许修改租客信息
-                                $('#refreshMemberInfo'+ (index+1)).hide();
-                                $('#addRowBtn').hide();
-                                if(index > 0){
-                                    let row = document.getElementById("memberRow"+ (index+1));
-                                    row.style.display = "block";
+                                // 查看租约时不允许修改租客信息
+                                if(title === '查看租约'){
+                                    $('#refreshMemberInfo'+ (index+1)).hide();
+                                    $('#addRowBtn').hide();
                                     $('#deleteInfoRow'+ (index+1)).hide();
                                 }
+                                let row = document.getElementById("memberRow"+ (index+1));
+                                row.style.display = "block";
                                 $('#memberName'+(index+1)).val(item.name).prop('readonly', true);
                                 $('#tel'+(index+1)).val(item.tel).prop('readonly', true);
                                 $('#idCard'+(index+1)).val(item.idCard).prop('readonly', true);
                                 $('#memberId'+(index+1)).val(item.id).prop('readonly', true);
                                 $('#sex'+(index+1)).val(item.sex).prop('disabled', true);
                             });
+                            if(title === '修改租约'){
+                                $('#updateRowInfoBtn').show();
+                            }
                         } else {
                             swal("查找租客失败", res.msg + "\n" + res.data, "error")
                         }
@@ -372,6 +380,15 @@ function openMadel(row, title){
                 var formattedEndDate = endDate.toISOString().substring(0, 10);
                 $("#startDate").val(formattedStartDate);
                 $("#endDate").val(formattedEndDate);
+
+                // 获取当前选中的值
+                if (type === '1') {
+                    $('#unitTitle').text('租期(天)')
+                } else if (type === '2') {
+                    $('#unitTitle').text('租期(月)')
+                } else {
+                    $('#unitTitle').text('租期(年)')
+                }
 }
 
 function addOrUpdate() {
@@ -380,6 +397,7 @@ function addOrUpdate() {
     var text = '';
     if (!leaseId) {
         let memberId1 = $('#memberId1').val();
+        var memberRow1 = document.getElementById("memberRow1");
         var memberRow2 = document.getElementById("memberRow2");
         var memberRow3 = document.getElementById("memberRow3");
         var memberRow4 = document.getElementById("memberRow4");
@@ -388,7 +406,7 @@ function addOrUpdate() {
         let memberId3 = $('#memberId3').val();
         let memberId4 = $('#memberId4').val();
         let memberId5 = $('#memberId5').val();
-        if (!memberId1
+        if ((memberRow1.style.display === "block" && !memberId1)
             || (memberRow2.style.display === "block" && !memberId2)
             || (memberRow3.style.display === "block" && !memberId3)
             || (memberRow4.style.display === "block" && !memberId4)
@@ -419,7 +437,6 @@ function addOrUpdate() {
     } else {
         doAddOrUpdate();
     }
-
 }
 
 function doAddOrUpdate() {
@@ -427,7 +444,10 @@ function doAddOrUpdate() {
     let roomId = $('#roomId').val();
     // 打包租客信息
     let members = packageMemberArrays();
-
+    if(members.length === 0){
+        swal('请至少登记一位租客')
+        return
+    }
     let data = {
         rowId: leaseId,
         leaseNumber: $('#number').val(),
@@ -540,10 +560,12 @@ function doAddOrUpdate() {
 }
 
 function packageMemberArrays(){
+    var memberRow1 = document.getElementById("memberRow1");
     var memberRow2 = document.getElementById("memberRow2");
     var memberRow3 = document.getElementById("memberRow3");
     var memberRow4 = document.getElementById("memberRow4");
     var memberRow5 = document.getElementById("memberRow5");
+    let memberId1 = $('#memberId1').val();
     let memberId2 = $('#memberId2').val();
     let memberId3 = $('#memberId3').val();
     let memberId4 = $('#memberId4').val();
@@ -551,15 +573,17 @@ function packageMemberArrays(){
 
     let members = [];
     // 获取第一组租客信息
-    var member1 = {
-        rowId: $('#memberId1').val(),
-        memberName: document.getElementById('memberName1').value,
-        idCard: document.getElementById('idCard1').value,
-        tel: document.getElementById('tel1').value,
-        sex: document.getElementById('sex1').value
-    };
-    // 将第一组租客信息添加到数组中
-    members.push(member1);
+    if(memberRow1.style.display === "block") {
+        var member1 = {
+            rowId: $('#memberId1').val(),
+            memberName: document.getElementById('memberName1').value,
+            idCard: document.getElementById('idCard1').value,
+            tel: document.getElementById('tel1').value,
+            sex: document.getElementById('sex1').value
+        };
+        // 将第一组租客信息添加到数组中
+        members.push(member1);
+    }
 
     if(memberRow2.style.display === "block") {
         var member2 = {
@@ -607,6 +631,7 @@ function packageMemberArrays(){
 
 $('#addOrUpdateModal').on('hidden.bs.modal', function () {
     unlockMemberInfo();
+    $('#updateRowInfoBtn').hide();
 });
 
 
@@ -877,6 +902,8 @@ $(document).ready(function () {
     initRoom();
     initMemberCache();
     initValidate();
+
+    $('#updateRowInfoBtn').hide();
 });
 
 /*初始化租客下拉框*/
@@ -934,13 +961,15 @@ leaseTypeSelect.addEventListener("change", function () {
     var selectedValue = leaseTypeSelect.value;
     if (selectedValue === '1') {
         $('#unitTitle').text('租期(天)')
+        calcDayDate();
     } else if (selectedValue === '2') {
         $('#unitTitle').text('租期(月)')
+        calcMonthDate();
     } else {
         $('#unitTitle').text('租期(年)')
+        calcYearDate();
     }
 });
-
 
 function enableRows() {
     let length = selectedRows.length;
@@ -998,21 +1027,208 @@ function enableRows() {
 
 function addMemberInfoRow() {
     // 获取要判断的div元素
+    var memberRow1 = document.getElementById("memberRow1");
     var memberRow2 = document.getElementById("memberRow2");
     var memberRow3 = document.getElementById("memberRow3");
     var memberRow4 = document.getElementById("memberRow4");
     var memberRow5 = document.getElementById("memberRow5");
     // 判断div是否隐藏
-    if (memberRow2.style.display === "none") {
+    if (memberRow1.style.display === "none") {
         // 显示div
+        memberRow1.style.display = "block";
+    } else if (memberRow1.style.display === "block" && memberRow2.style.display === "none") {
         memberRow2.style.display = "block";
-    } else if (memberRow2.style.display === "block" && memberRow3.style.display === "none") {
+    } else if (memberRow1.style.display === "block" && memberRow2.style.display === "block" && memberRow3.style.display === "none") {
         memberRow3.style.display = "block";
-    } else if (memberRow2.style.display === "block" && memberRow3.style.display === "block" && memberRow4.style.display === "none") {
+    } else if (memberRow1.style.display === "block" && memberRow2.style.display === "block" && memberRow3.style.display === "block" && memberRow4.style.display === "none") {
         memberRow4.style.display = "block";
-    } else if (memberRow2.style.display === "block" && memberRow3.style.display === "block" && memberRow4.style.display === "block" && memberRow5.style.display === "none") {
+    } else if (memberRow1.style.display === "block" && memberRow2.style.display === "block" && memberRow3.style.display === "block" && memberRow4.style.display === "block"
+                && memberRow5.style.display === "none") {
         memberRow5.style.display = "block";
     } else {
         swal('一个房间最多登记五位租客')
     }
+}
+
+// 监听输入框的oninput事件
+$('#unit').on('input', function () {
+    var leaseType = document.getElementById("leaseType").value;
+    if(leaseType === '1') {
+        calcDayDate();
+    }else if (leaseType === '2') {
+        calcMonthDate();
+    }else if (leaseType === '3') {
+        calcYearDate();
+    }
+});
+
+function calcDayDate() {
+        var daysInput = document.getElementById("unit");
+        var startInput = document.getElementById("startDate");
+        var endInput = document.getElementById("endDate");
+
+        // 获取输入的天数
+        var days = parseInt(daysInput.value);
+        // 计算开始日期
+        if(startInput.value){
+            var startDate = new Date(startInput.value);
+        }else{
+            var startDate = new Date();
+            var startYear = startDate.getFullYear();
+            var startMonth = (startDate.getMonth() + 1).toString().padStart(2, '0');
+            var startDay = startDate.getDate().toString().padStart(2, '0');
+            var startDateString = startYear + '-' + startMonth + '-' + startDay;
+            startInput.value = startDateString;
+        }
+
+        // 在开始日期上增加天数
+        startDate.setDate(startDate.getDate() + days);
+
+        // 格式化日期字符串
+        var endYear = startDate.getFullYear();
+        var endMonth = (startDate.getMonth() + 1).toString().padStart(2, '0');
+        var endDay = startDate.getDate().toString().padStart(2, '0');
+        var endDateString = endYear + '-' + endMonth + '-' + endDay;
+
+        // 填充控件值
+        endInput.value = endDateString;
+}
+
+function calcMonthDate() {
+        var monthsInput = document.getElementById("unit");
+        var startInput = document.getElementById("startDate");
+        var endInput = document.getElementById("endDate");
+
+        // 获取输入的天数
+        var months = parseInt(monthsInput.value);
+        // 计算开始日期
+        if(startInput.value){
+            var startDate = new Date(startInput.value);
+        }else{
+            var startDate = new Date();
+            var startYear = startDate.getFullYear();
+            var startMonth = (startDate.getMonth() + 1).toString().padStart(2, '0');
+            var startDay = startDate.getDate().toString().padStart(2, '0');
+            var startDateString = startYear + '-' + startMonth + '-' + startDay;
+            startInput.value = startDateString;
+        }
+
+        // 计算结束日期
+        var endDate = new Date(startDate.getFullYear(), startDate.getMonth() + months, startDate.getDate());
+
+        // 格式化日期字符串
+        var endYear = endDate.getFullYear();
+        var endMonth = (endDate.getMonth() + 1).toString().padStart(2, '0');
+        var endDay = endDate.getDate().toString().padStart(2, '0');
+        var endDateString = endYear + '-' + endMonth + '-' + endDay;
+
+        // 填充控件值
+        endInput.value = endDateString;
+}
+
+function calcYearDate() {
+        var yearsInput = document.getElementById("unit");
+        var startInput = document.getElementById("startDate");
+        var endInput = document.getElementById("endDate");
+
+        // 获取输入的天数
+        var years = parseInt(yearsInput.value);
+        // 计算开始日期
+        if(startInput.value){
+            var startDate = new Date(startInput.value);
+        }else{
+            var startDate = new Date();
+            var startYear = startDate.getFullYear();
+            var startMonth = (startDate.getMonth() + 1).toString().padStart(2, '0');
+            var startDay = startDate.getDate().toString().padStart(2, '0');
+            var startDateString = startYear + '-' + startMonth + '-' + startDay;
+            startInput.value = startDateString;
+        }
+
+        // 计算结束日期
+        var endDate = new Date(startDate.getFullYear() + years, startDate.getMonth(), startDate.getDate());
+
+        // 格式化日期字符串
+        var endYear = endDate.getFullYear();
+        var endMonth = (endDate.getMonth() + 1).toString().padStart(2, '0');
+        var endDay = endDate.getDate().toString().padStart(2, '0');
+        var endDateString = endYear + '-' + endMonth + '-' + endDay;
+
+        // 填充控件值
+        endInput.value = endDateString;
+}
+
+// 获取下拉框元素
+var startDate = document.getElementById("startDate");
+// 绑定 change 事件
+startDate.addEventListener("change", function () {
+    var leaseType = document.getElementById("leaseType").value;
+    var unit = document.getElementById("unit").value;
+    // 获取当前选中的值
+    if (leaseType === '1') {
+        calcDayDate();
+    } else if (leaseType === '2') {
+        calcMonthDate();
+    } else {
+        calcYearDate();
+    }
+});
+
+function updateMember(){
+    let leaseId = $('#id').val();
+    let roomId = $('#roomId').val();
+    // 打包租客信息
+    let members = packageMemberArrays();
+
+    if(members.length === 0){
+        swal('请至少登记一位租客')
+        return
+    }
+    let data = {
+        id: leaseId,
+        rowId: leaseId,
+        leaseNumber: $('#number').val(),
+        // 租客信息
+        members: members,
+        tel: $('#tel').val(),
+        sex: $('#sex').val(),
+        idCard: $('#idCard').val(),
+        // 租赁信息
+        roomId: roomId,
+        roomNo: getRoomNumber(roomId),
+        rentAmount: $('#rentAmount').val(),
+        leaseType: $('#leaseType').val(),
+        unit: $('#unit').val(),
+        startDate: $('#startDate').val(),
+        endDate: $('#endDate').val(),
+    };
+    var arr = [];
+    data.optType = 'updateMember';
+    arr.push(data);
+    $.ajax({
+        type: "PUT",
+        url: "/lease", // 待后端提供PUT修改接口
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(arr),  // 设置请求体
+        success: function (res) {
+            console.log(res);
+            if (res.code == 200) {
+                swal("修 改", "租约信息已修改",
+                    "success");
+                cleanSelectRows();
+            } else {
+                swal("修改失败", res.msg, "error")
+            }
+            // {#关闭模态框并清除框内数据，否则下次打开还是上次的数据#}
+            $("#table").bootstrapTable('refresh');
+            $("#addOrUpdateform")[0].reset();
+            $('#id').val('');   // 租客id作为隐藏字段无法通过reset()清除，需要单独处理
+            $('#addOrUpdateModal').modal('hide');
+            $("#table").bootstrapTable('refresh');
+        },
+        error: function (res) {
+            swal("修改失败", res.responseJSON.msg, "error")
+        }
+    })
 }

@@ -2,14 +2,9 @@ package com.panghu.housemanage.common.util;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.panghu.housemanage.pojo.po.LeasePo;
-import com.panghu.housemanage.pojo.po.MemberPo;
-import com.panghu.housemanage.pojo.po.PHBasePo;
-import com.panghu.housemanage.pojo.po.RoomPo;
-import com.panghu.housemanage.pojo.vo.LeaseVo;
-import com.panghu.housemanage.pojo.vo.MemberVo;
-import com.panghu.housemanage.pojo.vo.PHBaseVo;
-import com.panghu.housemanage.pojo.vo.RoomVo;
+import com.panghu.housemanage.common.enumeration.ReceiptTypeEnum;
+import com.panghu.housemanage.pojo.po.*;
+import com.panghu.housemanage.pojo.vo.*;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.lang.reflect.Field;
@@ -143,6 +138,25 @@ public class RequestHandleUtils {
         return poList;
     }
 
+    private static Object receiptDTOTrans(List<ReceiptVo> voList) {
+        List<ReceiptPo> poList = new ArrayList<>(voList.size());
+        voList.forEach(receiptVo -> {
+            ReceiptPo receiptPo = new ReceiptPo();
+            Optional.ofNullable(receiptVo.getRowId()).ifPresent(receiptPo::setId);
+            Optional.ofNullable(receiptVo.getAmount()).ifPresent(receiptPo::setAmount);
+            Optional.ofNullable(receiptVo.getReceiptType()).ifPresent(typeEnum -> receiptPo.setReceiptType(typeEnum.getCode()));
+            Optional.ofNullable(receiptVo.getPayType()).ifPresent(payTypeEnum -> receiptPo.setPayType(payTypeEnum.getCode()));
+            Optional.ofNullable(receiptVo.getBizDate()).ifPresent(receiptPo::setBizDate);
+            Optional.ofNullable(receiptVo.getRoomNo()).ifPresent(receiptPo::setRoomNo);
+            Optional.ofNullable(receiptVo.getLeaseNumber()).ifPresent(receiptPo::setLeaseNumber);
+            Optional.ofNullable(receiptVo.getMemberName()).ifPresent(receiptPo::setMemberName);
+            Optional.ofNullable(receiptVo.getMemberIdcard()).ifPresent(receiptPo::setMemberIdcard);
+            Optional.ofNullable(receiptVo.getMemberTel()).ifPresent(receiptPo::setMemberTel);
+            poList.add(receiptPo);
+        });
+        return poList;
+    }
+
 
     public static <T extends PHBaseVo, R extends PHBasePo> List<R> modelDTOTrans(List<T> voList) {
         T firstVo = voList.get(0);
@@ -155,6 +169,9 @@ public class RequestHandleUtils {
             }
             case LeaseVo l -> {
                 return (List<R>) leaseDTOTrans((List<LeaseVo>) voList);
+            }
+            case ReceiptVo l -> {
+                return (List<R>) receiptDTOTrans((List<ReceiptVo>) voList);
             }
             default -> throw new IllegalStateException("Unexpected value: " + firstVo);
         }

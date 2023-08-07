@@ -106,7 +106,7 @@ $('#table').bootstrapTable({
                 },
             onDblClickRow: function (row, $element, field) {
                                 // 处理双击事件
-                                alert('111')
+                                gotoMember2(row.memberName)
                               },
         });
     },
@@ -419,5 +419,10 @@ function gotoMember() {
         return
     }
     let url = "/member/page?roomSearch=" + encodeURIComponent(roomNos); // 构建带参数的 URL
+    window.location.href = url;
+}
+
+function gotoMember2(memberName) {
+    let url = "/member/page?memberSearch=" + memberName; // 构建带参数的 URL
     window.location.href = url;
 }

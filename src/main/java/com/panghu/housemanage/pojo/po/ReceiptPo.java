@@ -19,13 +19,12 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("t_lease")
+@TableName("t_receipt")
 public class ReceiptPo extends PHBasePo{
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
-    @EnumValue
-    private ReceiptTypeEnum receiptType;
-    private PayTypeEnum payType;
+    private Integer receiptType;
+    private Integer payType;
     private String number;
     private String leaseNumber;
     private String roomNo;

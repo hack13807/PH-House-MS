@@ -160,8 +160,65 @@ public class LeaseServiceImpl implements LeaseService {
         if ("edit".equals(voList.get(0).getOptType())) {
             // 租约修改将失效原租约，创建新租约
             edit(voList.get(0));
+        }else if ("updateMember".equals(voList.get(0).getOptType())) {
+            // 更新租客
+            updateMember(poList.get(0));
         }else {
             terminate(poList);
+        }
+    }
+
+    private void updateMember(LeasePo leasePo) {
+        Long rowId = leasePo.getId();
+        QueryWrapper<LeaseMemberRelPo> wrapper = new QueryWrapper<>();
+        wrapper.eq("lease_id", rowId);
+        updateMemberStatusForDeleteRel(leasePo);
+        leaseMemberRelMapper.delete(wrapper);
+        List<MemberVo> members = leasePo.getMembers();
+
+        for (MemberVo member: members
+        ) {
+            if (ObjectUtils.isEmpty(member.getRowId())) {
+                MemberPo memberPo = MemberPo.builder().name(member.getMemberName()).tel(member.getTel()).sex(member.getSex().getCode()).idCard(member.getIdCard()).status(1).build();
+                // 验重
+                MemberPo exist = memberService.checkUnique(memberPo);
+                if (exist == null) {
+                    memberMapper.insert(memberPo);
+                    member.setRowId(memberPo.getId());
+                }else {
+                    if (exist.getSex() == member.getSex().getCode() && exist.getTel().equals(member.getTel()) || exist.getName().equals(member.getMemberName())) {
+                        member.setRowId(exist.getId());
+                    }else {
+                        // 和系统内数据对不上
+                        throw new PHServiceException(PHExceptionCodeEnum.ERROR_MEMBER_INFO, exist.getName()+"-"+ MemberSexEnum.getValueByCode(exist.getSex())+"-"+exist.getIdCard()+"-"+exist.getTel());
+                    }
+                }
+            }
+        }
+
+        // 检查是否需要更新租客和房间状态
+        updateStatusForInsert(members, leasePo.getRoomId());
+        members.forEach(member -> {
+            LeaseMemberRelPo po = LeaseMemberRelPo.builder().leaseId(leasePo.getId()).memberId(member.getRowId()).build();
+            leaseMemberRelMapper.insert(po);
+        });
+    }
+
+    private void updateMemberStatusForDeleteRel(LeasePo leasePo) {
+        Long leaseId = leasePo.getId();
+        QueryWrapper<LeaseMemberRelPo> wrapper = new QueryWrapper<>();
+        wrapper.eq("lease_id", leaseId);
+        List<LeaseMemberRelPo> leaseMemberRelPos = leaseMemberRelMapper.selectList(wrapper);
+        Map<Long, List<LeaseMemberRelPo>> collect = leaseMemberRelPos.stream().collect(Collectors.groupingBy(LeaseMemberRelPo::getMemberId));
+
+        for (Long memberId: collect.keySet()
+        ) {
+            List<LeaseVo> voList = leaseMapper.queryLeaseByMemberId(memberId);
+            List<LeaseVo> list = voList.stream().filter(leaseVo -> leaseVo.getEffective().getValue() == 1 && !Objects.equals(leaseVo.getRowId(), leasePo.getId())).toList();
+            if (CollectionUtils.isEmpty(list)) {
+                MemberPo memberPo = MemberPo.builder().id(memberId).status(MemberStatusEnum.SURRENDER.getCode()).build();
+                memberMapper.updateById(memberPo);
+            }
         }
     }
 
@@ -244,8 +301,8 @@ public class LeaseServiceImpl implements LeaseService {
     }
 
     @Override
-    public List<LeaseVo> queryLeaseByRoomId(Long roomId) {
-        return leaseMapper.queryLeaseByRooomId(roomId);
+    public List<LeaseVo> queryLeaseAndMemberByRoomId(Long roomId) {
+        return leaseMapper.queryLeaseAndMemberByRoomId(roomId);
     }
 
     private String genLeaseNumber(LeaseVo leaseVo) {

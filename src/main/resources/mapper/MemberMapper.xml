@@ -25,7 +25,12 @@
         <where>
             1 = 1
             <if test=" memberVo.memberName != null and memberVo.memberName != '' ">
-                and m.name = #{memberVo.memberName}
+                and (
+                    m.name LIKE CONCAT('%', #{memberVo.memberName}, '%')
+                    or m.tel LIKE CONCAT('%', #{memberVo.memberName}, '%')
+                    or m.idcard LIKE CONCAT('%', #{memberVo.memberName}, '%')
+                    or l.number LIKE CONCAT('%', #{memberVo.memberName}, '%')
+                )
             </if>
             <if test=" memberVo.roomNo != null and memberVo.roomNo != '' ">
                 and r.number = #{memberVo.roomNo}
@@ -69,7 +74,7 @@
         SELECT m.id as id, m.name as name, m.tel, m.sex, m.idcard as idCard, m.status as status
         FROM t_member m
         left join t_lease_member_rel rel on rel.member_id = m.id
-        LEFT JOIN t_lease l ON l.id = rel.lease_id and l.effective = 1 and l.isdelete = 0
+        LEFT JOIN t_lease l ON l.id = rel.lease_id and l.isdelete = 0
         WHERE l.id = #{leaseId}
     </select>
 

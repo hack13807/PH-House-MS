@@ -4,17 +4,17 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.panghu.housemanage.common.util.PHResp;
 import com.panghu.housemanage.common.util.RequestHandleUtils;
+import com.panghu.housemanage.pojo.vo.LeaseVo;
 import com.panghu.housemanage.pojo.vo.ReceiptVo;
 import com.panghu.housemanage.service.ReceiptService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -41,5 +41,21 @@ public class ReceiptController {
         IPage<ReceiptVo> pageResult = receiptService.pageQueryReceipt(page, receiptVo);
         // 获取查询总数和记录，构建返回前端的Map对象
         return RequestHandleUtils.successPageResult(pageResult);
+    }
+
+    @PostMapping
+    @ResponseBody
+    public PHResp<String> insert(@RequestBody ReceiptVo receiptVo, HttpServletRequest request) {
+        String user = request.getParameter("user");
+        receiptService.insertReceipt(receiptVo);
+        return PHResp.success();
+    }
+
+    @PutMapping
+    @ResponseBody
+    @Transactional
+    public PHResp<String> update(@RequestBody List<ReceiptVo> voList) {
+        receiptService.updateBatch(voList);
+        return PHResp.success();
     }
 }

@@ -47,7 +47,7 @@ public class LeaseController {
     @GetMapping("getByRoomId")
     @ResponseBody
     public PHResp<List<LeaseVo>> getByRoomId(@RequestParam("roomId") Long roomId) {
-        List<LeaseVo> leaseVos = leaseService.queryLeaseByRoomId(roomId);
+        List<LeaseVo> leaseVos = leaseService.queryLeaseAndMemberByRoomId(roomId);
         return PHResp.success(leaseVos);
     }
 

@@ -21,7 +21,7 @@ public interface LeaseMapper extends BaseMapper<LeasePo> {
 
     List<LeaseVo> queryLeaseByRoomId(@Param("roomId") Long roomId);
 
-    List<LeaseVo> queryLeaseByRooomId(@Param("roomId") Long roomId);
+    List<LeaseVo> queryLeaseAndMemberByRoomId(@Param("roomId") Long roomId);
 
     List<LeaseVo> checkUnique(Map<String, Object> params);
 

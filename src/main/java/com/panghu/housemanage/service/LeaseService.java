@@ -21,5 +21,5 @@ public interface LeaseService {
 
     List<LeaseVo> checkUnique(LeaseVo leaseVo);
 
-    List<LeaseVo> queryLeaseByRoomId(Long roomId);
+    List<LeaseVo> queryLeaseAndMemberByRoomId(Long roomId);
 }

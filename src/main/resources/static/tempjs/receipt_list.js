@@ -119,180 +119,34 @@ $(function(){
 });
 $('td[data-rowcolor]').attr("style", "background-color:yellow;");
 
-/*添加租约*/
-function addLease() {
-    $('.modal-title').text("新增收款")
-    $('#addOrUpdateModal').modal('show')
-    $('#addOrUpdateform')[0].reset()  //重置表单
-}
-
-function unlockMemberInfo() {
-    $('#memberName').val('').prop('disabled', false);
-    $('#tel').val('').prop('disabled', false);
-    $('#idCard').val('').prop('disabled', false);
-    $('#memberId').val('').prop('disabled', false);
-    $('#sex').val('1').prop('disabled', false);
-
-    $("#roomId").prop('disabled', false);
-    $("#leaseType").prop('disabled', false);
-    $("#unit").prop('disabled', false);
-    $("#rentAmount").prop('disabled', false);
-    $("#startDate").prop('disabled', false);
-    $("#endDate").prop('disabled', false);
-
-    $('#refreshMemberInfo').show();
-}
-
-function lockMemberInfo() {
-    $('#memberName').prop('disabled', true);
-    $('#tel').prop('disabled', true);
-    $('#idCard').prop('disabled', true);
-    $('#memberId').prop('disabled', true);
-    $('#sex').prop('disabled', true);
-}
-function lockAllInfo() {
-    lockMemberInfo();
-    $('#sex').prop('disabled', true);
-    $("#roomId").prop('disabled', true);
-    $("#leaseType").prop('disabled', true);
-    $("#unit").prop('disabled', true);
-    $("#rentAmount").prop('disabled', true);
-    $("#startDate").prop('disabled', true);
-    $("#endDate").prop('disabled', true);
-}
-
-// 监听输入框的oninput事件
-$('#memberName').on('input', function () {
-    var inputValue = $(this).val();
-    // 发送Ajax请求获取匹配数据并渲染选择框
-    // 获取输入框的值
-    var inputValue = $('#memberName').val();
-    // 获取选择框元素
-    var selectBox = $('#selectBox');
-    selectBox.empty();
-    $.each(memberCache, function (index, item) {
-        if (item.name.indexOf(inputValue) !== -1) {
-            var name = $('<li>').text(item.name + ' / ' + item.tel);
-            selectBox.append(name);
-            valueCache.push(item.name + ' / ' + item.tel + ' / ' + item.idCard + ' / ' + item.id + ' / ' + item.sex);
-        }
-    });
-    // 显示选择框
-    selectBox.show();
-});
-
-// 监听选择框的点击事件
-$(document).on('click', '#selectBox li', function () {
-    var selectedValue = $(this).text();
-//        $('#memberName').val(selectedValue);
-    $.each(valueCache, function (index, item) {
-        if (item.indexOf(selectedValue) !== -1) {
-            var values = item.split(' / ');
-            $('#memberName').val(values[0]).prop('disabled', true);
-            $('#tel').val(values[1]).prop('disabled', true);
-            $('#idCard').val(values[2]).prop('disabled', true);
-            $('#memberId').val(values[3]).prop('disabled', true);
-            $('#sex').val(values[4]).prop('disabled', true);
-            // 回填租客信息后重置校验器
-            resetValidate();
-        }
-    });
-    valueCache = [];
-    $('#selectBox').hide();
-});
-
-// 监听输入框的失去焦点事件
-$('#memberName').blur(function () {
-    // 延迟隐藏选择框
-    hideSelectBoxTask = setTimeout(function () {
-        $('#selectBox').hide();
-    }, 200);  // 延迟时间可以根据实际情况进行调整
-});
-
-// 监听输入框的获得焦点事件
-$('#memberName').focus(function () {
-    // 取消延迟隐藏选择框的任务
-    if (hideSelectBoxTask) {
-        clearTimeout(hideSelectBoxTask);
-        hideSelectBoxTask = null;
-    }
-});
-
-
 <!--  租约信息表单校验规则  -->
 function initValidate() {
     $(document).ready(function () {
         $('#addOrUpdateform').bootstrapValidator({
             <!--  excluded: [':disabled', ':hidden', ':not(:visible)', ':empty'],-->
             fields: {
-                memberName: {
+                roomId: {
                     validators: {
                         notEmpty: {
-                            message: '姓名不能为空'
-                        },
-                    }
-                },
-                idCard: {
-                    validators: {
-                        notEmpty: {
-                            message: '身份证号不能为空'
-                        },
-                        regexp: {
-                            regexp: /^\d{17}[\d|x]|\d{15}$/,
-                            message: '请输入正确的身份证号码'
+                            message: '房间号不能为空'
                         }
                     }
                 },
-                tel: {
+                amount: {
                     validators: {
                         notEmpty: {
-                            message: '手机号不能为空'
-                        },
-                        regexp: {
-                            regexp: /^1[3456789]\d{9}$/,
-                            message: '手机号码格式错误'
-                        }
-                    }
-                },
-                rentAmount: {
-                    validators: {
-                        notEmpty: {
-                            message: '租金额不能为空'
+                            message: '收款金额不能为空'
                         },
                         regexp: {
                             regexp: /^([1-9]\d{0,4}|\d{2,4})(\.\d{1,1})?$/,
-                            message: '租金金额格式错误，请重新输入'
+                            message: '收款金额格式错误，请重新输入'
                         }
                     }
                 },
-                unit: {
-                    validators: {
-                        notEmpty: {
-                            message: '租住时长不能为空'
-                        },
-                        integer: {
-                            message: '请输入整数'
-                        },
-                        callback: {
-                            message: '请输入 1 至 1000 范围内的整数',
-                            callback: function (input) {
-                                var value = parseInt(input);
-                                return value >= 1 && value <= 1000;
-                            }
-                        }
-                    }
-                },
-                startDate: {
+                bizDate: {
                     validators: {
                         notEmpty: {
                             message: '开始日期不能为空'
-                        }
-                    }
-                },
-                endDate: {
-                    validators: {
-                        notEmpty: {
-                            message: '结束日期不能为空'
                         }
                     }
                 }
@@ -326,6 +180,51 @@ function initUsingRoom() {
     });
 }
 
+var memberSelect = document.getElementById("memberId");
+memberSelect.addEventListener("change", function () {
+    var memberSelectValue = memberSelect.value;
+    console.log(memberSelectValue);
+    // 获取当前选中的值
+    $.ajax("/member/getById?" + "id=" + memberSelectValue, {
+            type: 'get',
+            dataType: "json",
+            success: function (res) {
+                member = res.data;
+                $("#memberIdcard").val(member.idCard);
+                $("#memberTel").val(member.tel);
+            }
+        });
+});
+
+var leaseSelect = document.getElementById("leaseId");
+leaseSelect.addEventListener("change", function () {
+    var leaseSelectValue = leaseSelect.value;
+    console.log(leaseSelectValue);
+    document.getElementById("memberId").innerHTML = "";
+    // 获取当前选中的值
+    $.ajax("/member/queryMemberByLeaseId?" + "id=" + leaseSelectValue, {
+            type: 'get',
+            dataType: "json",
+            success: function (res) {
+                memberList = res.data;
+                var leaseOpts = ""; // 添加默认空选项
+                var memberOpts = ""; // 添加默认空选项
+                let uniqueLease = [];
+                let firstLease = '';
+                for (let index = 0; index < memberList.length; index++) {
+                    let member = memberList[index];
+                    memberOpts += "<option value='" + member.id + "'>" + member.name + "</option>";
+                    if(index === 0){
+                        $("#memberIdcard").val(member.idCard);
+                        $("#memberTel").val(member.tel);
+                    }
+                }
+                $("#memberId").append(memberOpts);
+                // $("#roomId").selectpicker("refresh");
+            }
+        });
+});
+
 // 获取下拉框元素
 var roomSelect = document.getElementById("roomId");
 // 绑定 change 事件
@@ -343,10 +242,25 @@ roomSelect.addEventListener("change", function () {
                 leaseList = res.data;
                 var leaseOpts = ""; // 添加默认空选项
                 var memberOpts = ""; // 添加默认空选项
+                let uniqueLease = [];
+                let firstLease = '';
                 for (let index = 0; index < leaseList.length; index++) {
                     let lease = leaseList[index];
-                    leaseOpts += "<option value='" + lease.leaseId + "'>" + lease.leaseNumber + "</option>";
-                    memberOpts += "<option value='" + lease.memberId + "'>" + lease.memberName + "</option>";
+                    if(index === 0){
+                        firstLease = lease.rowId;
+                    }
+                    if (!uniqueLease.includes(lease.rowId)) {
+                        uniqueLease.push(lease.rowId);
+                        leaseOpts += "<option value='" + lease.rowId + "'>" + lease.leaseNumber + "</option>";
+                    }
+                    if(firstLease === lease.rowId){
+                        memberOpts += "<option value='" + lease.memberId + "'>" + lease.memberName + "</option>";
+                        // 第一个租约的第一个租客的信息填充
+                        if(index === 0){
+                            $("#memberIdcard").val(lease.idCard);
+                            $("#memberTel").val(lease.tel);
+                        }
+                    }
                 }
                 $("#leaseId").append(leaseOpts);
                 $("#memberId").append(memberOpts);
@@ -462,4 +376,101 @@ function chk_changed(value) {
         var selectedString = selectedValues.join(",");
         $("#voReceiptType").val(selectedString);
      }
+}
+
+function addReceipt() {
+    $('.modal-title').text("新增收款")
+    $('#addOrUpdateModal').modal('show')
+    $('#addOrUpdateform')[0].reset()  //重置表单
+
+// 初始化时间
+    var bizDate = new Date();
+    var formattedStartDate = bizDate.toISOString().substring(0, 10);
+    $("#bizDate").val(formattedStartDate);
+}
+
+$('#addOrUpdateModal').on('hidden.bs.modal', function () {
+    document.getElementById("leaseId").innerHTML = "";
+    document.getElementById("memberId").innerHTML = "";
+});
+
+function addOrUpdate() {
+    let receiptId = $('#id').val();
+    console.log("receiptId的值为：" + receiptId)
+     var selectElement1 = document.getElementById("roomId");
+      var roomNo = selectElement1.options[selectElement1.selectedIndex].innerHTML;
+       var selectElement2 = document.getElementById("leaseId");
+        var leaseNumber = selectElement2.options[selectElement2.selectedIndex].innerHTML;
+        var selectElement3 = document.getElementById("memberId");
+        var memberName = selectElement3.options[selectElement3.selectedIndex].innerHTML;
+    var data = {
+        rowId: receiptId,
+        amount: $('#amount').val(),
+        receiptType: $('#receiptType').val(),
+        payType: $('#payType').val(),
+        bizDate: $('#bizDate').val(),
+        roomNo: roomNo,
+        leaseNumber: leaseNumber,
+        memberName: memberName,
+        memberIdcard: $('#memberIdcard').val(),
+        memberTel: $('#memberTel').val(),
+    };
+        // {# 如果不存在project_id就是新增 #}
+        if (!receiptId) {
+            $.ajax({
+                type: "POST",
+                url: "/receipt",
+                dataType: "json",
+                contentType: "application/json;charset=UTF-8",  // 设置请求头部
+                data: JSON.stringify(data),  // 设置请求体
+                success: function (res) {
+                    if (res.code == 200) {
+                        swal("新 增", "收款记录已添加",
+                            "success");
+                    } else {
+                        swal("添加失败", res.msg, "error")
+                    }
+                    // {#关闭模态框并清除框内数据，否则下次打开还是上次的数据#}
+                    $("#table").bootstrapTable('refresh');
+                    $("#addOrUpdateform")[0].reset();
+                    $('#id').val('');   // 租客id作为隐藏字段无法通过reset()清除，需要单独处理
+                    $('#addOrUpdateModal').modal('hide');
+                    $("#table").bootstrapTable('refresh');
+                },
+                error: function (res) {
+                    swal("添加失败", res.responseJSON.msg, "error")
+                }
+            })
+        }
+        // {# 如果project_id存在就是修改 #}
+        else {
+            var arr = [];
+            arr.push(data);
+            $.ajax({
+                type: "PUT",
+                url: "/receipt", // 待后端提供PUT修改接口
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(arr),  // 设置请求体
+                success: function (res) {
+                    console.log(res);
+                    if (res.code == 200) {
+                        swal("修 改", "收款信息已修改",
+                            "success");
+                        cleanSelectRows();
+                    } else {
+                        swal("修改失败", res.msg, "error")
+                    }
+                    // {#关闭模态框并清除框内数据，否则下次打开还是上次的数据#}
+                    $("#table").bootstrapTable('refresh');
+                    $("#addOrUpdateform")[0].reset();
+                    $('#id').val('');   // 租客id作为隐藏字段无法通过reset()清除，需要单独处理
+                    $('#addOrUpdateModal').modal('hide');
+                    $("#table").bootstrapTable('refresh');
+                },
+                error: function (res) {
+                    swal("修改失败", res.responseJSON.msg, "error")
+                }
+            })
+        }
 }

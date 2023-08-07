@@ -3,8 +3,11 @@ package com.panghu.housemanage.service.impl;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.panghu.housemanage.common.util.RequestHandleUtils;
 import com.panghu.housemanage.dao.ReceiptMapper;
+import com.panghu.housemanage.pojo.po.LeasePo;
 import com.panghu.housemanage.pojo.po.ReceiptPo;
+import com.panghu.housemanage.pojo.vo.LeaseVo;
 import com.panghu.housemanage.pojo.vo.ReceiptVo;
 import com.panghu.housemanage.service.ReceiptService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -39,6 +43,9 @@ public class ReceiptServiceImpl implements ReceiptService {
 
     @Override
     public void insertReceipt(ReceiptVo leaseVo) {
+        // 数据模型转换
+        ReceiptPo receiptPo = RequestHandleUtils.<ReceiptVo, ReceiptPo> modelDTOTrans(Collections.singletonList(leaseVo)).get(0);
+        receiptMapper.insert(receiptPo);
     }
 
 

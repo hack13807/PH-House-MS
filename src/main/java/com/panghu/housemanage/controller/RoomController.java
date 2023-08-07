@@ -6,7 +6,6 @@ import com.panghu.housemanage.common.enumeration.PHExceptionCodeEnum;
 import com.panghu.housemanage.common.exception.PHServiceException;
 import com.panghu.housemanage.common.util.PHResp;
 import com.panghu.housemanage.common.util.RequestHandleUtils;
-import com.panghu.housemanage.pojo.po.LeasePo;
 import com.panghu.housemanage.pojo.po.RoomPo;
 import com.panghu.housemanage.pojo.vo.RoomVo;
 import com.panghu.housemanage.service.MemberService;

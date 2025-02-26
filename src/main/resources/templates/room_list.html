@@ -32,12 +32,12 @@
 
         <input name="roomSearch" id="roomSearch" class="form-control" placeholder="房间号"/>
         <!--操作按钮-->
-        <button id="search" class="btn btn-primary" th:onclick="search()">搜 索</button>
-        <button class="btn btn-success" th:onclick="|addRoom()|">新 增</button>
-        <button class="btn btn-info" th:onclick="|edit()|">编 辑</button>
-        <button id="gotoMember" class="btn btn-warning" th:onclick="gotoMember()">查看租客</button>
-        <button id="disable" class="btn btn-danger" th:onclick="disableRows()">禁 用</button>
-        <button id="enable" class="btn btn-primary" th:onclick="enableRows()">启 用</button>
+        <button id="search" class="btn btn-primary toolbar-btn" th:onclick="search()">搜 索</button>
+        <button class="btn btn-success toolbar-btn" th:onclick="|addRoom()|">新 增</button>
+        <button class="btn btn-info toolbar-btn" th:onclick="|edit()|">编 辑</button>
+        <button id="gotoMember" class="btn btn-warning toolbar-btn" th:onclick="gotoMember()">查看租客</button>
+        <button id="disable" class="btn toolbar-btn" th:onclick="disableRows()">禁 用</button>
+        <button id="enable" class="btn btn-primary toolbar-btn" th:onclick="enableRows()">启 用</button>
     </div>
     <!--表格-->
     <div class="panel-body">

@@ -20,25 +20,18 @@
     </div>
     <!--工具栏-->
     <div id="toolbar" class="div-toolbar">
-        <select name="select" id="effectiveSelect" class="toolbar-selector" data-toggle="tooltip" title="点此切换需要查询的收款单状态">
-            <option value="-1">全部状态</option>
-            <option value="1">生 效</option>
-            <option value="0">作 废</option>
+        <select name="select" id="receiptStatus" class="toolbar-selector">
+            <option value="-1">全部</option>
+            <option value="0">待收款</option>
+            <option value="1" selected>已收款</option>
         </select>
-<!--        <div class="checkbox"> <label> <input type="checkbox" value=""> Option one is this and that—be sure to include why it's great </label></div><div class="checkbox disabled"> <label> <input type="checkbox" value="" disabled> Option two is disabled </label></div><div class="radio"> <label> <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked> Option one is this and that—be sure to include why it's great </label></div><div class="radio"> <label> <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2"> Option two can be something else and selecting it will deselect option one </label></div><div class="radio disabled"> <label> <input type="radio" name="optionsRadios" id="optionsRadios3" value="option3" disabled> Option three is disabled </label></div>-->
-        <div id="id_div" class="div-toolbar div-inline">
-            <input id="type_select" class="form-control" readonly placeholder="全部款项" onclick="show_options();" style="background-color: inherit;">
-        </div>
-        <input name="voReceiptType" id="voReceiptType" type="hidden"/>
-        <input id="searchKey" class="form-control" placeholder="租客/租约/收款单" th:value="${memberSearch}"/>
-        <input name="roomSearch" id="roomSearch" class="form-control" placeholder="房间号"/>
+        <input name="memberSearch" id="memberSearch" class="form-control" placeholder="租客姓名" th:value="${memberSearch}"/>
+        <input name="roomSearch" id="roomSearch" class="form-control" placeholder="房间号" th:value="${roomSearch}"/>
         <!--操作按钮-->
-        <button id="search" class="btn btn-primary" th:onclick="search()">搜 索</button>
-        <button id="new" class="btn btn-success" th:onclick="addReceipt()">新 增</button>
-        <button id="edit" class="btn btn-info" th:onclick="|edit()|">编 辑</button>
-        <button id="terminate" class="btn btn-warning" th:onclick="terminate()">手动失效</button>
-<!--        <button id="effective" class="btn btn-primary" th:onclick="enableRows()">手动生效</button>-->
-        <button id="delete" class="btn btn-danger" th:onclick="|deleteRows();|">删 除</button>
+        <button id="search" class="btn btn-primary toolbar-btn" th:onclick="search()">搜 索</button>
+        <button class="btn btn-success toolbar-btn" th:onclick="|addReceipt()|">新 增</button>
+        <button class="btn btn-info toolbar-btn" th:onclick="|edit()|">编 辑</button>
+        <button id="delete" class="btn btn-danger toolbar-btn" th:onclick="|deleteRows();|">删 除</button>
         <div class="div-inline">
             <div id="type_select_options" style="height: 60px; width: auto; padding-top: 20px; padding-left: 110px; display: none;">
                 <div class="checks">

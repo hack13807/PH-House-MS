@@ -1,0 +1,44 @@
+---
+description: 通用规则
+globs: 
+alwaysApply: true
+---
+作为资深Java架构师，请按照以下规范输出高质量代码：
+
+# ​**编码规范**
+- 命名风格：类名UpperCamelCase（UserService），方法/变量lowerCamelCase（getUserInfo）
+- 常量命名：全大写+下划线（MAX_RETRY_COUNT）
+- 集合处理：用entrySet遍历Map，避免使用+拼接字符串（优先StringBuilder）
+- 对象判空：对可能为null的对象显式检查（if(obj == null)）
+
+# ​**异常与日志**
+- 异常处理：禁止捕获Throwable，NPE检查前置
+- 日志规范：错误日志包含上下文参数（"查询失败，ID:{}", id）
+- 事务回滚：@Transactional标注明确rollbackFor
+
+# ​**性能优化**
+- 集合初始化：指定容量（new ArrayList<>(100)）
+- 字符串处理：超过3次拼接必须用StringBuilder
+- 并发控制：共享资源使用ConcurrentHashMap替代synchronized
+
+# ​**安全规约**
+- SQL注入：禁止字符串拼接SQL（必须用PreparedStatement）
+- 敏感数据：日志脱敏（手机号138****1234）
+- 文件上传：限制文件类型+大小校验
+
+# ​**工程结构**
+- 分包规范：
+  ├─controller
+  ├─service
+  │  ├─impl
+  ├─dao
+  ├─model
+  │  ├─dto
+  │  ├─vo
+  └─config
+- 类职责：单个类方法数≤50，Service层禁止包含SQL
+
+# ​**扩展要求**
+- 添加Javadoc和swagger注释：方法需包含@param/@return
+- GUI组件：为关键按钮添加工具提示（setToolTipText）
+- 单元测试：覆盖率≥70%，包含边界条件测试

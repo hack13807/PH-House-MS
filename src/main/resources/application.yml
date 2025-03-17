@@ -1,5 +1,22 @@
 server:
   port: 8080
+  # Tomcat服务器配置
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+      force-request: true
+      force-response: true
+  tomcat:
+    max-threads: 200
+    connection-timeout: 5000
+    max-connections: 10000
+    accept-count: 500
+    threads:
+      max: 800
+      min-spare: 100
 
 spring:
   thymeleaf:
@@ -9,50 +26,62 @@ spring:
     encoding: UTF-8
     mode: HTML
   datasource:
-        name: hms
-        url: jdbc:mysql://127.0.0.1:3306/hms?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
-        username: root
-        password: admin
-        # 使用druid数据源
-        type: com.alibaba.druid.pool.DruidDataSource
-        driver-class-name: com.mysql.cj.jdbc.Driver
+    name: hms
+    url: jdbc:mysql://127.0.0.1:3306/hms?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: admin
+    # 使用druid数据源
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  # MVC配置
+  mvc:
+    async:
+      request-timeout: 60000
+    throw-exception-if-no-handler-found: true
+    converters:
+      preferred-json-mapper: jackson
+  # 文件上传配置
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  # RestTemplate配置
+  resttemplate:
+    read-timeout: 60000
+    connect-timeout: 60000
+  # Jackson配置
+  jackson:
+    default-property-inclusion: NON_NULL
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  # Web资源配置
+  web:
+    resources:
+      add-mappings: false
 
+# 日志配置
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
+    com:
+      panghu:
+        housemanage: DEBUG
+      baomidou:
+        mybatisplus: DEBUG
 
 mybatis-plus:
-  # Mapper.xml 文件位置 Maven 多模块项目的扫描路径需以 classpath*: 开头
-  mapperLocations: classpath*:mapper/*Mapper.xml
-  #  #MyBaits 别名包扫描路径，通过该属性可以给包中的类注册别名 实体扫描，多个package用逗号或者分号分隔
-  #  typeAliasesPackage: com.vanhr.user.dao.entity
-  #  #通过父类（或实现接口）的方式来限定扫描实体
-  #  typeAliasesSuperType: com.vanhr.user.dao.entity.baseEntity
-  #  #枚举类 扫描路径 如果配置了该属性，会将路径下的枚举类进行注入，让实体类字段能够简单快捷的使用枚举属性
-  #  typeEnumsPackage: com.vanhr.user.dao.enums
-  #  #启动时是否检查 MyBatis XML 文件的存在，默认不检查 仅限spring boot 使用
-  #  checkConfigLocation : true
-  #  #通过该属性可指定 MyBatis 的执行器，MyBatis 的执行器总共有三种：
-  #  # ExecutorType.SIMPLE：该执行器类型不做特殊的事情，为每个语句的执行创建一个新的预处理语句（PreparedStatement）
-  #  # ExecutorType.REUSE：该执行器类型会复用预处理语句（PreparedStatement）
-  #  # ExecutorType.BATCH：该执行器类型会批量执行所有的更新语句
-  #  executorType: SIMPLE
-  #  # 指定外部化 MyBatis Properties 配置，通过该配置可以抽离配置，实现不同环境的配置部署
-  #  configurationProperties:
-  configuration: # MyBatis 原生支持的配置
+  # Mapper.xml 文件位置
+  mapper-locations: classpath*:mapper/*Mapper.xml
+  type-aliases-package: com.panghu.housemanage.pojo
+  configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-    logging:
-      level:
-        com:
-          baomidou:
-            mybatisplus=DEBUG:
     # 是否开启自动驼峰命名规则（camel case）映射
-    mapUnderscoreToCamelCase: true
-    # 枚举处理类,如果配置了该属性,枚举将统一使用指定处理器进行处理
-    #   org.apache.ibatis.type.EnumTypeHandler : 存储枚举的名称
-    #   org.apache.ibatis.type.EnumOrdinalTypeHandler : 存储枚举的索引
-    #   com.baomidou.mybatisplus.extension.handlers.MybatisEnumTypeHandler : 枚举类需要实现IEnum接口或字段标记@EnumValue注解.(3.1.2以下版本为EnumTypeHandler)
-    #    defaultEnumTypeHandler: com.baomidou.mybatisplus.extension.handlers.MybatisEnumTypeHandler
-    # 配置JdbcTypeForNull, oracle数据库必须配置
-#    jdbc-type-for-null: null
-  global-config: # 全局策略配置
+    map-underscore-to-camel-case: true
+  global-config:
     # 是否控制台 print mybatis-plus 的 LOGO
     banner: false
     db-config:
@@ -60,9 +89,13 @@ mybatis-plus:
       id-type: auto
       # 表名是否使用下划线命名，默认数据库表使用下划线命名
       table-underline: true
-      #是否开启大写命名，默认不开启
-#      capital-mode: false
-#      #逻辑已删除值,(逻辑删除下有效) 需要注入逻辑策略LogicSqlInjector 以@Bean方式注入
-#      logic-not-delete-value: 0
-#      #逻辑未删除值,(逻辑删除下有效)
-#      logic-delete-value: 1
+
+# Coze API配置
+coze:
+  api:
+    token: pat_VEOk6aZf3o1DXCYo0rWklUFvRtLktLXsJLxzB4xrWlTYu1gft3EN8N8SvbEYipw9
+    base-url: https://api.coze.cn
+  workflow:
+    news:
+      id: 7474599559693778982
+      appid: 7474543679249334309

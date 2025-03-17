@@ -13,10 +13,10 @@ import java.time.Duration;
 
 @SpringBootApplication
 @MapperScan("com.panghu.housemanage.dao")
-public class ManageBooksApplication {
+public class PHHouseApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ManageBooksApplication.class, args);
+        SpringApplication.run(PHHouseApplication.class, args);
     }
     
     /**

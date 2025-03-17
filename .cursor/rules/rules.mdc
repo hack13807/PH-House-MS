@@ -1,0 +1,7 @@
+---
+description: 生成代码时规则
+globs: 
+alwaysApply: true
+---
+- 请不要构建或者启动关闭应用程序，我将使用IDEA进行运行调试
+- 正确调用API，禁止使用模拟数据

@@ -28,4 +28,23 @@ public class PHResp<T> {
     public static <T> PHResp<T> error(int code, String msg,T error) {
         return new PHResp<>(code, msg, error);
     }
+    
+    /**
+     * 返回错误响应，使用默认错误码500
+     * @param msg 错误消息
+     * @return 错误响应对象
+     */
+    public static <T> PHResp<T> error(String msg) {
+        return new PHResp<>(500, msg, null);
+    }
+    
+    /**
+     * 返回错误响应，包含错误码和消息
+     * @param code 错误码
+     * @param msg 错误消息
+     * @return 错误响应对象
+     */
+    public static <T> PHResp<T> error(int code, String msg) {
+        return new PHResp<>(code, msg, null);
+    }
 }

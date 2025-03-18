@@ -34,10 +34,28 @@ public class MemberServiceImpl implements MemberService {
     public IPage<MemberVo> pageQueryMember(Page<MemberVo> page, MemberVo vo) {
         try {
             preprocess(vo);
-            // 添加日志记录租客查询参数
-            log.info("查询租客，参数：{}", vo);
+            // 详细记录查询参数
+            log.info("查询租客，参数：memberName={}, roomNo={}, roomNos={}, voStatus={}", 
+                    vo != null ? vo.getMemberName() : null,
+                    vo != null ? vo.getRoomNo() : null,
+                    vo != null ? vo.getRoomNos() : null,
+                    vo != null ? vo.getVoStatus() : null);
+            
+            // 增加SQL调试信息
+            log.info("开始执行pageQueryMember SQL...");
             IPage<MemberVo> resultPage = memberMapper.pageQueryMember(page, vo);
-            log.info("租客查询结果数：{}", resultPage.getTotal());
+            log.info("租客查询完成，结果数：{}", resultPage.getTotal());
+            
+            // 打印查询结果中的几条记录以便调试
+            if (resultPage.getRecords() != null && !resultPage.getRecords().isEmpty()) {
+                log.info("查询结果示例：第一条记录 - name={}, id={}, roomNo={}", 
+                        resultPage.getRecords().get(0).getMemberName(),
+                        resultPage.getRecords().get(0).getRowId(),
+                        resultPage.getRecords().get(0).getRoomNo());
+            } else {
+                log.warn("查询结果为空");
+            }
+            
             return resultPage;
         } catch (Exception e) {
             log.error("查询租客异常", e);
@@ -58,6 +76,30 @@ public class MemberServiceImpl implements MemberService {
             roomNo = roomNo.replace("，", ",");
             vo.setRoomNos(Arrays.asList(roomNo.split(",")));
             vo.setRoomNo(null);
+            vo.setVoStatus("-1");
+        }
+        
+        // 状态转换处理，前端传入的状态与数据库状态映射
+        String voStatus = vo.getVoStatus();
+        if (StringUtils.hasText(voStatus)) {
+            log.info("状态参数预处理前：voStatus={}", voStatus);
+            
+            // 如果前端没有明确指定状态过滤（或传入的是全部），则默认不过滤status
+            if (voStatus == null || voStatus.isEmpty() || "-1".equals(voStatus) || "0".equals(voStatus)) {
+                log.info("查询全部状态租客，移除status过滤条件");
+                vo.setVoStatus("-1"); // 设置为-1表示不过滤
+            }
+            // 前端传1表示查询空闲状态(status=0)，传2表示查询在租状态(status=1)
+            else if ("1".equals(voStatus)) {
+                vo.setVoStatus("0"); // 空闲状态
+                log.info("查询空闲状态，已修正voStatus=0");
+            } else if ("2".equals(voStatus)) {
+                vo.setVoStatus("1"); // 在租状态
+                log.info("查询在租状态，已修正voStatus=1");
+            }
+        } else {
+            // 如果状态参数为空，默认查询所有非禁用状态
+            log.info("状态参数为空，默认查询所有状态");
             vo.setVoStatus("-1");
         }
     }

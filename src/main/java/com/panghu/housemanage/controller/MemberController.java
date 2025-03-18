@@ -68,11 +68,14 @@ public class MemberController {
             // 通过前端参数构建查询实体
             MemberVo memberVo = RequestHandleUtils.buildPoEntity(request, MemberVo.class);
             
-            log.info("查询租客列表：memberName={}, roomNo={}", 
-                    memberVo.getMemberName(), memberVo.getRoomNo());
+            log.info("查询租客列表：原始参数={}", request.getParameterMap());
+            log.info("查询租客列表构建的VO对象：memberName={}, roomNo={}, voStatus={}", 
+                    memberVo.getMemberName(), memberVo.getRoomNo(), memberVo.getVoStatus());
             
             // 把分页对象page和查询实体传到service层
             IPage<MemberVo> pageResult = memberService.pageQueryMember(page, memberVo);
+            
+            log.info("查询租客列表结果：总数={}, 当前页={}", pageResult.getTotal(), pageResult.getCurrent());
             
             // 获取查询总数和记录，构建返回前端的Map对象
             return RequestHandleUtils.successPageResult(pageResult);

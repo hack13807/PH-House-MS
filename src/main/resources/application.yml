@@ -22,7 +22,8 @@ spring:
   # 激活的配置文件，默认使用prod（使用H2）
   profiles:
     active: prod
-    
+  application:
+    name: ph-house
   thymeleaf:
     cache: false
     prefix: classpath:/templates/
@@ -120,7 +121,7 @@ spring:
       on-profile: prod
   datasource:
     name: hms
-    url: jdbc:h2:file:./data/hms;MODE=MYSQL;DATABASE_TO_LOWER=TRUE;CASE_INSENSITIVE_IDENTIFIERS=TRUE;AUTO_SERVER=TRUE
+    url: jdbc:h2:file:./data/hms;MODE=MYSQL;DATABASE_TO_LOWER=TRUE;CASE_INSENSITIVE_IDENTIFIERS=TRUE;IGNORECASE=TRUE;AUTO_SERVER=TRUE
     username: sa
     password: 
     # 使用druid数据源
@@ -158,7 +159,8 @@ spring:
       enabled: true
       path: /h2-console
       settings:
-        web-allow-others: false
+        trace: false
+        web-allow-others: true
   # 初始化数据库
   sql:
     init:
@@ -166,3 +168,17 @@ spring:
       schema-locations: classpath:schema.sql
       data-locations: classpath:data.sql
       encoding: UTF-8
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+  # 配置连接池参数
+  hikari:
+    minimum-idle: 5
+    maximum-pool-size: 15
+    connection-timeout: 30000
+    idle-timeout: 180000
+    max-lifetime: 1800000
+    connection-test-query: SELECT 1
+    validation-timeout: 5000
+    auto-commit: true
+  flyway:
+    enabled: false

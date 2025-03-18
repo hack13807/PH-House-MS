@@ -160,20 +160,16 @@ public class RequestHandleUtils {
 
     public static <T extends PHBaseVo, R extends PHBasePo> List<R> modelDTOTrans(List<T> voList) {
         T firstVo = voList.get(0);
-        switch (firstVo) {
-            case MemberVo m -> {
-                return (List<R>) memberDTOTrans((List<MemberVo>) voList);
-            }
-            case RoomVo r -> {
-                return (List<R>) roomDTOTrans((List<RoomVo>) voList);
-            }
-            case LeaseVo l -> {
-                return (List<R>) leaseDTOTrans((List<LeaseVo>) voList);
-            }
-            case ReceiptVo l -> {
-                return (List<R>) receiptDTOTrans((List<ReceiptVo>) voList);
-            }
-            default -> throw new IllegalStateException("Unexpected value: " + firstVo);
+        if (firstVo instanceof MemberVo) {
+            return (List<R>) memberDTOTrans((List<MemberVo>) voList);
+        } else if (firstVo instanceof RoomVo) {
+            return (List<R>) roomDTOTrans((List<RoomVo>) voList);
+        } else if (firstVo instanceof LeaseVo) {
+            return (List<R>) leaseDTOTrans((List<LeaseVo>) voList);
+        } else if (firstVo instanceof ReceiptVo) {
+            return (List<R>) receiptDTOTrans((List<ReceiptVo>) voList);
+        } else {
+            throw new IllegalStateException("Unexpected value: " + firstVo);
         }
     }
 

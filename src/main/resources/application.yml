@@ -112,6 +112,11 @@ spring:
     # 使用druid数据源
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
+    # 基础数据源配置
+    validation-query: SELECT 1
+    test-while-idle: true
+    test-on-borrow: false
+    test-on-return: false
 
 ---
 # 生产环境配置，使用H2嵌入式数据库
@@ -141,7 +146,7 @@ spring:
       min-evictable-idle-time-millis: 300000
       validation-query: SELECT 1
       test-while-idle: true
-      test-on-borrow: true
+      test-on-borrow: false
       test-on-return: false
       # 打开PSCache，并且指定每个连接上PSCache的大小
       pool-prepared-statements: true
@@ -153,6 +158,7 @@ spring:
       filters: stat,wall
       # 合并多个DruidDataSource的监控数据
       use-global-data-source-stat: true
+      connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
   # H2控制台配置
   h2:
     console:
@@ -168,6 +174,8 @@ spring:
       schema-locations: classpath:schema.sql
       data-locations: classpath:data.sql
       encoding: UTF-8
+      continue-on-error: true
+      platform: h2
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
   # 配置连接池参数
